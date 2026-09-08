@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#111111">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+<title>SHARDA BOUTIQUE - Tailoring App</title>
+<style>
+:root{--bg:#f5f5f7;--card:#fff;--text:#1d1d1f;--muted:#6e6e73;--dark:#111;--green:#128C7E;--blue:#0a84ff;--red:#d92d20;--line:#e5e5e7}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}
+header{position:sticky;top:0;z-index:10;background:var(--dark);color:#fff;padding:15px 12px;text-align:center;font-size:20px;font-weight:700}
+.wrap{max-width:920px;margin:auto;padding:12px}.card{background:var(--card);border-radius:16px;padding:15px;margin:12px 0;box-shadow:0 2px 10px #0000000d}
+h2{font-size:18px;margin:0 0 12px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.measures{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+label{font-size:13px;font-weight:700}.field{display:flex;flex-direction:column;gap:5px}input,select,textarea{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;font-size:15px;background:#fff}
+textarea{resize:vertical}.buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}button{border:0;border-radius:10px;padding:11px 14px;font-weight:700;cursor:pointer}
+.primary{background:var(--dark);color:#fff}.secondary{background:#ececf0}.blue{background:var(--blue);color:#fff}.green{background:var(--green);color:#fff}.red{background:var(--red);color:#fff}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat{background:#f2f2f4;border-radius:12px;padding:12px;text-align:center}.stat b{display:block;font-size:20px}
+.customer{display:grid;grid-template-columns:68px 1fr auto;gap:10px;border:1px solid var(--line);border-radius:14px;padding:10px;margin:10px 0;align-items:center}
+.customer img{width:68px;height:68px;border-radius:12px;object-fit:cover;background:#eee}.name{font-weight:800}.meta{font-size:13px;color:var(--muted);line-height:1.5}.actions{display:flex;gap:5px;flex-wrap:wrap}.actions button{padding:8px 9px;font-size:12px}
+.badge{display:inline-block;padding:3px 7px;border-radius:999px;background:#f2f2f4;font-size:11px;margin-right:4px}
+#installBtn{display:none;width:100%;margin-top:8px}
+.driveStatus{font-size:13px;color:var(--muted);margin-top:8px;line-height:1.5}
+@media(max-width:700px){.grid,.measures{grid-template-columns:1fr 1fr}.customer{grid-template-columns:58px 1fr}.customer img{width:58px;height:58px}.actions{grid-column:1/3}.stats{grid-template-columns:1fr 1fr 1fr}}
+</style>
+</head>
+<body>
+<header>🧵 SHARDA BOUTIQUE<br><small style='font-size:12px;font-weight:400'>90 33 55 85 22 / 73 591 319 39</small></header>
+<div class="wrap">
+
+<div class="card">
+<div class="stats">
+<div class="stat"><b id="totalCustomers">0</b><span>Customers</span></div>
+<div class="stat"><b id="totalAmount">₹0</b><span>Total</span></div>
+<div class="stat"><b id="totalBalance">₹0</b><span>Balance</span></div>
+</div>
+<button id="installBtn" class="blue">📲 App Install करें</button>
+</div>
+
+<div class="card">
+<h2>☁️ Google Drive Backup & Sync</h2>
+<div class="field"><label>Google OAuth Client ID</label><input id="googleClientId" placeholder="xxxxx.apps.googleusercontent.com"></div>
+<div class="buttons">
+<button class="blue" type="button" onclick="connectGoogleDrive()">🔐 Google Drive Connect</button>
+<button class="secondary" type="button" onclick="syncFromDrive()">☁️ Drive से Load</button>
+<button class="secondary" type="button" onclick="syncToDrive()">⬆️ अभी Backup करें</button>
+</div>
+<div id="driveStatus" class="driveStatus">Google Drive अभी connect नहीं है। पहली बार Client ID डालकर Connect करें।</div>
+</div>
+
+<div class="card">
+<h2>Customer Details</h2>
+<div style="background:#f2f2f4;padding:9px;border-radius:10px;margin-bottom:10px"><b>SHARDA BOUTIQUE</b> · 90 33 55 85 22 / 73 591 319 39</div>
+
+<div class="grid">
+<div class="field"><label>Customer Name *</label><input id="name" placeholder="नाम"></div>
+<div class="field"><label>Mobile Number *</label><input id="mobile" inputmode="numeric" placeholder="मोबाइल नंबर"></div>
+<div class="field"><label>Extra Information</label><input id="extra" placeholder="जैसे Address / Customer Note"></div>
+<div class="field"><label>काम लेने की तारीख</label><input id="takenDate" type="date"></div>
+</div>
+
+<div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px;gap:8px">
+<h2 style="margin:0">Garments</h2>
+<button class="secondary" type="button" onclick="addGarment()">＋ Add Garment</button>
+</div>
+<div id="garmentList"></div>
+
+<div class="card" style="background:#f7f7f8;margin-top:12px">
+<h2>Payment Summary</h2>
+<div class="grid">
+<div class="field"><label>Grand Total ₹</label><input id="amount" type="number" min="0" readonly></div>
+<div class="field"><label>Advance ₹</label><input id="advance" type="number" min="0" oninput="updateSummary()"></div>
+<div class="field"><label>Balance ₹</label><input id="balance" type="number" min="0" readonly></div>
+</div>
+</div>
+
+<div class="field" style="margin-top:10px"><label>Notes / Order Details</label><textarea id="notes" rows="3" placeholder="Extra notes, fitting, design, fabric notes..."></textarea></div>
+<div class="buttons">
+<button class="primary" onclick="saveCustomer()">💾 Save Customer</button>
+<button class="secondary" onclick="resetForm()">Clear</button>
+</div>
+</div>
+
+<div class="card">
+<h2>Customer List</h2>
+<input id="search" oninput="render()" placeholder="🔍 नाम, मोबाइल या garment से खोजें">
+<div id="list"></div>
+</div>
+</div>
+
+<script>
+const defaultMeasurements=[
+ ['height','Height'],['shoulder','Shoulder'],['armhole','Armhole'],
+ ['upper_chest','Upper chest'],['chest','Chest'],['waist','Waist'],
+ ['hip','Hip'],['neck_front_back','Neck :- front/back'],['sleeve','Sleeve']
+];
+const garmentMeasurementDefaults={
+ 'Kurti':[
+  ['height','Height'],['shoulder','Shoulder'],['armhole','Armhole'],
+  ['upper_chest','Upper chest'],['chest','Chest'],['waist','Waist'],
+  ['hip','Hip'],['neck_front_back','Neck :- front/back'],['sleeve','Sleeve']
+ ],
+ 'Pant':[
+  ['height','Height'],['hip','Hip'],['thai','Thai'],['mori','Mori']
+ ],
+ 'Blouse':[
+  ['height','Height'],['shoulder','Shoulder'],['armhole','Armhole'],
+  ['upper_chest','Upper chest'],['chest','Chest'],['waist','Waist'],
+  ['neck_front_back','Neck :- front/back'],['sleeve','Sleeve']
+ ]
+};
+const defaultExtraMeasurements=JSON.parse(localStorage.getItem('sharda_measurement_fields')||'[]');
+let measurementFields=defaultExtraMeasurements;
+let customers=JSON.parse(localStorage.getItem('tailor_app_customers')||'[]');
+let editId=null, customerPhotoData='', deferredPrompt=null, garments=[];
+let googleTokenClient=null, googleAccessToken='', driveFolderId=localStorage.getItem('sharda_drive_folder_id')||'', driveFileId=localStorage.getItem('sharda_drive_file_id')||'';
+const DRIVE_SCOPE='https://www.googleapis.com/auth/drive.file';
+const DRIVE_FOLDER_NAME='SHARDA BOUTIQUE';
+const DRIVE_DATA_NAME='SHARDA_BOUTIQUE_DATA.json';
+
+window.addEventListener('beforeinstallprompt',e=>{
+ e.preventDefault(); deferredPrompt=e; document.getElementById('installBtn').style.display='block';
+});
+document.getElementById('installBtn').addEventListener('click',async()=>{
+ if(!deferredPrompt)return; deferredPrompt.prompt(); await deferredPrompt.userChoice;
+ deferredPrompt=null; document.getElementById('installBtn').style.display='none';
+});
+if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+
+const get=id=>document.getElementById(id)?.value.trim()||'';
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const money=n=>'₹'+Number(n||0);
+
+function saveFields(){localStorage.setItem('sharda_measurement_fields',JSON.stringify(measurementFields));}
+
+function readFile(file, cb){
+ if(!file){cb('');return;}
+ const r=new FileReader(); r.onload=()=>cb(r.result); r.readAsDataURL(file);
+}
+
+function addGarment(data={}){
+ const g={
+   id:data.id||Date.now()+Math.random(),
+   garment:data.garment||'Blouse',
+   delivery:data.delivery||'',
+   amount:Number(data.amount||0),
+   photo:data.photo||'',
+   measurements:data.measurements ? {...data.measurements} : {},
+   notes:data.notes||''
+ };
+ garments.push(g);
+ renderGarments();
+ updateSummary();
+}
+
+function removeGarment(id){
+ if(garments.length===1){alert('कम से कम एक garment रखना जरूरी है।');return;}
+ garments=garments.filter(g=>g.id!==id); renderGarments(); updateSummary();
+}
+
+function getMeasurementFieldsForGarment(g){
+ const base=garmentMeasurementDefaults[g.garment]||[];
+ const extra=Array.isArray(g.extraMeasurements)?g.extraMeasurements:[];
+ return [...base,...extra];
+}
+function addExtraMeasurement(){
+ const label=prompt('नया Extra ordinary measurement नाम लिखें:');
+ if(!label||!label.trim())return;
+ const id='extra_'+Date.now();
+ measurementFields.push([id,label.trim()]);
+ saveFields();
+ renderGarments();
+}
+function renameExtraMeasurement(id){
+ const f=measurementFields.find(x=>x[0]===id); if(!f)return;
+ const label=prompt('Measurement का नया नाम:',f[1]);
+ if(!label||!label.trim())return;
+ f[1]=label.trim(); saveFields(); renderGarments();
+}
+function removeExtraMeasurement(id){
+ const f=measurementFields.find(x=>x[0]===id);
+ if(f&&confirm(`"${f[1]}" measurement हटाना है?`)){
+  measurementFields=measurementFields.filter(x=>x[0]!==id);
+  saveFields(); renderGarments();
+ }
+}
+function changeGarmentType(id,value){
+ const g=garments.find(x=>x.id===id); if(!g)return;
+ g.garment=value;
+ // Keep extra measurements only; standard fields change automatically by garment type.
+ renderGarments(); updateSummary();
+}
+
+function renderGarments(){
+ const box=document.getElementById('garmentList');
+ box.innerHTML=garments.map((g,i)=>`
+ <div class="card" style="border:1px solid var(--line);margin:10px 0;background:#fff">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+   <h2 style="margin:0">Garment ${i+1}</h2>
+   <button type="button" class="red" onclick="removeGarment(${g.id})">🗑️ Remove</button>
+  </div>
+  <div class="grid" style="margin-top:10px">
+   <div class="field"><label>Garment Type</label>
+    <select data-g="${g.id}" data-key="garment" onchange="changeGarmentType(${g.id},this.value)">
+     ${['Blouse','Kurti','Salwar Suit','Pant','Shirt','Dress','Other'].map(v=>`<option ${g.garment===v?'selected':''}>${v}</option>`).join('')}
+    </select>
+   </div>
+   <div class="field"><label>Delivery Date</label>
+    <input type="date" value="${esc(g.delivery)}" onchange="changeGarment(${g.id},this.value,'delivery')">
+   </div>
+   <div class="field"><label>Garment Amount ₹</label>
+    <input type="number" min="0" value="${g.amount}" onchange="changeGarment(${g.id},this.value,'amount')">
+   </div>
+   <div class="field"><label>Dress Photo</label>
+    <input type="file" accept="image/*" capture="environment" onchange="changePhoto(${g.id},this.files[0])">
+   </div>
+  </div>
+  ${g.photo?`<img src="${g.photo}" style="width:100px;height:100px;object-fit:cover;border-radius:10px;margin-top:8px">`:''}
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:15px">
+   <h3 style="margin:0">Measurements (inches)</h3>
+   <button type="button" class="secondary" onclick="addExtraMeasurement()">＋ Extra ordinary Add</button>
+  </div>
+  <div class="measures">${getMeasurementFieldsForGarment(g).map(([id,label])=>{
+    const isExtra=id.startsWith('extra_');
+    return `<div class="field">
+      <label>${esc(label)}</label>
+      <div style="display:flex;gap:4px">
+       <input data-gid="${g.id}" data-mid="${id}" value="${esc(g.measurements[id]||'')}" oninput="changeMeasurement(${g.id},'${id}',this.value)" style="min-width:0">
+       ${isExtra?`<button type="button" class="secondary" onclick="renameExtraMeasurement('${id}')">✏️</button><button type="button" class="red" onclick="removeExtraMeasurement('${id}')">×</button>`:''}
+      </div>
+     </div>`;
+   }).join('')}</div>
+  <div class="field" style="margin-top:10px"><label>Garment Notes</label>
+   <textarea rows="2" oninput="changeGarment(${g.id},this.value,'notes')">${esc(g.notes)}</textarea>
+  </div>
+ </div>`).join('');
+}
+
+function changeGarment(id,value,key){
+ const g=garments.find(x=>x.id===id); if(!g)return;
+ if(key==='amount') g.amount=Number(value||0); else if(key==='delivery') g.delivery=value;
+ else if(key==='notes') g.notes=value; else if(key==='garment') g.garment=value;
+ updateSummary();
+}
+function changeMeasurement(id,key,value){
+ const g=garments.find(x=>x.id===id); if(g) g.measurements[key]=value;
+}
+function changePhoto(id,file){
+ const g=garments.find(x=>x.id===id); if(!g)return;
+ readFile(file,data=>{g.photo=data;renderGarments();updateSummary();});
+}
+function updateSummary(){
+ const total=garments.reduce((s,g)=>s+Number(g.amount||0),0);
+ const adv=Number(document.getElementById('advance')?.value||0);
+ document.getElementById('amount').value=total;
+ document.getElementById('balance').value=Math.max(total-adv,0);
+}
+
+function addMeasurement(){addExtraMeasurement();}
+function renameMeasurement(id){renameExtraMeasurement(id);}
+function removeMeasurement(id){removeExtraMeasurement(id);}
+
+function setDriveStatus(msg,ok=false){
+ const el=document.getElementById('driveStatus'); if(el){el.textContent=msg;el.style.color=ok?'#128C7E':'#6e6e73';}
+}
+function saveDriveConfig(){localStorage.setItem('sharda_google_client_id',get('googleClientId'));}
+function initGoogleClient(){
+ const cid=localStorage.getItem('sharda_google_client_id')||get('googleClientId');
+ if(!cid || !window.google?.accounts?.oauth2) return false;
+ googleTokenClient=google.accounts.oauth2.initTokenClient({client_id:cid,scope:DRIVE_SCOPE,callback:(resp)=>{if(resp.error){setDriveStatus('Google authorization नहीं मिला: '+resp.error);return;} googleAccessToken=resp.access_token; localStorage.setItem('sharda_drive_connected','1'); setDriveStatus('Google Drive connected है। अब Save Customer पर automatic backup होगा।',true); syncToDrive();}});
+ return true;
+}
+async function connectGoogleDrive(){
+ const cid=get('googleClientId')||localStorage.getItem('sharda_google_client_id');
+ if(!cid){alert('पहले Google OAuth Client ID डालें।');return;}
+ document.getElementById('googleClientId').value=cid; saveDriveConfig();
+ if(!initGoogleClient()){alert('Google Sign-in अभी load हो रहा है। 2-3 सेकंड बाद फिर Connect दबाएँ।');return;}
+ googleTokenClient.requestAccessToken({prompt:'consent'});
+}
+function getDriveToken(){
+ if(googleAccessToken) return Promise.resolve(googleAccessToken);
+ if(!initGoogleClient()) return Promise.reject(new Error('Google Client ID सेट नहीं है या Google library load नहीं हुई।'));
+ return new Promise((resolve,reject)=>{
+   const old=googleTokenClient.callback;
+   googleTokenClient.callback=(resp)=>{googleTokenClient.callback=old;if(resp.error){reject(new Error(resp.error));return;}googleAccessToken=resp.access_token;resolve(googleAccessToken);};
+   googleTokenClient.requestAccessToken({prompt:''});
+ });
+}
+async function driveFetch(url,opts={}){
+ const token=await getDriveToken();
+ opts.headers={...(opts.headers||{}),Authorization:'Bearer '+token};
+ let r=await fetch(url,opts);
+ if(r.status===401){googleAccessToken='';const t=await getDriveToken();opts.headers.Authorization='Bearer '+t;r=await fetch(url,opts);}
+ if(!r.ok){let msg='Drive error '+r.status;try{const j=await r.json();msg=j.error?.message||msg;}catch(e){}throw new Error(msg);}
+ return r;
+}
+async function ensureDriveFolder(){
+ if(driveFolderId)return driveFolderId;
+ const q=encodeURIComponent(`name='${DRIVE_FOLDER_NAME}' and mimeType='application/vnd.google-apps.folder' and trashed=false`);
+ const r=await driveFetch(`https://www.googleapis.com/drive/v3/files?q=${q}&spaces=drive&fields=files(id,name)&pageSize=10`);
+ const j=await r.json();
+ if(j.files?.length){driveFolderId=j.files[0].id;localStorage.setItem('sharda_drive_folder_id',driveFolderId);return driveFolderId;}
+ const create=await driveFetch('https://www.googleapis.com/drive/v3/files?fields=id,name',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:DRIVE_FOLDER_NAME,mimeType:'application/vnd.google-apps.folder'})});
+ const f=await create.json();driveFolderId=f.id;localStorage.setItem('sharda_drive_folder_id',driveFolderId);return driveFolderId;
+}
+function drivePayload(){return JSON.stringify({version:1,updatedAt:new Date().toISOString(),customers});}
+async function uploadDriveData(){
+ const folderId=await ensureDriveFolder();
+ const blob=new Blob([drivePayload()],{type:'application/json'});
+ if(!driveFileId){
+   const boundary='sharda_'+Date.now();
+   const body=new Blob([
+    `--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n`,
+    JSON.stringify({name:DRIVE_DATA_NAME,parents:[folderId],mimeType:'application/json'}),
+    `\r\n--${boundary}\r\nContent-Type: application/json\r\n\r\n`,blob,`\r\n--${boundary}--`
+   ]);
+   const r=await driveFetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,name',{method:'POST',headers:{'Content-Type':`multipart/related; boundary=${boundary}`},body});
+   const f=await r.json();driveFileId=f.id;localStorage.setItem('sharda_drive_file_id',driveFileId);
+ }else{
+   await driveFetch(`https://www.googleapis.com/upload/drive/v3/files/${driveFileId}?uploadType=media`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:blob});
+ }
+ setDriveStatus('☁️ Google Drive backup सफल: '+new Date().toLocaleString(),true);
+}
+async function syncToDrive(){
+ try{setDriveStatus('☁️ Drive में backup हो रहा है...');await uploadDriveData();}
+ catch(e){setDriveStatus('Backup नहीं हुआ: '+e.message);if(!googleAccessToken) alert('Google Drive पहले Connect करें।');}
+}
+async function syncFromDrive(){
+ try{
+  setDriveStatus('☁️ Drive से data लोड हो रहा है...');
+  await ensureDriveFolder();
+  if(!driveFileId){
+   const q=encodeURIComponent(`name='${DRIVE_DATA_NAME}' and '${driveFolderId}' in parents and trashed=false`);
+   const r=await driveFetch(`https://www.googleapis.com/drive/v3/files?q=${q}&spaces=drive&fields=files(id,name,modifiedTime)&pageSize=10`);const j=await r.json();
+   if(j.files?.length){driveFileId=j.files[0].id;localStorage.setItem('sharda_drive_file_id',driveFileId);} else {setDriveStatus('Drive में अभी कोई backup नहीं मिला।');return;}
+  }
+  const r=await driveFetch(`https://www.googleapis.com/drive/v3/files/${driveFileId}?alt=media`);const data=await r.json();
+  if(Array.isArray(data.customers)){customers=data.customers;persist();render();setDriveStatus('☁️ Drive से data सफलतापूर्वक load हो गया।',true);} else throw new Error('Backup file का format सही नहीं है।');
+ }catch(e){setDriveStatus('Drive से load नहीं हुआ: '+e.message);}
+}
+async function autoDriveBackup(){
+ if(localStorage.getItem('sharda_drive_connected')!=='1')return;
+ try{await uploadDriveData();}catch(e){setDriveStatus('Local save हो गया, लेकिन Drive backup नहीं हुआ: '+e.message);}
+}
+
+function saveCustomer(){
+ if(!get('name')||!get('mobile')){alert('Customer Name और Mobile Number जरूरी है');return;}
+ if(!garments.length){alert('कम से कम एक garment जोड़ें');return;}
+ const total=garments.reduce((s,g)=>s+Number(g.amount||0),0);
+ const adv=Number(get('advance')||0);
+ const old=customers.find(x=>x.id===editId);
+ const data={
+  id:editId||Date.now(),
+  name:get('name'), mobile:get('mobile'), extra:get('extra'),
+  takenDate:get('takenDate'), amount:total, advance:adv,
+  balance:Math.max(total-adv,0), notes:get('notes'),
+  extraMeasurements: measurementFields.filter(x=>x[0].startsWith('extra_')),
+  customerPhoto:customerPhotoData||(old?.customerPhoto||''),
+  garments:garments
+ };
+ if(editId) customers=customers.map(x=>x.id===editId?data:x); else customers.unshift(data);
+ persist(); resetForm(); render(); autoDriveBackup();
+}
+
+function persist(){localStorage.setItem('tailor_app_customers',JSON.stringify(customers));}
+
+function resetForm(){
+ editId=null; customerPhotoData=''; garments=[];
+ ['name','mobile','extra','takenDate','advance','notes'].forEach(id=>{
+  const e=document.getElementById(id);if(e)e.value='';
+ });
+ document.getElementById('amount').value=0;
+ document.getElementById('balance').value=0;
+ addGarment();
+}
+
+function editCustomer(id){
+ const x=customers.find(c=>c.id===id); if(!x)return;
+ editId=id; customerPhotoData=x.customerPhoto||'';
+ ['name','mobile','extra','takenDate','advance','notes'].forEach(id=>{
+  const e=document.getElementById(id);if(e)e.value=x[id]??'';
+ });
+ garments=(x.garments&&x.garments.length)?JSON.parse(JSON.stringify(x.garments)):[{
+  id:Date.now(),garment:x.garment||'Blouse',delivery:x.delivery||'',amount:Number(x.amount||0),
+  photo:x.photo||'',measurements:x.measurements||{},notes:''
+ }];
+// Preserve extra measurement names saved in the customer record.
+if(x.extraMeasurements) measurementFields=x.extraMeasurements;
+else measurementFields=JSON.parse(localStorage.getItem('sharda_measurement_fields')||'[]');
+ renderGarments(); updateSummary(); window.scrollTo({top:200,behavior:'smooth'});
+}
+
+function deleteCustomer(id){
+ if(confirm('Customer delete करना है?')){customers=customers.filter(x=>x.id!==id);persist();render();}
+}
+
+async function shareBill(id){
+ const x=customers.find(c=>c.id===id); if(!x)return;
+ const garments=(x.garments||[]);
+ let text=`SHARDA BOUTIQUE\n\nCustomer Name: ${x.name}\nTotal Amount: ₹${x.amount}\nAdvance: ₹${x.advance}\nBalance: ₹${x.balance}\n\n`;
+ garments.forEach((g,i)=>{ text+=`Garment ${i+1}: ${g.garment}\nWork Given Date: ${x.takenDate||'-'}\n`; });
+ text+='\nThank you 🙏';
+ const files=[];
+ for(let i=0;i<garments.length;i++){
+   const src=garments[i].photo;
+   if(!src) continue;
+   try{
+     const res=await fetch(src); const blob=await res.blob();
+     const ext=(blob.type||'image/jpeg').split('/')[1]||'jpg';
+     files.push(new File([blob],`SHARDA_BOUTIQUE_${i+1}.${ext}`,{type:blob.type||'image/jpeg'}));
+   }catch(e){}
+ }
+ try{
+   if(navigator.share){
+     const data={title:'SHARDA BOUTIQUE - Bill',text};
+     if(files.length && navigator.canShare && navigator.canShare({files})) data.files=files;
+     await navigator.share(data);
+   }else{
+     await navigator.clipboard.writeText(text);
+     alert('Share support नहीं है। Bill details copy हो गई हैं, अब जहाँ चाहें paste कर सकते हैं।');
+   }
+ }catch(e){ if(e && e.name!=='AbortError') alert('Share नहीं हो पाया। कृपया फिर से कोशिश करें।'); }
+}
+
+function whatsappCustomer(id){
+ const x=customers.find(c=>c.id===id); if(!x)return;
+ let msg=`SHARDA BOUTIQUE\n\nCustomer: ${x.name}\nTotal Amount: ₹${x.amount}\nAdvance: ₹${x.advance}\nBalance: ₹${x.balance}\n\n`;
+ (x.garments||[]).forEach((g,i)=>{
+   msg+=`Garment ${i+1}: ${g.garment}\n`;
+   msg+=`Work Given Date: ${x.takenDate||'-'}\n`;
+   msg+=`Amount: ₹${g.amount}\n`;
+   if(g.photo) msg+=`Dress Photo: ${g.photo}\n`;
+   msg+=`\n`;
+ });
+ msg+=`धन्यवाद 🙏`;
+ window.open(`https://wa.me/91${x.mobile.replace(/\D/g,'')}?text=${encodeURIComponent(msg)}`,'_blank');
+}
+function smsCustomer(id){
+ const x=customers.find(c=>c.id===id); if(!x)return;
+ let msg=`SHARDA BOUTIQUE\nCustomer: ${x.name}\nTotal: ₹${x.amount}\nAdvance: ₹${x.advance}\nBalance: ₹${x.balance}\n`;
+ (x.garments||[]).forEach((g,i)=>{
+   msg+=`\nGarment ${i+1}: ${g.garment}\nWork Given Date: ${x.takenDate||'-'}\n`;
+ });
+ window.location.href=`sms:${x.mobile}?body=${encodeURIComponent(msg)}`;
+}
+
+function billCustomer(id){
+ const x=customers.find(c=>c.id===id); if(!x)return;
+ const garmentBlocks=(x.garments||[]).map((g,i)=>`
+   <div class="box">
+    <h3>${esc(g.garment)}</h3>
+    <div><b>Work Given Date:</b> ${esc(x.takenDate||'-')}</div>
+    ${g.photo?`<img class="photo" src="${g.photo}">`:''}
+   </div>`).join('');
+ const w=window.open('','_blank'); if(!w){alert('Popup allow करें');return;}
+ w.document.write(`<html><head><title>SHARDA BOUTIQUE - ${esc(x.name)}</title>
+ <style>body{font-family:Arial;padding:22px;max-width:700px;margin:auto}.head{text-align:center;border-bottom:2px solid #111;padding-bottom:12px}.shop{font-size:28px;font-weight:800}.contact{font-size:14px}.box{border:1px solid #bbb;border-radius:10px;padding:14px;margin:12px 0}.photo{width:150px;height:150px;object-fit:cover;border-radius:10px;margin-top:10px}.amount{font-size:18px;line-height:1.9}.thanks{text-align:center;margin-top:25px}@media print{button{display:none}}</style></head>
+ <body><div class="head"><div class="shop">SHARDA BOUTIQUE</div><div class="contact">90 33 55 85 22 / 73 591 319 39</div></div>
+ <div class="box"><b>Customer Name:</b> ${esc(x.name)}</div>
+ <div class="box amount"><b>Total Amount:</b> ₹${x.amount}<br><b>Advance:</b> ₹${x.advance}<br><b>Balance:</b> ₹${x.balance}</div>
+ ${garmentBlocks}
+ <div class="thanks">Thank you 🙏<br><br><button onclick="window.print()">🖨️ Print / Save PDF</button></div></body></html>`);
+ w.document.close();
+}
+function printCustomer(id){billCustomer(id);}
+
+function render(){
+ const q=get('search').toLowerCase();
+ const filtered=customers.filter(x=>(x.name+' '+x.mobile+' '+(x.extra||'')+' '+(x.garments||[]).map(g=>g.garment).join(' ')).toLowerCase().includes(q));
+ const total=customers.reduce((s,x)=>s+Number(x.amount||0),0);
+ const bal=customers.reduce((s,x)=>s+Number(x.balance||0),0);
+ document.getElementById('totalCustomers').textContent=customers.length;
+ document.getElementById('totalAmount').textContent='₹'+total;
+ document.getElementById('totalBalance').textContent='₹'+bal;
+ document.getElementById('list').innerHTML=filtered.length?filtered.map(x=>{
+  const gs=(x.garments||[]).map(g=>g.garment).join(', ');
+  return `<div class="customer">
+   <img src="${x.customerPhoto||''}" onerror="this.style.visibility='hidden'">
+   <div><div class="name">${esc(x.name)}</div>
+   <div class="meta">📞 ${esc(x.mobile)} · ${esc(gs||'-')}<br>
+   <span class="badge">Garments ${(x.garments||[]).length}</span>
+   <span class="badge">Total ₹${x.amount||0}</span><span class="badge">Advance ₹${x.advance||0}</span><span class="badge">Balance ₹${x.balance||0}</span>
+   <br>${x.takenDate?`काम: ${x.takenDate}<br>`:''}${x.extra?`Extra: ${esc(x.extra)}`:''}</div></div>
+   <div class="actions"><button class="blue" onclick="editCustomer(${x.id})">Edit</button><button class="green" onclick="billCustomer(${x.id})">Bill</button><button class="green" onclick="whatsappCustomer(${x.id})">WhatsApp</button><button class="blue" onclick="shareBill(${x.id})">Share Bill</button><button class="blue" onclick="smsCustomer(${x.id})">Message</button><button onclick="printCustomer(${x.id})">Print</button><button class="red" onclick="deleteCustomer(${x.id})">Delete</button></div>
+  </div>`;
+ }).join(''):'<p style="color:#6e6e73">अभी कोई customer save नहीं है।</p>';
+}
+
+document.getElementById('googleClientId').value=localStorage.getItem('sharda_google_client_id')||'';
+if(localStorage.getItem('sharda_drive_connected')==='1') setDriveStatus('Google Drive connected है। Save Customer करने पर automatic backup होगा।',true);
+if(!garments.length) addGarment(); else renderGarments(); updateSummary(); render();
+</script>
+</body>
+</html>

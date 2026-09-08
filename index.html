@@ -71,7 +71,7 @@ textarea{resize:vertical}.buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top
 <div class="card" style="background:#f7f7f8;margin-top:12px">
 <h2>Payment Summary</h2>
 <div class="grid">
-<div class="field"><label>Grand Total ₹</label><input id="amount" type="number" min="0" readonly></div>
+<div class="field"><label>Grand Total ₹</label><input id="amount" type="number" min="0" inputmode="decimal" oninput="updateSummary()" placeholder="कुल राशि डालें"></div>
 <div class="field"><label>Advance ₹</label><input id="advance" type="number" min="0" oninput="updateSummary()"></div>
 <div class="field"><label>Balance ₹</label><input id="balance" type="number" min="0" readonly></div>
 </div>
@@ -253,9 +253,8 @@ function changePhoto(id,file){
  readFile(file,data=>{g.photo=data;renderGarments();updateSummary();});
 }
 function updateSummary(){
- const total=garments.reduce((s,g)=>s+Number(g.amount||0),0);
+ const total=Number(document.getElementById('amount')?.value||0);
  const adv=Number(document.getElementById('advance')?.value||0);
- document.getElementById('amount').value=total;
  document.getElementById('balance').value=Math.max(total-adv,0);
 }
 
@@ -349,7 +348,8 @@ async function autoDriveBackup(){
 function saveCustomer(){
  if(!get('name')||!get('mobile')){alert('Customer Name और Mobile Number जरूरी है');return;}
  if(!garments.length){alert('कम से कम एक garment जोड़ें');return;}
- const total=garments.reduce((s,g)=>s+Number(g.amount||0),0);
+ const total=Number(get('amount')||0);
+ if(total<0){alert('Grand Total सही राशि डालें');return;}
  const adv=Number(get('advance')||0);
  const old=customers.find(x=>x.id===editId);
  const data={
@@ -372,7 +372,7 @@ function resetForm(){
  ['name','mobile','extra','takenDate','advance','notes'].forEach(id=>{
   const e=document.getElementById(id);if(e)e.value='';
  });
- document.getElementById('amount').value=0;
+ document.getElementById('amount').value='';
  document.getElementById('balance').value=0;
  addGarment();
 }
@@ -383,6 +383,7 @@ function editCustomer(id){
  ['name','mobile','extra','takenDate','advance','notes'].forEach(id=>{
   const e=document.getElementById(id);if(e)e.value=x[id]??'';
  });
+ document.getElementById('amount').value=Number(x.amount||0);
  garments=(x.garments&&x.garments.length)?JSON.parse(JSON.stringify(x.garments)):[{
   id:Date.now(),garment:x.garment||'Blouse',delivery:x.delivery||'',amount:Number(x.amount||0),
   photo:x.photo||'',measurements:x.measurements||{},notes:''

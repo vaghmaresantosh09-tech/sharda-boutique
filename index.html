@@ -25,7 +25,7 @@ textarea{resize:vertical}.buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top
 #installBtn{display:none;width:100%;margin-top:8px}
 .driveStatus{font-size:13px;color:var(--muted);margin-top:8px;line-height:1.5}
 @media(max-width:700px){.grid,.measures{grid-template-columns:1fr 1fr}.customer{grid-template-columns:58px 1fr}.customer img{width:58px;height:58px}.actions{grid-column:1/3}.stats{grid-template-columns:1fr 1fr 1fr}}
-</style>
+.suggestions{position:absolute;left:0;right:0;top:100%;z-index:30;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 5px 18px #0002;overflow:hidden}.suggestions button{display:block;width:100%;text-align:left;background:#fff;border-radius:0;border-bottom:1px solid var(--line)}.field.rel{position:relative}.modebar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.modebar button.active{background:#111;color:#fff}.history{border:1px dashed #bbb;border-radius:12px;padding:10px;margin:10px 0;background:#fafafa}.history-item{padding:8px 0;border-bottom:1px solid #eee}.history-item:last-child{border-bottom:0}.reminder{border-left:4px solid #111;background:#f7f7f8;padding:10px;border-radius:10px;margin:8px 0}.reminder strong{display:block}.smallbtn{padding:7px 9px;font-size:12px}.status{font-size:13px;color:var(--muted);margin-top:6px}.photoPreview{width:100px;height:100px;object-fit:cover;border-radius:10px;margin-top:8px}</style>
 </head>
 <body>
 <header>🧵 SHARDA BOUTIQUE<br><small style='font-size:12px;font-weight:400'>90 33 55 85 22 / 73 591 319 39</small></header>
@@ -52,21 +52,48 @@ textarea{resize:vertical}.buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top
 </div>
 
 <div class="card">
+<h2>🔔 Delivery Reminders</h2>
+<div class="buttons"><button class="blue" type="button" onclick="requestNotifications()">🔔 Notification ON</button><button class="secondary" type="button" onclick="checkReminders(true)">🔄 Check Reminders</button></div>
+<div id="reminderList" class="status">कोई reminder नहीं। Delivery date से 2 दिन पहले reminder शुरू होगा।</div>
+</div>
+
+<div class="card">
 <h2>Customer Details</h2>
 <div style="background:#f2f2f4;padding:9px;border-radius:10px;margin-bottom:10px"><b>SHARDA BOUTIQUE</b> · 90 33 55 85 22 / 73 591 319 39</div>
 
 <div class="grid">
-<div class="field"><label>Customer Name *</label><input id="name" placeholder="नाम"></div>
-<div class="field"><label>Mobile Number *</label><input id="mobile" inputmode="numeric" placeholder="मोबाइल नंबर"></div>
+<div class="field rel"><label>Customer Name *</label><input id="name" placeholder="नाम" autocomplete="off" oninput="customerTyping()"><div id="nameSuggestions" class="suggestions"></div></div>
+<div class="field rel"><label>Mobile Number *</label><input id="mobile" inputmode="numeric" placeholder="मोबाइल नंबर" autocomplete="off" oninput="customerTyping()"><div id="mobileSuggestions" class="suggestions"></div></div>
 <div class="field"><label>Extra Information</label><input id="extra" placeholder="जैसे Address / Customer Note"></div>
 <div class="field"><label>काम लेने की तारीख</label><input id="takenDate" type="date"></div>
 </div>
 
+<div class="modebar">
+<button id="tailoringModeBtn" type="button" class="secondary active" onclick="setWorkType('tailoring')">🧵 Tailoring / New Order</button>
+<button id="alterationModeBtn" type="button" class="secondary" onclick="setWorkType('alteration')">✂️ Alteration</button>
+</div>
+<div id="existingCustomerStatus" class="status"></div>
+<div id="historyBox"></div>
+
+<div id="tailoringSection">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px;gap:8px">
 <h2 style="margin:0">Garments</h2>
 <button class="secondary" type="button" onclick="addGarment()">＋ Add Garment</button>
 </div>
 <div id="garmentList"></div>
+</div>
+
+<div id="alterationSection" style="display:none" class="card">
+<h2>✂️ Alteration Details</h2>
+<div class="grid">
+ <div class="field"><label>Alteration Amount ₹</label><input id="alterationAmount" type="number" min="0" inputmode="decimal" oninput="updateSummary()" placeholder="राशि"></div>
+ <div class="field"><label>Delivery Date</label><input id="alterationDelivery" type="date" oninput="updateSummary()"></div>
+ <div class="field"><label>Alteration Photo</label><input id="alterationPhoto" type="file" accept="image/*" onchange="changeAlterationPhoto(this.files[0])"></div>
+ <div class="field"><label>Size / Measurements</label><input id="alterationSize" placeholder="जैसे waist 32, length 40"></div>
+</div>
+<div id="alterationPhotoPreview"></div>
+<div class="field" style="margin-top:10px"><label>Alteration Details / Notes</label><textarea id="alterationNotes" rows="3" placeholder="क्या alteration करना है..."></textarea></div>
+</div>
 
 <div class="card" style="background:#f7f7f8;margin-top:12px">
 <h2>Payment Summary</h2>
@@ -116,6 +143,7 @@ const defaultExtraMeasurements=JSON.parse(localStorage.getItem('sharda_measureme
 let measurementFields=defaultExtraMeasurements;
 let customers=JSON.parse(localStorage.getItem('tailor_app_customers')||'[]');
 let editId=null, customerPhotoData='', deferredPrompt=null, garments=[];
+let currentCustomerId=null, editingOrderId=null, workType='tailoring', alterationPhotoData='', alarmTimer=null;
 let googleTokenClient=null, googleAccessToken='', driveFolderId=localStorage.getItem('sharda_drive_folder_id')||'', driveFileId=localStorage.getItem('sharda_drive_file_id')||'';
 const DRIVE_SCOPE='https://www.googleapis.com/auth/drive.file';
 const DRIVE_FOLDER_NAME='SHARDA BOUTIQUE';
@@ -253,7 +281,7 @@ function changePhoto(id,file){
  readFile(file,data=>{g.photo=data;renderGarments();updateSummary();});
 }
 function updateSummary(){
- const total=Number(document.getElementById('amount')?.value||0);
+ const total=workType==='alteration'?Number(document.getElementById('alterationAmount')?.value||0):Number(document.getElementById('amount')?.value||0);
  const adv=Number(document.getElementById('advance')?.value||0);
  document.getElementById('balance').value=Math.max(total-adv,0);
 }
@@ -345,54 +373,96 @@ async function autoDriveBackup(){
  try{await uploadDriveData();}catch(e){setDriveStatus('Local save हो गया, लेकिन Drive backup नहीं हुआ: '+e.message);}
 }
 
+function normalizeName(v){return String(v||'').trim().toLowerCase().replace(/\s+/g,' ');}
+function normalizeMobile(v){return String(v||'').replace(/\D/g,'');}
+function customerOrders(x){
+ if(Array.isArray(x.orders)) return x.orders;
+ // पुराने format को पहले order में migrate करें
+ return [{id:x.id||Date.now(),type:'tailoring',takenDate:x.takenDate||'',garments:Array.isArray(x.garments)?JSON.parse(JSON.stringify(x.garments)):[],amount:Number(x.amount||0),advance:Number(x.advance||0),balance:Number(x.balance||0),notes:x.notes||'',alarmEnabled:true,alarmDone:false,alarmSnoozedUntil:0}];
+}
+function ensureCustomerOrders(x){
+ if(!Array.isArray(x.orders)) x.orders=customerOrders(x);
+ return x.orders;
+}
+function clearSuggestions(){['nameSuggestions','mobileSuggestions'].forEach(id=>{const e=document.getElementById(id);if(e)e.innerHTML='';});}
+function customerTyping(){
+ const n=get('name'), m=normalizeMobile(get('mobile'));
+ const matches=customers.filter(x=>{
+  const xn=normalizeName(x.name), xm=normalizeMobile(x.mobile);
+  return (n && xn.includes(normalizeName(n))) || (m && xm.includes(m));
+ }).slice(0,6);
+ const html=matches.map(x=>`<button type="button" onclick="openCustomerForNewOrder(${x.id})"><b>${esc(x.name)}</b><br><span class="meta">📞 ${esc(x.mobile)} · ${ensureCustomerOrders(x).length} old order(s)</span></button>`).join('');
+ if(n||m){document.getElementById('nameSuggestions').innerHTML=html;document.getElementById('mobileSuggestions').innerHTML=html;} else clearSuggestions();
+ const exact=customers.find(x=>normalizeName(x.name)===normalizeName(n)&&normalizeMobile(x.mobile)===m&&n&&m);
+ if(exact && currentCustomerId!==exact.id){openCustomerForNewOrder(exact.id);}
+}
+function openCustomerForNewOrder(id){
+ const x=customers.find(c=>c.id===id);if(!x)return;
+ currentCustomerId=id; editingOrderId=null; editId=null; workType='tailoring'; customerPhotoData=x.customerPhoto||''; alterationPhotoData='';
+ ['name','mobile','extra'].forEach(k=>{const e=document.getElementById(k);if(e)e.value=x[k]??'';});
+ document.getElementById('takenDate').value='';document.getElementById('amount').value='';document.getElementById('advance').value='';document.getElementById('balance').value=0;document.getElementById('notes').value='';
+ document.getElementById('alterationAmount').value='';document.getElementById('alterationDelivery').value='';document.getElementById('alterationSize').value='';document.getElementById('alterationNotes').value='';document.getElementById('alterationPhoto').value='';document.getElementById('alterationPhotoPreview').innerHTML='';
+ garments=[];addGarment();setWorkType('tailoring');
+ clearSuggestions();renderHistory(x);document.getElementById('existingCustomerStatus').textContent='✅ पुराना customer खुल गया है। नीचे नया Order/Alteration भरें—पुराने records सुरक्षित रहेंगे।';window.scrollTo({top:200,behavior:'smooth'});
+}
+function setWorkType(type){
+ workType=type;document.getElementById('tailoringModeBtn').classList.toggle('active',type==='tailoring');document.getElementById('alterationModeBtn').classList.toggle('active',type==='alteration');
+ document.getElementById('tailoringSection').style.display=type==='tailoring'?'block':'none';document.getElementById('alterationSection').style.display=type==='alteration'?'block':'none';updateSummary();
+}
+function renderHistory(x){
+ const orders=ensureCustomerOrders(x); if(!orders.length){document.getElementById('historyBox').innerHTML='';return;}
+ document.getElementById('historyBox').innerHTML=`<div class="history"><b>📚 पुराना रिकॉर्ड — ${orders.length}</b>${orders.slice().reverse().map((o,i)=>{
+  const label=o.type==='alteration'?'✂️ Alteration':'🧵 Tailoring';
+  const gs=(o.garments||[]).map(g=>g.garment).join(', ');
+  return `<div class="history-item"><b>${label}</b> · ${esc(o.takenDate||o.date||'-')} · ₹${Number(o.amount||0)}<br>${esc(gs||o.size||o.notes||'')}</div>`;
+ }).join('')}</div>`;
+}
+function collectCurrentRecord(){
+ if(workType==='alteration'){
+  const amount=Number(get('alterationAmount')||0), delivery=get('alterationDelivery');
+  return {id:Date.now()+Math.random(),type:'alteration',takenDate:get('takenDate'),delivery,amount,advance:Number(get('advance')||0),balance:Math.max(amount-Number(get('advance')||0),0),photo:alterationPhotoData,size:get('alterationSize'),notes:get('alterationNotes'),alarmEnabled:true,alarmDone:false,alarmSnoozedUntil:0};
+ }
+ const amount=Number(get('amount')||0), adv=Number(get('advance')||0);
+ return {id:Date.now()+Math.random(),type:'tailoring',takenDate:get('takenDate'),garments:JSON.parse(JSON.stringify(garments)),amount,advance:adv,balance:Math.max(amount-adv,0),notes:get('notes'),alarmEnabled:true,alarmDone:false,alarmSnoozedUntil:0};
+}
 function saveCustomer(){
- if(!get('name')||!get('mobile')){alert('Customer Name और Mobile Number जरूरी है');return;}
- if(!garments.length){alert('कम से कम एक garment जोड़ें');return;}
- const total=Number(get('amount')||0);
- if(total<0){alert('Grand Total सही राशि डालें');return;}
- const adv=Number(get('advance')||0);
- const old=customers.find(x=>x.id===editId);
- const data={
-  id:editId||Date.now(),
-  name:get('name'), mobile:get('mobile'), extra:get('extra'),
-  takenDate:get('takenDate'), amount:total, advance:adv,
-  balance:Math.max(total-adv,0), notes:get('notes'),
-  extraMeasurements: measurementFields.filter(x=>x[0].startsWith('extra_')),
-  customerPhoto:customerPhotoData||(old?.customerPhoto||''),
-  garments:garments
- };
- if(editId) customers=customers.map(x=>x.id===editId?data:x); else customers.unshift(data);
- persist(); resetForm(); render(); autoDriveBackup();
+ const name=get('name'), mobile=get('mobile'); if(!name||!mobile){alert('Customer Name और Mobile Number जरूरी है');return;}
+ if(workType==='tailoring'&&!garments.length){alert('कम से कम एक garment जोड़ें');return;}
+ if(workType==='alteration'&&!get('alterationDelivery')){alert('Alteration की Delivery Date डालें');return;}
+ const rec=collectCurrentRecord();
+ if(currentCustomerId){
+  const x=customers.find(c=>c.id===currentCustomerId); if(!x)return;
+  const orders=ensureCustomerOrders(x);
+  if(editingOrderId){ const idx=orders.findIndex(o=>String(o.id)===String(editingOrderId)); if(idx>=0) orders[idx]=rec; else orders.push(rec); } else orders.push(rec);
+  x.name=name;x.mobile=mobile;x.extra=get('extra');x.customerPhoto=customerPhotoData||x.customerPhoto||'';
+  // Customer totals = सभी पुराने + नए orders का total
+  x.amount=x.orders.reduce((s,o)=>s+Number(o.amount||0),0);x.advance=x.orders.reduce((s,o)=>s+Number(o.advance||0),0);x.balance=x.orders.reduce((s,o)=>s+Number(o.balance||0),0);
+  x.takenDate=rec.takenDate||x.takenDate||'';x.garments=x.orders.flatMap(o=>o.garments||[]);
+ }else{
+  const duplicate=customers.find(x=>normalizeName(x.name)===normalizeName(name)&&normalizeMobile(x.mobile)===normalizeMobile(mobile));
+  if(duplicate){openCustomerForNewOrder(duplicate.id);alert('यह customer पहले से मौजूद है। नया order उसके अंदर खुल गया है—अब details भरकर Save करें।');return;}
+  const x={id:Date.now(),name,mobile,extra:get('extra'),customerPhoto:customerPhotoData||'',orders:[rec],amount:Number(rec.amount||0),advance:Number(rec.advance||0),balance:Number(rec.balance||0),takenDate:rec.takenDate||''};
+  x.garments=rec.garments||[];customers.unshift(x);
+ }
+ persist();render();const saved=customers.find(c=>c.id===currentCustomerId)||customers[0];resetForm();if(saved)renderHistory(saved);autoDriveBackup();checkReminders(true);alert('Customer / Order successfully save हो गया। पुराना record सुरक्षित है।');
 }
-
 function persist(){localStorage.setItem('tailor_app_customers',JSON.stringify(customers));}
-
 function resetForm(){
- editId=null; customerPhotoData=''; garments=[];
- ['name','mobile','extra','takenDate','advance','notes'].forEach(id=>{
-  const e=document.getElementById(id);if(e)e.value='';
- });
- document.getElementById('amount').value='';
- document.getElementById('balance').value=0;
- addGarment();
+ editId=null;currentCustomerId=null;editingOrderId=null;customerPhotoData='';alterationPhotoData='';garments=[];workType='tailoring';clearSuggestions();document.getElementById('existingCustomerStatus').textContent='';document.getElementById('historyBox').innerHTML='';
+ ['name','mobile','extra','takenDate','advance','notes','alterationAmount','alterationDelivery','alterationSize','alterationNotes'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});document.getElementById('alterationPhoto').value='';document.getElementById('alterationPhotoPreview').innerHTML='';document.getElementById('amount').value='';document.getElementById('balance').value=0;setWorkType('tailoring');addGarment();
 }
-
 function editCustomer(id){
- const x=customers.find(c=>c.id===id); if(!x)return;
- editId=id; customerPhotoData=x.customerPhoto||'';
- ['name','mobile','extra','takenDate','advance','notes'].forEach(id=>{
-  const e=document.getElementById(id);if(e)e.value=x[id]??'';
- });
- document.getElementById('amount').value=Number(x.amount||0);
- garments=(x.garments&&x.garments.length)?JSON.parse(JSON.stringify(x.garments)):[{
-  id:Date.now(),garment:x.garment||'Blouse',delivery:x.delivery||'',amount:Number(x.amount||0),
-  photo:x.photo||'',measurements:x.measurements||{},notes:''
- }];
-// Preserve extra measurement names saved in the customer record.
-if(x.extraMeasurements) measurementFields=x.extraMeasurements;
-else measurementFields=JSON.parse(localStorage.getItem('sharda_measurement_fields')||'[]');
- renderGarments(); updateSummary(); window.scrollTo({top:200,behavior:'smooth'});
+ const x=customers.find(c=>c.id===id);if(!x)return;currentCustomerId=id;editId=null;customerPhotoData=x.customerPhoto||'';ensureCustomerOrders(x);
+ document.getElementById('name').value=x.name||'';document.getElementById('mobile').value=x.mobile||'';document.getElementById('extra').value=x.extra||'';
+ // Edit button opens the latest order for correction; old orders remain in history.
+ const o=x.orders[x.orders.length-1]; editingOrderId=o.id;
+ document.getElementById('takenDate').value=o.takenDate||'';document.getElementById('notes').value=o.notes||'';document.getElementById('advance').value=o.advance||'';document.getElementById('amount').value=o.amount||'';
+ garments=o.type==='tailoring'&&o.garments?.length?JSON.parse(JSON.stringify(o.garments)):[];if(!garments.length)addGarment();
+ setWorkType(o.type==='alteration'?'alteration':'tailoring');
+ if(o.type==='alteration'){document.getElementById('alterationAmount').value=o.amount||'';document.getElementById('alterationDelivery').value=o.delivery||'';document.getElementById('alterationSize').value=o.size||'';document.getElementById('alterationNotes').value=o.notes||'';alterationPhotoData=o.photo||'';document.getElementById('alterationPhotoPreview').innerHTML=alterationPhotoData?`<img class="photoPreview" src="${alterationPhotoData}">`:'';}
+ renderGarments();updateSummary();renderHistory(x);document.getElementById('existingCustomerStatus').textContent='✏️ Latest order edit mode. Save करने पर latest order update होगा।';window.scrollTo({top:200,behavior:'smooth'});
 }
+function changeAlterationPhoto(file){readFile(file,data=>{alterationPhotoData=data;document.getElementById('alterationPhotoPreview').innerHTML=data?`<img class="photoPreview" src="${data}">`:'';});}
 
 function deleteCustomer(id){
  if(confirm('Customer delete करना है?')){customers=customers.filter(x=>x.id!==id);persist();render();}
@@ -470,29 +540,50 @@ function printCustomer(id){billCustomer(id);}
 
 function render(){
  const q=get('search').toLowerCase();
- const filtered=customers.filter(x=>(x.name+' '+x.mobile+' '+(x.extra||'')+' '+(x.garments||[]).map(g=>g.garment).join(' ')).toLowerCase().includes(q));
- const total=customers.reduce((s,x)=>s+Number(x.amount||0),0);
- const bal=customers.reduce((s,x)=>s+Number(x.balance||0),0);
- document.getElementById('totalCustomers').textContent=customers.length;
- document.getElementById('totalAmount').textContent='₹'+total;
- document.getElementById('totalBalance').textContent='₹'+bal;
+ const filtered=customers.filter(x=>(x.name+' '+x.mobile+' '+(x.extra||'')+' '+JSON.stringify(ensureCustomerOrders(x))).toLowerCase().includes(q));
+ const total=customers.reduce((s,x)=>s+Number(x.amount||0),0),bal=customers.reduce((s,x)=>s+Number(x.balance||0),0);
+ document.getElementById('totalCustomers').textContent=customers.length;document.getElementById('totalAmount').textContent='₹'+total;document.getElementById('totalBalance').textContent='₹'+bal;
  document.getElementById('list').innerHTML=filtered.length?filtered.map(x=>{
-  const gs=(x.garments||[]).map(g=>g.garment).join(', ');
-  return `<div class="customer">
-   <img src="${x.customerPhoto||''}" onerror="this.style.visibility='hidden'">
-   <div><div class="name">${esc(x.name)}</div>
-   <div class="meta">📞 ${esc(x.mobile)} · ${esc(gs||'-')}<br>
-   <span class="badge">Garments ${(x.garments||[]).length}</span>
-   <span class="badge">Total ₹${x.amount||0}</span><span class="badge">Advance ₹${x.advance||0}</span><span class="badge">Balance ₹${x.balance||0}</span>
-   <br>${x.takenDate?`काम: ${x.takenDate}<br>`:''}${x.extra?`Extra: ${esc(x.extra)}`:''}</div></div>
-   <div class="actions"><button class="blue" onclick="editCustomer(${x.id})">Edit</button><button class="green" onclick="billCustomer(${x.id})">Bill</button><button class="green" onclick="whatsappCustomer(${x.id})">WhatsApp</button><button class="blue" onclick="shareBill(${x.id})">Share Bill</button><button class="blue" onclick="smsCustomer(${x.id})">Message</button><button onclick="printCustomer(${x.id})">Print</button><button class="red" onclick="deleteCustomer(${x.id})">Delete</button></div>
-  </div>`;
+  const orders=ensureCustomerOrders(x), latest=orders[orders.length-1]||{};const gs=orders.flatMap(o=>o.garments||[]).map(g=>g.garment).filter(Boolean).join(', ');
+  const nextDates=orders.map(o=>o.type==='alteration'?o.delivery:(o.garments||[]).map(g=>g.delivery).filter(Boolean).join(', ')).filter(Boolean).join(', ');
+  return `<div class="customer"><img src="${x.customerPhoto||''}" onerror="this.style.visibility='hidden'">\n   <div><div class="name">${esc(x.name)}</div><div class="meta">📞 ${esc(x.mobile)} · ${orders.length} Order(s)<br><span class="badge">Total ₹${x.amount||0}</span><span class="badge">Advance ₹${x.advance||0}</span><span class="badge">Balance ₹${x.balance||0}</span><br>🧵 ${esc(gs||'')} ${orders.some(o=>o.type==='alteration')?' · ✂️ Alteration':''}<br>${nextDates?'🚚 Delivery: '+esc(nextDates):''}</div></div>\n   <div class="actions"><button class="blue" onclick="openCustomerForNewOrder(${x.id})">＋ New Order</button><button class="blue" onclick="editCustomer(${x.id})">Edit</button><button class="green" onclick="billCustomer(${x.id})">Bill</button><button class="green" onclick="shareBill(${x.id})">Share</button><button class="blue" onclick="whatsappCustomer(${x.id})">WhatsApp</button><button class="blue" onclick="smsCustomer(${x.id})">Message</button><button onclick="printCustomer(${x.id})">Print</button><button class="red" onclick="deleteCustomer(${x.id})">Delete</button></div>\n  </div>`;
  }).join(''):'<p style="color:#6e6e73">अभी कोई customer save नहीं है।</p>';
+ renderReminders();
 }
-
+function allDeliveries(){
+ const out=[];
+ customers.forEach(x=>{
+  ensureCustomerOrders(x).forEach(o=>{
+   if(o.type==='alteration'){
+    if(o.delivery) out.push({x,o,date:o.delivery,label:'✂️ Alteration'});
+   } else {
+    (o.garments||[]).forEach(g=>{
+     if(g.delivery) out.push({x,o,g,date:g.delivery,label:'🧵 '+(g.garment||'Garment')});
+    });
+   }
+  });
+ });
+ return out;
+}
+function daysUntil(dateStr){const d=new Date(dateStr+'T00:00:00');const t=new Date();t.setHours(0,0,0,0);return Math.ceil((d-t)/86400000);}
+function requestNotifications(){if(!('Notification' in window)){alert('इस browser में notification support नहीं है।');return;}Notification.requestPermission().then(p=>{alert(p==='granted'?'🔔 Notification ON हो गया।':'Notification permission नहीं मिला।');checkReminders(true);});}
+function reminderKey(x,o,g){return `${x.id}_${o.id}_${g?.id||'alt'}`;}
+function snoozeReminder(key){localStorage.setItem('sharda_snooze_'+key,String(Date.now()+60*60*1000));renderReminders();}
+function disableReminder(key){localStorage.setItem('sharda_disabled_'+key,'1');renderReminders();}
+function doneReminder(key){localStorage.setItem('sharda_done_'+key,'1');renderReminders();}
+function renderReminders(){
+ const now=Date.now();const due=allDeliveries().filter(r=>{const d=daysUntil(r.date);const key=reminderKey(r.x,r.o,r.g);return d<=2&&d>=0&&!localStorage.getItem('sharda_disabled_'+key)&&!localStorage.getItem('sharda_done_'+key)&&Number(localStorage.getItem('sharda_snooze_'+key)||0)<=now;});
+ const box=document.getElementById('reminderList');if(!box)return;if(!due.length){box.innerHTML='कोई active reminder नहीं।';return;}
+ box.innerHTML=due.map(r=>{const d=daysUntil(r.date),key=reminderKey(r.x,r.o,r.g);return `<div class="reminder"><strong>🔔 ${esc(r.x.name)} — ${esc(r.label)}</strong>📞 ${esc(r.x.mobile)} · Delivery: ${esc(r.date)} · ${d===0?'आज':d===1?'कल':'2 दिन बाद'}<div class="buttons"><button class="smallbtn" onclick="snoozeReminder('${key}')">⏰ 1 घंटे Push</button><button class="smallbtn" onclick="disableReminder('${key}')">🔕 Band</button><button class="smallbtn" onclick="doneReminder('${key}')">✅ Done</button></div></div>`;}).join('');
+}
+function checkReminders(force=false){
+ const due=allDeliveries().filter(r=>{const d=daysUntil(r.date),key=reminderKey(r.x,r.o,r.g);return d<=2&&d>=0&&!localStorage.getItem('sharda_disabled_'+key)&&!localStorage.getItem('sharda_done_'+key)&&Number(localStorage.getItem('sharda_snooze_'+key)||0)<=Date.now();});
+ renderReminders();
+ if(force||due.length){if('Notification' in window&&Notification.permission==='granted'){const shownKey='sharda_last_notified';const stamp=new Date().toISOString().slice(0,10);if(localStorage.getItem(shownKey)!==stamp&&due.length){new Notification('SHARDA BOUTIQUE — Delivery Reminder',{body:due.map(r=>`${r.x.name} • ${r.label} • ${r.date}`).slice(0,3).join('\n')});localStorage.setItem(shownKey,stamp);}}}
+}
 document.getElementById('googleClientId').value=localStorage.getItem('sharda_google_client_id')||'';
 if(localStorage.getItem('sharda_drive_connected')==='1') setDriveStatus('Google Drive connected है। Save Customer करने पर automatic backup होगा।',true);
-if(!garments.length) addGarment(); else renderGarments(); updateSummary(); render();
+customers.forEach(x=>ensureCustomerOrders(x));persist(); if(!garments.length) addGarment(); else renderGarments(); updateSummary(); render(); checkReminders(true); alarmTimer=setInterval(()=>checkReminders(false),60000);
 </script>
 </body>
 </html>

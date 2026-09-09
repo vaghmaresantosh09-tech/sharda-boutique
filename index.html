@@ -106,7 +106,7 @@ textarea{resize:vertical}.buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top
 
 <div class="field" style="margin-top:10px"><label>Notes / Order Details</label><textarea id="notes" rows="3" placeholder="Extra notes, fitting, design, fabric notes..."></textarea></div>
 <div class="buttons">
-<button class="primary" onclick="saveCustomer()">💾 Save Customer</button>
+<button class="primary" type="button" onclick="saveCustomer()">💾 Save Customer</button>
 <button class="secondary" onclick="resetForm()">Clear</button>
 </div>
 </div>
@@ -141,7 +141,15 @@ const garmentMeasurementDefaults={
 };
 const defaultExtraMeasurements=JSON.parse(localStorage.getItem('sharda_measurement_fields')||'[]');
 let measurementFields=defaultExtraMeasurements;
-let customers=JSON.parse(localStorage.getItem('tailor_app_customers')||'[]');
+const CUSTOMER_STORAGE_KEY='tailor_app_customers_v2';
+function loadCustomers(){
+  const keys=[CUSTOMER_STORAGE_KEY,'tailor_app_customers'];
+  for(const k of keys){
+    try{const raw=localStorage.getItem(k); if(raw){const arr=JSON.parse(raw); if(Array.isArray(arr)&&arr.length) return arr;}}catch(e){}
+  }
+  return [];
+}
+let customers=loadCustomers();
 let editId=null, customerPhotoData='', deferredPrompt=null, garments=[];
 let currentCustomerId=null, editingOrderId=null, workType='tailoring', alterationPhotoData='', alarmTimer=null;
 let googleTokenClient=null, googleAccessToken='', driveFolderId=localStorage.getItem('sharda_drive_folder_id')||'', driveFileId=localStorage.getItem('sharda_drive_file_id')||'';
@@ -443,10 +451,22 @@ function saveCustomer(){
   if(duplicate){openCustomerForNewOrder(duplicate.id);alert('यह customer पहले से मौजूद है। नया order उसके अंदर खुल गया है—अब details भरकर Save करें।');return;}
   const x={id:Date.now(),name,mobile,extra:get('extra'),customerPhoto:customerPhotoData||'',orders:[rec],amount:Number(rec.amount||0),advance:Number(rec.advance||0),balance:Number(rec.balance||0),takenDate:rec.takenDate||''};
   x.garments=rec.garments||[];customers.unshift(x);
+  currentCustomerId=x.id;
  }
- persist();render();const saved=customers.find(c=>c.id===currentCustomerId)||customers[0];resetForm();if(saved)renderHistory(saved);autoDriveBackup();checkReminders(true);alert('Customer / Order successfully save हो गया। पुराना record सुरक्षित है।');
+ persist();
+ render();
+ const saved=customers.find(c=>c.id===currentCustomerId)||customers[0];
+ if(saved) renderHistory(saved);
+ autoDriveBackup();
+ checkReminders(true);
+ alert('Customer / Order successfully save हो गया। पुराना record सुरक्षित है।');
 }
-function persist(){localStorage.setItem('tailor_app_customers',JSON.stringify(customers));}
+function persist(){
+  const data=JSON.stringify(customers);
+  localStorage.setItem(CUSTOMER_STORAGE_KEY,data);
+  localStorage.setItem('tailor_app_customers',data);
+  return true;
+}
 function resetForm(){
  editId=null;currentCustomerId=null;editingOrderId=null;customerPhotoData='';alterationPhotoData='';garments=[];workType='tailoring';clearSuggestions();document.getElementById('existingCustomerStatus').textContent='';document.getElementById('historyBox').innerHTML='';
  ['name','mobile','extra','takenDate','advance','notes','alterationAmount','alterationDelivery','alterationSize','alterationNotes'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});document.getElementById('alterationPhoto').value='';document.getElementById('alterationPhotoPreview').innerHTML='';document.getElementById('amount').value='';document.getElementById('balance').value=0;setWorkType('tailoring');addGarment();
@@ -583,7 +603,9 @@ function checkReminders(force=false){
 }
 document.getElementById('googleClientId').value=localStorage.getItem('sharda_google_client_id')||'';
 if(localStorage.getItem('sharda_drive_connected')==='1') setDriveStatus('Google Drive connected है। Save Customer करने पर automatic backup होगा।',true);
-customers.forEach(x=>ensureCustomerOrders(x));persist(); if(!garments.length) addGarment(); else renderGarments(); updateSummary(); render(); checkReminders(true); alarmTimer=setInterval(()=>checkReminders(false),60000);
+customers.forEach(x=>ensureCustomerOrders(x)); if(customers.length) persist(); if(!garments.length) addGarment(); else renderGarments(); updateSummary(); render(); checkReminders(true); alarmTimer=setInterval(()=>checkReminders(false),60000);
+window.addEventListener('storage',e=>{if(e.key===CUSTOMER_STORAGE_KEY||e.key==='tailor_app_customers'){customers=loadCustomers();customers.forEach(x=>ensureCustomerOrders(x));render();}});
+window.addEventListener('pageshow',()=>{const fresh=loadCustomers();if(fresh.length!==customers.length){customers=fresh;customers.forEach(x=>ensureCustomerOrders(x));render();}});
 </script>
 </body>
 </html>

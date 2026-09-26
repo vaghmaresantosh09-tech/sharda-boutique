@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="hi"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#5b4bdb"><title>SILAI GURU</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5f6fb;color:#202238}
+.on{min-height:100vh;background:linear-gradient(135deg,#5b4bdb,#8067f4);padding:28px 14px;display:flex;align-items:center}
+.card{background:#fff;width:100%;max-width:620px;margin:auto;border-radius:26px;padding:22px;box-shadow:0 12px 35px #0002}
+.logo{text-align:center;color:#5848d8;font-size:34px;font-weight:900;margin:8px 0}
+.sub{text-align:center;color:#73778c;font-size:17px;margin:0 0 20px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:flex;flex-direction:column;gap:6px}.full{grid-column:1/-1}
+label{font-weight:700;font-size:14px}input,textarea{width:100%;padding:15px;border:1px solid #dfe1eb;border-radius:14px;font-size:17px;outline:none}input:focus,textarea:focus{border-color:#5b4bdb;box-shadow:0 0 0 3px #5b4bdb18}
+textarea{min-height:90px;resize:vertical}.btn{width:100%;margin-top:16px;padding:16px;border:0;border-radius:15px;background:#5b4bdb;color:#fff;font-size:18px;font-weight:800}.msg{text-align:center;margin-top:12px;font-weight:700;min-height:20px}
+.app{display:none}.hero{background:linear-gradient(135deg,#5b4bdb,#8067f4);color:white;padding:20px;border-radius:0 0 24px 24px}.wrap{max-width:760px;margin:auto;padding:14px}.brand{font-size:27px;font-weight:900}.shop{margin-top:6px}.icons{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.ico{background:#fff;border:1px solid #e3e4ee;border-radius:15px;padding:12px 4px;min-height:92px;font-weight:700;box-shadow:0 4px 14px #2221}.ico span{display:block;font-size:28px;margin-bottom:7px}.box{background:#fff;border-radius:18px;padding:16px;margin:13px 0;box-shadow:0 5px 18px #22210a}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat{text-align:center;background:#f0efff;border-radius:13px;padding:12px}.stat b{display:block;font-size:21px}.stat small{color:#73778c}.modal{display:none;position:fixed;inset:0;background:#0007;align-items:flex-end;z-index:10}.sheet{background:#fff;width:100%;max-width:760px;margin:auto;border-radius:24px 24px 0 0;padding:18px;max-height:88vh;overflow:auto}.close{float:right;border:0;border-radius:10px;padding:9px}.row{padding:11px 0;border-bottom:1px solid #e5e6ef;display:flex;justify-content:space-between;gap:8px}@media(max-width:500px){.grid{grid-template-columns:1fr}.full{grid-column:auto}.icons{gap:6px}.ico{min-height:84px;font-size:11px}.ico span{font-size:25px}}
+</style></head>
+<body>
+<div id="setup" class="on"><div class="card">
+<div class="logo">✂️ SILAI GURU</div>
+<p class="sub">पहली बार app use करने के लिए profile पूरा करें</p>
+<div class="grid">
+<div class="field"><label>User Name *</label><input id="name"></div>
+<div class="field"><label>Mobile *</label><input id="mobile" inputmode="numeric"></div>
+<div class="field"><label>Shop Name *</label><input id="shop"></div>
+<div class="field"><label>Email ID *</label><input id="email" type="email"></div>
+<div class="field full"><label>Address *</label><textarea id="address"></textarea></div>
+<div class="field"><label>State *</label><input id="state"></div>
+<div class="field"><label>City *</label><input id="city"></div>
+<div class="field"><label>Pincode *</label><input id="pin" inputmode="numeric"></div>
+</div>
+<button id="saveBtn" class="btn">Profile Save &amp; Open App</button>
+<div id="msg" class="msg"></div>
+</div></div>
+
+<div id="app" class="app">
+<header class="hero"><div class="wrap" style="padding:0"><div class="brand">✂️ SILAI GURU</div><div id="shopTop" class="shop"></div><div id="ownerTop"></div></div></header>
+<div class="wrap">
+<div class="box"><div class="stats"><div class="stat"><b id="customers">0</b><small>Customers</small></div><div class="stat"><b id="orders">0</b><small>Orders</small></div><div class="stat"><b id="pending">₹0</b><small>Pending</small></div></div></div>
+<div class="box"><h2>Dashboard</h2><div id="icons" class="icons"></div></div>
+<div class="box"><h2>Quick Summary</h2><div class="row"><span>Today's Delivery</span><b id="today">0</b></div><div class="row"><span>Pending Payment</span><b id="pay">₹0</b></div></div>
+</div></div>
+<div id="modal" class="modal"><div class="sheet"><button id="close" class="close">✕</button><h2 id="modalTitle"></h2><div id="modalBody"></div></div></div>
+
+<script>
+(function(){
+'use strict';
+var KEY='sg_profile_v2';
+var profile=null;
+try{profile=JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){profile=null}
+
+var setup=document.getElementById('setup'), app=document.getElementById('app');
+var fields={name:document.getElementById('name'),mobile:document.getElementById('mobile'),shop:document.getElementById('shop'),email:document.getElementById('email'),address:document.getElementById('address'),state:document.getElementById('state'),city:document.getElementById('city'),pin:document.getElementById('pin')};
+var msg=document.getElementById('msg');
+
+function val(k){return fields[k].value.trim()}
+function complete(p){return p&&p.name&&p.mobile&&p.shop&&p.email&&p.address&&p.state&&p.city&&p.pin}
+
+document.getElementById('saveBtn').addEventListener('click',function(){
+  var keys=['name','mobile','shop','email','address','state','city','pin'];
+  for(var i=0;i<keys.length;i++){
+    if(!val(keys[i])){msg.textContent='⚠️ Kripya sabhi * wali details bhariye.';fields[keys[i]].focus();return;}
+  }
+  profile={name:val('name'),mobile:val('mobile'),shop:val('shop'),email:val('email'),address:val('address'),state:val('state'),city:val('city'),pin:val('pin')};
+  try{localStorage.setItem(KEY,JSON.stringify(profile));}catch(e){msg.textContent='❌ Phone storage available nahi hai.';return;}
+  if(!complete(profile)){msg.textContent='❌ Profile save nahi hua.';return;}
+  msg.textContent='✅ Profile saved! App open ho raha hai...';
+  setTimeout(showApp,150);
+});
+
+function showApp(){
+  setup.style.display='none';
+  app.style.display='block';
+  document.getElementById('shopTop').textContent=profile.shop+' • '+profile.city+', '+profile.state;
+  document.getElementById('ownerTop').textContent='Owner: '+profile.name;
+  window.scrollTo(0,0);
+}
+var mods=[['➕','New Order'],['👥','Customers'],['📋','Orders'],['📏','Measurements'],['💰','Payments'],['🚚','Delivery'],['📊','Reports'],['🏪','Shop Profile'],['☁️','Backup'],['🧑‍🔧','Workers'],['👗','Garments'],['⚙️','Settings'],['💎','Plans & Upgrade']];
+var icons=document.getElementById('icons');
+mods.forEach(function(m){
+  var b=document.createElement('button');b.className='ico';
+  b.innerHTML='<span>'+m[0]+'</span>'+m[1];
+  b.addEventListener('click',function(){openModal(m[1]);});
+  icons.appendChild(b);
+});
+function openModal(title){
+ document.getElementById('modalTitle').textContent=title;
+ document.getElementById('modalBody').innerHTML='<p>यह SILAI GURU '+title+' screen का demo है.</p><div class="row"><span>Shop</span><b>'+profile.shop+'</b></div><div class="row"><span>Owner</span><b>'+profile.name+'</b></div>';
+ document.getElementById('modal').style.display='flex';
+}
+document.getElementById('close').addEventListener('click',function(){document.getElementById('modal').style.display='none';});
+if(complete(profile)){showApp();}
+})();
+</script></body></html>

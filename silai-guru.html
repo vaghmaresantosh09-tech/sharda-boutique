@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#6c4df6">
+<title>SILAI GURU</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#f6f7fb;color:#202124}
+header{background:linear-gradient(135deg,#6c4df6,#8f5cff);color:white;padding:18px 16px 22px;border-radius:0 0 26px 26px;position:sticky;top:0;z-index:5}
+.brand{font-size:23px;font-weight:800}.shop{font-size:15px;margin-top:5px;opacity:.95}.profile{float:right;margin-top:-42px;background:#ffffff2b;border:1px solid #ffffff55;color:#fff;border-radius:14px;padding:9px 11px}
+.wrap{max-width:900px;margin:auto;padding:14px}.welcome{font-size:21px;font-weight:800;margin:4px 0 14px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.stat{background:#fff;border-radius:18px;padding:14px;text-align:center;box-shadow:0 4px 18px #0000000a}.stat b{display:block;font-size:21px}.muted{color:#777;font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}.icon{border:0;background:#fff;border-radius:18px;padding:14px 7px;min-height:94px;box-shadow:0 4px 18px #0000000b;font-weight:700;color:#303038}.ico{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;margin:auto auto 8px;font-size:24px}
+.card{background:#fff;border-radius:20px;padding:16px;margin:12px 0;box-shadow:0 4px 18px #0000000b}h2{margin:0 0 12px;font-size:18px}
+.row{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid #eee}.row:last-child{border-bottom:0}
+button,input,select,textarea{font:inherit}button{cursor:pointer}.primary{background:#6c4df6;color:white;border:0;border-radius:12px;padding:12px 15px;font-weight:800}.secondary{background:#eeeef4;border:0;border-radius:12px;padding:11px 14px;font-weight:700}
+input,select,textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:12px;margin-top:5px}.field{margin:10px 0}.actions{display:flex;gap:8px;flex-wrap:wrap}
+.modal{position:fixed;inset:0;background:#0007;display:none;align-items:flex-end;z-index:20}.sheet{background:#fff;width:100%;max-height:88vh;overflow:auto;border-radius:25px 25px 0 0;padding:18px}.close{float:right;border:0;background:#eee;border-radius:50%;width:38px;height:38px}
+.onboard{position:fixed;inset:0;background:#f6f7fb;z-index:30;overflow:auto}.onboard .box{max-width:600px;margin:35px auto;padding:22px}.logo{font-size:32px;font-weight:900;color:#6c4df6;text-align:center}.hint{text-align:center;color:#666;font-size:13px;margin:8px 0 20px}
+.bottom{position:sticky;bottom:0;background:#ffffffef;backdrop-filter:blur(12px);display:grid;grid-template-columns:repeat(4,1fr);padding:9px 4px;border-top:1px solid #eee}.bottom button{border:0;background:none;font-size:12px;font-weight:700;color:#555}.bottom span{display:block;font-size:21px;margin-bottom:2px}
+@media(max-width:600px){.grid{grid-template-columns:repeat(4,1fr)}.icon{font-size:11px;padding:10px 3px}.ico{width:40px;height:40px;font-size:21px}.stats{gap:6px}.stat{padding:11px 5px}}
+</style>
+</head>
+<body>
+<div id="onboard" class="onboard">
+ <div class="box">
+  <div class="logo">✂️ SILAI GURU</div>
+  <div class="hint">पहली बार app इस्तेमाल करने से पहले आपकी shop profile जरूरी है</div>
+  <div class="field"><b>User Name *</b><input id="pname" placeholder="आपका नाम"></div>
+  <div class="field"><b>Mobile Number *</b><input id="pmobile" inputmode="numeric" placeholder="मोबाइल नंबर"></div>
+  <div class="field"><b>Shop Name *</b><input id="pshop" placeholder="दुकान का नाम"></div>
+  <div class="field"><b>Email ID *</b><input id="pemail" type="email" placeholder="email@example.com"></div>
+  <div class="field"><b>Address *</b><textarea id="paddress" rows="2" placeholder="दुकान का पूरा पता"></textarea></div>
+  <div class="field"><b>State *</b><input id="pstate" placeholder="State"></div>
+  <div class="field"><b>City *</b><input id="pcity" placeholder="City"></div>
+  <div class="field"><b>Pincode *</b><input id="ppincode" inputmode="numeric" placeholder="Pincode"></div>
+  <button class="primary" style="width:100%;margin-top:8px" onclick="saveProfile()">Continue to SILAI GURU →</button>
+ </div>
+</div>
+
+<header>
+ <button class="profile" onclick="openProfile()">👤 Profile</button>
+ <div class="brand">✂️ SILAI GURU</div>
+ <div class="shop" id="shopTop">Shop Profile</div>
+</header>
+<div class="wrap">
+ <div class="welcome" id="welcome">Namaste 👋</div>
+ <div class="stats">
+  <div class="stat"><b id="customers">0</b><span class="muted">Customers</span></div>
+  <div class="stat"><b id="orders">0</b><span class="muted">Orders</span></div>
+  <div class="stat"><b id="pending">0</b><span class="muted">Pending</span></div>
+ </div>
+ <div class="grid" id="menu"></div>
+ <div class="card"><h2>⚡ Quick Summary</h2><div class="row"><span>Today's Delivery</span><b id="today">0</b></div><div class="row"><span>Pending Payment</span><b id="balance">₹0</b></div><div class="row"><span>This Month Orders</span><b id="month">0</b></div></div>
+ <div class="card"><h2>🧵 Recent Orders</h2><div id="recent"><div class="muted">अभी कोई order नहीं है</div></div></div>
+</div>
+<div class="bottom">
+ <button onclick="home()"><span>⌂</span>Home</button>
+ <button onclick="openPanel('Customers')"><span>👥</span>Customers</button>
+ <button onclick="openPanel('New Order')"><span>➕</span>New Order</button>
+ <button onclick="openPanel('Orders')"><span>📋</span>Orders</button>
+</div>
+
+<div class="modal" id="modal" onclick="if(event.target===this)closePanel()"><div class="sheet"><button class="close" onclick="closePanel()">✕</button><div id="panel"></div></div></div>
+
+<script>
+const icons=[
+['New Order','➕','Create customer order, garments, delivery date and payment'],
+['Customers','👥','Add, search and manage customer records'],
+['Orders','📋','All orders, pending and completed work'],
+['Measurements','📏','Kurti, Pant, Blouse and custom measurements'],
+['Payments','💰','Advance, balance and payment records'],
+['Delivery','🚚','Delivery dates and reminders'],
+['Reports','📊','Customers, orders, payment and monthly summary'],
+['Shop Profile','🏪','Shop name, owner, address and contact'],
+['Backup','☁️','Backup and recovery section'],
+['Workers','🧑‍🔧','Workers and work assignment'],
+['Garments','👗','Garment types and garment details'],
+['Settings','⚙️','App preferences and future features']
+];
+let data=JSON.parse(localStorage.getItem('sg_demo')||'[]');
+function profile(){return JSON.parse(localStorage.getItem('sg_profile')||'null')}
+function saveProfile(){
+ const ids=['pname','pmobile','pshop','pemail','paddress','pstate','pcity','ppincode'];
+ if(ids.some(id=>!document.getElementById(id).value.trim())){alert('सभी * fields भरना जरूरी है');return}
+ const p={name:pname.value,mobile:pmobile.value,shop:pshop.value,email:pemail.value,address:paddress.value,state:pstate.value,city:pcity.value,pincode:ppincode.value};
+ localStorage.setItem('sg_profile',JSON.stringify(p));document.getElementById('onboard').style.display='none';render();
+}
+function render(){
+ const p=profile();if(!p){document.getElementById('onboard').style.display='block';return}
+ onboard.style.display='none';shopTop.textContent=p.shop+' • '+p.city+', '+p.state;welcome.textContent='Namaste, '+p.name+' 👋';
+ menu.innerHTML=icons.map((x,i)=>'<button class="icon" onclick="openPanel(\''+x[0]+'\')"><div class="ico" style="background:hsl('+((i*47)%360)+' 90% 94%)">'+x[1]+'</div>'+x[0]+'</button>').join('');
+ customers.textContent=new Set(data.map(x=>x.mobile)).size;orders.textContent=data.length;pending.textContent=data.filter(x=>x.status!=='Delivered').length;
+ balance.textContent='₹'+data.reduce((s,x)=>s+Math.max((+x.amount||0)-(+x.advance||0),0),0);
+ const now=new Date();month.textContent=data.filter(x=>{let d=new Date(x.date);return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear()}).length;
+ today.textContent=data.filter(x=>x.delivery===now.toISOString().slice(0,10)).length;
+ recent.innerHTML=data.slice(-5).reverse().map(x=>'<div class="row"><span><b>'+esc(x.name)+'</b><br><span class="muted">'+esc(x.garment)+' • Delivery '+esc(x.delivery||'-')+'</span></span><b>₹'+(x.amount||0)+'</b></div>').join('')||'<div class="muted">अभी कोई order नहीं है</div>';
+}
+function openPanel(name){
+ let h='<h2>'+name+'</h2>';
+ if(name==='New Order')h+=`<div class="field"><b>Customer Name</b><input id="cn"></div><div class="field"><b>Mobile</b><input id="cm" inputmode="numeric"></div><div class="field"><b>Garment</b><select id="cg"><option>Kurti</option><option>Blouse</option><option>Pant</option><option>Shirt</option><option>Dress</option><option>Other</option></select></div><div class="field"><b>Delivery Date</b><input id="cd" type="date"></div><div class="field"><b>Total Amount</b><input id="ca" type="number"></div><div class="field"><b>Advance</b><input id="cv" type="number"></div><button class="primary" onclick="saveOrder()">💾 Save Order</button>`;
+ else if(name==='Customers')h+='<div class="actions"><input id="searchC" placeholder="Search name/mobile" oninput="listCustomers()" style="flex:1"></div><div id="clist"></div>';
+ else if(name==='Orders')h+='<div id="olist"></div>';
+ else if(name==='Shop Profile')h+=profileHtml();
+ else h+='<p>यह section dashboard से open हो रहा है। यहाँ '+name+' की detailed screen रखी जाएगी.</p><div class="card"><b>Coming in full build</b><p class="muted">इस screen में detailed fields, history, edit options और plan-based features जोड़े जाएंगे.</p></div>';
+ panel.innerHTML=h;modal.style.display='flex';if(name==='Customers')listCustomers();if(name==='Orders')listOrders();
+}
+function saveOrder(){if(!cn.value.trim()||!cm.value.trim()){alert('Customer name और mobile जरूरी है');return}data.push({name:cn.value,mobile:cm.value,garment:cg.value,delivery:cd.value,amount:+ca.value||0,advance:+cv.value||0,status:'Pending',date:new Date().toISOString()});localStorage.setItem('sg_demo',JSON.stringify(data));closePanel();render();alert('Order save हो गया ✅')}
+function listCustomers(){const q=(searchC?.value||'').toLowerCase();const m={};data.forEach(x=>m[x.mobile]=x);clist.innerHTML=Object.values(m).filter(x=>(x.name+x.mobile).toLowerCase().includes(q)).map(x=>'<div class="row"><span><b>'+esc(x.name)+'</b><br><span class="muted">'+esc(x.mobile)+'</span></span><button class="secondary" onclick="alert(\'Customer details screen next build में\')">Open</button></div>').join('')||'<p class="muted">No customer</p>'}
+function listOrders(){olist.innerHTML=data.slice().reverse().map((x,i)=>'<div class="row"><span><b>'+esc(x.name)+'</b> • '+esc(x.garment)+'<br><span class="muted">Delivery: '+esc(x.delivery||'-')+' • '+x.status+'</span></span><b>₹'+x.amount+'</b></div>').join('')||'<p class="muted">No orders</p>'}
+function profileHtml(){const p=profile();return '<div class="card"><b>'+esc(p.shop)+'</b><p>'+esc(p.name)+'<br>📞 '+esc(p.mobile)+'<br>✉️ '+esc(p.email)+'<br>'+esc(p.address)+', '+esc(p.city)+', '+esc(p.state)+' - '+esc(p.pincode)+'</p><button class="secondary" onclick="editProfile()">✏️ Edit Profile</button></div>'}
+function editProfile(){const p=profile();document.getElementById('onboard').style.display='block';['name','mobile','shop','email','address','state','city','pincode'].forEach(k=>document.getElementById('p'+k).value=p[k]||'')}
+function openProfile(){openPanel('Shop Profile')}
+function closePanel(){modal.style.display='none'}
+function home(){closePanel();window.scrollTo({top:0,behavior:'smooth'})}
+function esc(s){return String(s??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
+render();
+</script>
+</body></html>

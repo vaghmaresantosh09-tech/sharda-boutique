@@ -67,10 +67,9 @@ function editExtraDetail(id){
 }
 function changeTheme(name){applyTheme(name);openM('settings')}
 function helpSupport(){
-  const mobile=(p?.mobile||'').replace(/\\D/g,'');
-  const wa=mobile?mobile.replace(/^0/,'91'):'';
   const email=p?.email||'';
-  const h='<div class="card"><h3>💬 WhatsApp Support</h3><p class="muted">App help ke liye WhatsApp par message bhej sakte hain.</p><button class="primary" onclick="location.href=\'https://wa.me/'+wa+'?text=SILAI%20GURU%20Help%20%26%20Support\'">📲 Open WhatsApp</button></div><div class="card"><h3>📧 Email Support</h3><p>'+esc(email||'Email not set')+'</p></div><div class="card"><h3>❓ Quick Help</h3><div class="row"><span>Profile</span><span>Edit from Settings</span></div><div class="row"><span>Measurements</span><span>Measurements menu</span></div><div class="row"><span>Backup</span><span>Backup menu</span></div><div class="row"><span>Plans</span><span>Plans & Upgrade</span></div></div>';
+  const website='https://vaghmaresantosh09-tech.github.io/sharda-boutique/';
+  const h='<div class="card"><h3>🌐 Support Website</h3><p class="muted">Help, app information और support resources के लिए website खोलें.</p><button class="primary" onclick="location.href=\''+website+'\'">🌐 Open Website</button></div><div class="card"><h3>📧 Email Support</h3><p class="muted">Support के लिए email करें. यहाँ mobile number share नहीं होगा.</p><p><b>'+esc(email||'Email not set')+'</b></p><button class="secondary" style="width:100%" onclick="location.href=\'mailto:'+encodeURIComponent(email)+'?subject=SILAI%20GURU%20Help%20%26%20Support\'">📧 Send Email</button></div><div class="card"><h3>❓ Quick Help</h3><div class="row"><span>Profile</span><span>Edit from Settings</span></div><div class="row"><span>Measurements</span><span>Measurements menu</span></div><div class="row"><span>Backup</span><span>Backup menu</span></div><div class="row"><span>Plans</span><span>Plans & Upgrade</span></div></div>';
   mt.textContent='🆘 Help & Support';mb.innerHTML=h;
 }
 function editProfileSettings(){openM('settings')}

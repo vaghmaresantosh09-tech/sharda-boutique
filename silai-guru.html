@@ -1,119 +1,219 @@
 <!doctype html>
-<html lang="hi">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#6c4df6">
+<meta name="theme-color" content="#6d4aff">
 <title>SILAI GURU</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#f6f7fb;color:#202124}
-header{background:linear-gradient(135deg,#6c4df6,#8f5cff);color:white;padding:18px 16px 22px;border-radius:0 0 26px 26px;position:sticky;top:0;z-index:5}
-.brand{font-size:23px;font-weight:800}.shop{font-size:15px;margin-top:5px;opacity:.95}.profile{float:right;margin-top:-42px;background:#ffffff2b;border:1px solid #ffffff55;color:#fff;border-radius:14px;padding:9px 11px}
-.wrap{max-width:900px;margin:auto;padding:14px}.welcome{font-size:21px;font-weight:800;margin:4px 0 14px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.stat{background:#fff;border-radius:18px;padding:14px;text-align:center;box-shadow:0 4px 18px #0000000a}.stat b{display:block;font-size:21px}.muted{color:#777;font-size:12px}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}.icon{border:0;background:#fff;border-radius:18px;padding:14px 7px;min-height:94px;box-shadow:0 4px 18px #0000000b;font-weight:700;color:#303038}.ico{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;margin:auto auto 8px;font-size:24px}
-.card{background:#fff;border-radius:20px;padding:16px;margin:12px 0;box-shadow:0 4px 18px #0000000b}h2{margin:0 0 12px;font-size:18px}
-.row{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid #eee}.row:last-child{border-bottom:0}
-button,input,select,textarea{font:inherit}button{cursor:pointer}.primary{background:#6c4df6;color:white;border:0;border-radius:12px;padding:12px 15px;font-weight:800}.secondary{background:#eeeef4;border:0;border-radius:12px;padding:11px 14px;font-weight:700}
-input,select,textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:12px;margin-top:5px}.field{margin:10px 0}.actions{display:flex;gap:8px;flex-wrap:wrap}
-.modal{position:fixed;inset:0;background:#0007;display:none;align-items:flex-end;z-index:20}.sheet{background:#fff;width:100%;max-height:88vh;overflow:auto;border-radius:25px 25px 0 0;padding:18px}.close{float:right;border:0;background:#eee;border-radius:50%;width:38px;height:38px}
-.onboard{position:fixed;inset:0;background:#f6f7fb;z-index:30;overflow:auto}.onboard .box{max-width:600px;margin:35px auto;padding:22px}.logo{font-size:32px;font-weight:900;color:#6c4df6;text-align:center}.hint{text-align:center;color:#666;font-size:13px;margin:8px 0 20px}
-.bottom{position:sticky;bottom:0;background:#ffffffef;backdrop-filter:blur(12px);display:grid;grid-template-columns:repeat(4,1fr);padding:9px 4px;border-top:1px solid #eee}.bottom button{border:0;background:none;font-size:12px;font-weight:700;color:#555}.bottom span{display:block;font-size:21px;margin-bottom:2px}
-@media(max-width:600px){.grid{grid-template-columns:repeat(4,1fr)}.icon{font-size:11px;padding:10px 3px}.ico{width:40px;height:40px;font-size:21px}.stats{gap:6px}.stat{padding:11px 5px}}
+:root{--p:#6d4aff;--p2:#8b5cf6;--bg:#f5f7fb;--card:#fff;--text:#202331;--muted:#707784;--line:#e9eaf0;--green:#18a66a;--red:#e44b61;--orange:#f39a35}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text)}
+button,input,select,textarea{font:inherit}button{cursor:pointer;border:0}.app{max-width:760px;margin:auto;min-height:100vh;padding-bottom:86px}
+.hero{background:linear-gradient(135deg,#6546ee,#8b52f6);color:#fff;border-radius:0 0 32px 32px;padding:28px 22px 24px;box-shadow:0 10px 30px #5d45e52a}
+.brand{font-size:30px;font-weight:850;letter-spacing:.3px}.brand span{font-size:28px}.shopline{margin-top:7px;font-size:16px;opacity:.95}.ownerline{margin-top:4px;font-size:13px;opacity:.8}
+.toprow{display:flex;justify-content:space-between;align-items:center}.profileBtn{background:#ffffff22;color:#fff;border:1px solid #ffffff45;padding:9px 12px;border-radius:14px;font-weight:700}
+.content{padding:20px}.hello{font-size:27px;font-weight:850;margin:6px 0 18px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}.stat{background:#fff;border:1px solid #f0f0f4;border-radius:22px;padding:16px 8px;text-align:center;box-shadow:0 6px 20px #24304d0b}.stat b{font-size:25px;display:block}.stat small{color:var(--muted);font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}.tile{background:#fff;border-radius:21px;padding:15px 5px 13px;text-align:center;box-shadow:0 7px 22px #24304d0b;border:1px solid #f0f0f4;min-height:112px}.ico{width:52px;height:52px;border-radius:17px;margin:0 auto 8px;display:grid;place-items:center;font-size:28px}.tile b{font-size:13px}.section{background:#fff;border-radius:25px;margin-top:18px;padding:19px;box-shadow:0 7px 22px #24304d0b}.section h2{margin:0 0 15px;font-size:21px}.row{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:13px 0;border-bottom:1px solid var(--line)}.row:last-child{border-bottom:0}.muted{color:var(--muted)}.amount{font-weight:800}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e9e9ef;z-index:20}.bottomin{max-width:760px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr)}.nav{padding:10px 4px 12px;text-align:center;color:#666}.nav b{display:block;font-size:26px;line-height:25px}.nav span{font-size:12px;font-weight:700}.nav.active{color:#6d4aff}
+.modal{position:fixed;inset:0;background:#0007;display:none;align-items:flex-end;z-index:50}.modal.show{display:flex}.sheet{background:#fff;width:100%;max-width:760px;margin:auto;border-radius:28px 28px 0 0;max-height:92vh;overflow:auto;padding:20px}.sheethead{display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#fff;z-index:2;padding-bottom:10px}.close{background:#f0f1f5;border-radius:12px;width:40px;height:40px;font-size:22px}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{margin:0 0 12px}.field.full{grid-column:1/-1}.field label{display:block;font-size:12px;font-weight:750;margin:0 0 6px;color:#5e6470}.field input,.field select,.field textarea{width:100%;padding:13px;border:1px solid #dddfe8;border-radius:13px;outline:0;background:#fff}.field textarea{min-height:75px;resize:vertical}.primary{background:linear-gradient(135deg,#6748ef,#8754f6);color:#fff;border-radius:14px;padding:14px 18px;font-weight:800;width:100%;margin-top:5px}.secondary{background:#f0efff;color:#6043df;border-radius:13px;padding:12px 15px;font-weight:750}.danger{background:#fff0f2;color:#d53f55;border-radius:12px;padding:9px 12px}.pill{display:inline-block;border-radius:99px;padding:5px 9px;font-size:11px;font-weight:800;background:#eef7f2;color:#168355}.search{width:100%;padding:13px 15px;border:1px solid #dddfe8;border-radius:14px;margin-bottom:12px}.empty{text-align:center;color:var(--muted);padding:25px 5px}.onboard{position:fixed;inset:0;background:linear-gradient(145deg,#5e43e9,#8c51f6);z-index:100;display:flex;align-items:center;justify-content:center;padding:18px}.oncard{background:#fff;width:100%;max-width:620px;border-radius:30px;padding:25px;max-height:94vh;overflow:auto}.onbrand{text-align:center;font-size:31px;font-weight:900;color:#6043df}.oncard p{text-align:center;color:var(--muted);margin:6px 0 20px}.notice{background:#f4f1ff;color:#5940c7;border-radius:14px;padding:11px;font-size:12px;margin-bottom:14px}.toast{position:fixed;left:50%;bottom:88px;transform:translateX(-50%);background:#222;color:#fff;padding:11px 16px;border-radius:99px;display:none;z-index:80;font-size:13px}.toast.show{display:block}
+@media(max-width:470px){.content{padding:16px}.grid{gap:9px}.tile{min-height:106px}.ico{width:48px;height:48px;font-size:25px}.tile b{font-size:12px}.hero{padding:24px 18px}.brand{font-size:27px}.formgrid{grid-template-columns:1fr}.field.full{grid-column:auto}}
 </style>
 </head>
 <body>
 <div id="onboard" class="onboard">
- <div class="box">
-  <div class="logo">✂️ SILAI GURU</div>
-  <div class="hint">पहली बार app इस्तेमाल करने से पहले आपकी shop profile जरूरी है</div>
-  <div class="field"><b>User Name *</b><input id="pname" placeholder="आपका नाम"></div>
-  <div class="field"><b>Mobile Number *</b><input id="pmobile" inputmode="numeric" placeholder="मोबाइल नंबर"></div>
-  <div class="field"><b>Shop Name *</b><input id="pshop" placeholder="दुकान का नाम"></div>
-  <div class="field"><b>Email ID *</b><input id="pemail" type="email" placeholder="email@example.com"></div>
-  <div class="field"><b>Address *</b><textarea id="paddress" rows="2" placeholder="दुकान का पूरा पता"></textarea></div>
-  <div class="field"><b>State *</b><input id="pstate" placeholder="State"></div>
-  <div class="field"><b>City *</b><input id="pcity" placeholder="City"></div>
-  <div class="field"><b>Pincode *</b><input id="ppincode" inputmode="numeric" placeholder="Pincode"></div>
-  <button class="primary" style="width:100%;margin-top:8px" onclick="saveProfile()">Continue to SILAI GURU →</button>
+ <div class="oncard">
+  <div class="onbrand">✂️ SILAI GURU</div>
+  <p>Apna profile complete karke app shuru karein</p>
+  <div class="notice">Ye Free Test version hai. Isme real cloud backup, WhatsApp aur photo upload abhi intentionally nahi diye gaye hain.</div>
+  <form id="profileForm">
+   <div class="formgrid">
+    <div class="field"><label>User Name *</label><input id="p_name" required></div>
+    <div class="field"><label>Mobile Number *</label><input id="p_mobile" inputmode="numeric" maxlength="10" required></div>
+    <div class="field"><label>Shop Name *</label><input id="p_shop" required></div>
+    <div class="field"><label>Email ID *</label><input id="p_email" type="email" required></div>
+    <div class="field full"><label>Address *</label><textarea id="p_address" required></textarea></div>
+    <div class="field"><label>State *</label><input id="p_state" value="Gujarat" required></div>
+    <div class="field"><label>City *</label><input id="p_city" value="Surat" required></div>
+    <div class="field"><label>Pincode *</label><input id="p_pin" inputmode="numeric" maxlength="6" required></div>
+   </div>
+   <button class="primary">Profile Save Karke App Open Karein</button>
+  </form>
  </div>
 </div>
 
-<header>
- <button class="profile" onclick="openProfile()">👤 Profile</button>
- <div class="brand">✂️ SILAI GURU</div>
- <div class="shop" id="shopTop">Shop Profile</div>
+<div class="app">
+<header class="hero">
+ <div class="toprow"><div><div class="brand"><span>✂️</span> SILAI GURU</div><div class="shopline" id="shopLine"></div><div class="ownerline" id="ownerLine"></div></div><button class="profileBtn" onclick="openModule('profile')">Profile</button></div>
 </header>
-<div class="wrap">
- <div class="welcome" id="welcome">Namaste 👋</div>
+<main class="content">
+ <div class="hello" id="hello"></div>
  <div class="stats">
-  <div class="stat"><b id="customers">0</b><span class="muted">Customers</span></div>
-  <div class="stat"><b id="orders">0</b><span class="muted">Orders</span></div>
-  <div class="stat"><b id="pending">0</b><span class="muted">Pending</span></div>
+  <div class="stat"><b id="statCustomers">0</b><small>Customers</small></div>
+  <div class="stat"><b id="statOrders">0</b><small>Orders</small></div>
+  <div class="stat"><b id="statPending">0</b><small>Pending</small></div>
  </div>
- <div class="grid" id="menu"></div>
- <div class="card"><h2>⚡ Quick Summary</h2><div class="row"><span>Today's Delivery</span><b id="today">0</b></div><div class="row"><span>Pending Payment</span><b id="balance">₹0</b></div><div class="row"><span>This Month Orders</span><b id="month">0</b></div></div>
- <div class="card"><h2>🧵 Recent Orders</h2><div id="recent"><div class="muted">अभी कोई order नहीं है</div></div></div>
-</div>
-<div class="bottom">
- <button onclick="home()"><span>⌂</span>Home</button>
- <button onclick="openPanel('Customers')"><span>👥</span>Customers</button>
- <button onclick="openPanel('New Order')"><span>➕</span>New Order</button>
- <button onclick="openPanel('Orders')"><span>📋</span>Orders</button>
+ <div class="grid" id="tiles"></div>
+ <section class="section"><h2>⚡ Quick Summary</h2>
+  <div class="row"><span>Today's Delivery</span><strong id="todayCount">0</strong></div>
+  <div class="row"><span>Pending Payment</span><strong id="pendingPay">₹0</strong></div>
+  <div class="row"><span>This Month Orders</span><strong id="monthOrders">0</strong></div>
+ </section>
+ <section class="section"><h2>🧵 Recent Orders</h2><div id="recent"></div></section>
+</main>
 </div>
 
-<div class="modal" id="modal" onclick="if(event.target===this)closePanel()"><div class="sheet"><button class="close" onclick="closePanel()">✕</button><div id="panel"></div></div></div>
+<div class="bottom"><div class="bottomin">
+ <button class="nav active" onclick="goHome()"><b>⌂</b><span>Home</span></button>
+ <button class="nav" onclick="openModule('customers')"><b>👥</b><span>Customers</span></button>
+ <button class="nav" onclick="openModule('neworder')"><b>＋</b><span>New Order</span></button>
+ <button class="nav" onclick="openModule('orders')"><b>📋</b><span>Orders</span></button>
+</div></div>
+
+<div id="modal" class="modal"><div class="sheet"><div class="sheethead"><h2 id="modalTitle" style="margin:0"></h2><button class="close" onclick="closeModal()">×</button></div><div id="modalBody"></div></div></div>
+<div id="toast" class="toast"></div>
 
 <script>
-const icons=[
-['New Order','➕','Create customer order, garments, delivery date and payment'],
-['Customers','👥','Add, search and manage customer records'],
-['Orders','📋','All orders, pending and completed work'],
-['Measurements','📏','Kurti, Pant, Blouse and custom measurements'],
-['Payments','💰','Advance, balance and payment records'],
-['Delivery','🚚','Delivery dates and reminders'],
-['Reports','📊','Customers, orders, payment and monthly summary'],
-['Shop Profile','🏪','Shop name, owner, address and contact'],
-['Backup','☁️','Backup and recovery section'],
-['Workers','🧑‍🔧','Workers and work assignment'],
-['Garments','👗','Garment types and garment details'],
-['Settings','⚙️','App preferences and future features']
-];
-let data=JSON.parse(localStorage.getItem('sg_demo')||'[]');
-function profile(){return JSON.parse(localStorage.getItem('sg_profile')||'null')}
-function saveProfile(){
- const ids=['pname','pmobile','pshop','pemail','paddress','pstate','pcity','ppincode'];
- if(ids.some(id=>!document.getElementById(id).value.trim())){alert('सभी * fields भरना जरूरी है');return}
- const p={name:pname.value,mobile:pmobile.value,shop:pshop.value,email:pemail.value,address:paddress.value,state:pstate.value,city:pcity.value,pincode:ppincode.value};
- localStorage.setItem('sg_profile',JSON.stringify(p));document.getElementById('onboard').style.display='none';render();
+const KEY='sg_profile_v2', CKEY='sg_customers_v2', OKEY='sg_orders_v2', WKEY='sg_workers_v2';
+const icons={
+ neworder:['＋','neworder','New Order'],customers:['👥','customers','Customers'],orders:['📋','orders','Orders'],measurements:['📏','measurements','Measurements'],
+ payments:['💰','payments','Payments'],delivery:['🚚','delivery','Delivery'],reports:['📊','reports','Reports'],profile:['🏪','profile','Shop Profile'],
+ backup:['☁️','backup','Backup'],workers:['🧑‍🔧','workers','Workers'],garments:['👗','garments','Garments'],settings:['⚙️','settings','Settings']
+};
+const colors=['#ffe3e6','#fff5d8','#e5f9df','#def7ed','#ddf7fb','#e5e5ff','#f4e1ff','#ffe2f0','#ffeadc','#e3f1ff','#e8f8dc','#def5ef'];
+let profile=JSON.parse(localStorage.getItem(KEY)||'null');
+let customers=JSON.parse(localStorage.getItem(CKEY)||'[]');
+let orders=JSON.parse(localStorage.getItem(OKEY)||'[]');
+let workers=JSON.parse(localStorage.getItem(WKEY)||'[]');
+
+function save(){localStorage.setItem(CKEY,JSON.stringify(customers));localStorage.setItem(OKEY,JSON.stringify(orders));localStorage.setItem(WKEY,JSON.stringify(workers))}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function money(n){return '₹'+Number(n||0).toLocaleString('en-IN')}
+function toast(s){const t=document.getElementById('toast');t.textContent=s;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800)}
+function init(){
+ document.getElementById('onboard').style.display=profile?'none':'flex';
+ if(!profile)return;
+ renderHeader();renderTiles();renderStats();
 }
-function render(){
- const p=profile();if(!p){document.getElementById('onboard').style.display='block';return}
- onboard.style.display='none';shopTop.textContent=p.shop+' • '+p.city+', '+p.state;welcome.textContent='Namaste, '+p.name+' 👋';
- menu.innerHTML=icons.map((x,i)=>'<button class="icon" onclick="openPanel(\''+x[0]+'\')"><div class="ico" style="background:hsl('+((i*47)%360)+' 90% 94%)">'+x[1]+'</div>'+x[0]+'</button>').join('');
- customers.textContent=new Set(data.map(x=>x.mobile)).size;orders.textContent=data.length;pending.textContent=data.filter(x=>x.status!=='Delivered').length;
- balance.textContent='₹'+data.reduce((s,x)=>s+Math.max((+x.amount||0)-(+x.advance||0),0),0);
- const now=new Date();month.textContent=data.filter(x=>{let d=new Date(x.date);return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear()}).length;
- today.textContent=data.filter(x=>x.delivery===now.toISOString().slice(0,10)).length;
- recent.innerHTML=data.slice(-5).reverse().map(x=>'<div class="row"><span><b>'+esc(x.name)+'</b><br><span class="muted">'+esc(x.garment)+' • Delivery '+esc(x.delivery||'-')+'</span></span><b>₹'+(x.amount||0)+'</b></div>').join('')||'<div class="muted">अभी कोई order नहीं है</div>';
+function renderHeader(){
+ document.getElementById('shopLine').textContent=(profile.shop||'My Shop')+' • '+(profile.city||'')+', '+(profile.state||'');
+ document.getElementById('ownerLine').textContent='Owner: '+(profile.name||'');
+ document.getElementById('hello').textContent='Namaste, '+(profile.name||'')+' 👋';
 }
-function openPanel(name){
- let h='<h2>'+name+'</h2>';
- if(name==='New Order')h+=`<div class="field"><b>Customer Name</b><input id="cn"></div><div class="field"><b>Mobile</b><input id="cm" inputmode="numeric"></div><div class="field"><b>Garment</b><select id="cg"><option>Kurti</option><option>Blouse</option><option>Pant</option><option>Shirt</option><option>Dress</option><option>Other</option></select></div><div class="field"><b>Delivery Date</b><input id="cd" type="date"></div><div class="field"><b>Total Amount</b><input id="ca" type="number"></div><div class="field"><b>Advance</b><input id="cv" type="number"></div><button class="primary" onclick="saveOrder()">💾 Save Order</button>`;
- else if(name==='Customers')h+='<div class="actions"><input id="searchC" placeholder="Search name/mobile" oninput="listCustomers()" style="flex:1"></div><div id="clist"></div>';
- else if(name==='Orders')h+='<div id="olist"></div>';
- else if(name==='Shop Profile')h+=profileHtml();
- else h+='<p>यह section dashboard से open हो रहा है। यहाँ '+name+' की detailed screen रखी जाएगी.</p><div class="card"><b>Coming in full build</b><p class="muted">इस screen में detailed fields, history, edit options और plan-based features जोड़े जाएंगे.</p></div>';
- panel.innerHTML=h;modal.style.display='flex';if(name==='Customers')listCustomers();if(name==='Orders')listOrders();
+function renderTiles(){
+ const el=document.getElementById('tiles');el.innerHTML='';
+ Object.values(icons).forEach((x,i)=>{const b=document.createElement('button');b.className='tile';b.onclick=()=>openModule(x[1]);
+ b.innerHTML='<div class="ico" style="background:'+colors[i]+'">'+x[0]+'</div><b>'+x[2]+'</b>';el.appendChild(b)})
 }
-function saveOrder(){if(!cn.value.trim()||!cm.value.trim()){alert('Customer name और mobile जरूरी है');return}data.push({name:cn.value,mobile:cm.value,garment:cg.value,delivery:cd.value,amount:+ca.value||0,advance:+cv.value||0,status:'Pending',date:new Date().toISOString()});localStorage.setItem('sg_demo',JSON.stringify(data));closePanel();render();alert('Order save हो गया ✅')}
-function listCustomers(){const q=(searchC?.value||'').toLowerCase();const m={};data.forEach(x=>m[x.mobile]=x);clist.innerHTML=Object.values(m).filter(x=>(x.name+x.mobile).toLowerCase().includes(q)).map(x=>'<div class="row"><span><b>'+esc(x.name)+'</b><br><span class="muted">'+esc(x.mobile)+'</span></span><button class="secondary" onclick="alert(\'Customer details screen next build में\')">Open</button></div>').join('')||'<p class="muted">No customer</p>'}
-function listOrders(){olist.innerHTML=data.slice().reverse().map((x,i)=>'<div class="row"><span><b>'+esc(x.name)+'</b> • '+esc(x.garment)+'<br><span class="muted">Delivery: '+esc(x.delivery||'-')+' • '+x.status+'</span></span><b>₹'+x.amount+'</b></div>').join('')||'<p class="muted">No orders</p>'}
-function profileHtml(){const p=profile();return '<div class="card"><b>'+esc(p.shop)+'</b><p>'+esc(p.name)+'<br>📞 '+esc(p.mobile)+'<br>✉️ '+esc(p.email)+'<br>'+esc(p.address)+', '+esc(p.city)+', '+esc(p.state)+' - '+esc(p.pincode)+'</p><button class="secondary" onclick="editProfile()">✏️ Edit Profile</button></div>'}
-function editProfile(){const p=profile();document.getElementById('onboard').style.display='block';['name','mobile','shop','email','address','state','city','pincode'].forEach(k=>document.getElementById('p'+k).value=p[k]||'')}
-function openProfile(){openPanel('Shop Profile')}
-function closePanel(){modal.style.display='none'}
-function home(){closePanel();window.scrollTo({top:0,behavior:'smooth'})}
-function esc(s){return String(s??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
-render();
+function renderStats(){
+ const pending=orders.filter(o=>o.status!=='Delivered').length;
+ const today=new Date().toISOString().slice(0,10);
+ const month=new Date().toISOString().slice(0,7);
+ const pay=orders.reduce((s,o)=>s+Math.max(0,Number(o.total||0)-Number(o.advance||0)),0);
+ document.getElementById('statCustomers').textContent=customers.length;
+ document.getElementById('statOrders').textContent=orders.length;
+ document.getElementById('statPending').textContent=pending;
+ document.getElementById('todayCount').textContent=orders.filter(o=>o.delivery===today).length;
+ document.getElementById('pendingPay').textContent=money(pay);
+ document.getElementById('monthOrders').textContent=orders.filter(o=>(o.created||'').slice(0,7)===month).length;
+ const r=document.getElementById('recent');const list=orders.slice().sort((a,b)=>(b.created||'').localeCompare(a.created||'')).slice(0,5);
+ r.innerHTML=list.length?list.map(o=>'<div class="row"><div><strong>'+esc(o.customer)+'</strong><div class="muted" style="font-size:13px">'+esc(o.garment)+' • Delivery '+esc(o.delivery||'-')+'</div></div><span class="amount">'+money(o.total)+'</span></div>').join(''):'<div class="empty">Abhi koi order nahi hai.</div>';
+}
+function goHome(){closeModal();renderStats();document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));document.querySelector('.nav').classList.add('active')}
+function openModule(type){
+ const titles={neworder:'➕ New Order',customers:'👥 Customers',orders:'📋 Orders',measurements:'📏 Measurements',payments:'💰 Payments',delivery:'🚚 Delivery',reports:'📊 Reports',profile:'🏪 Shop Profile',backup:'☁️ Backup',workers:'🧑‍🔧 Workers',garments:'👗 Garments',settings:'⚙️ Settings'};
+ document.getElementById('modalTitle').textContent=titles[type]||'SILAI GURU';
+ document.getElementById('modalBody').innerHTML=moduleHTML(type);
+ document.getElementById('modal').classList.add('show');
+}
+function closeModal(){document.getElementById('modal').classList.remove('show')}
+function moduleHTML(t){
+ if(t==='neworder')return orderForm();
+ if(t==='customers')return customersHTML();
+ if(t==='orders')return ordersHTML();
+ if(t==='measurements')return measurementsHTML();
+ if(t==='payments')return paymentsHTML();
+ if(t==='delivery')return deliveryHTML();
+ if(t==='reports')return reportsHTML();
+ if(t==='profile')return profileHTML();
+ if(t==='backup')return backupHTML();
+ if(t==='workers')return workersHTML();
+ if(t==='garments')return garmentsHTML();
+ return settingsHTML();
+}
+function orderForm(){
+ return '<form onsubmit="saveOrder(event)"><div class="formgrid">'+
+ '<div class="field full"><label>Customer Name *</label><input id="o_customer" required placeholder="Customer name"></div>'+
+ '<div class="field"><label>Mobile Number</label><input id="o_mobile" inputmode="numeric" maxlength="10"></div>'+
+ '<div class="field"><label>Garment *</label><select id="o_garment"><option>Kurti</option><option>Blouse</option><option>Pant</option><option>Dress</option><option>Shirt</option><option>Other</option></select></div>'+
+ '<div class="field"><label>Work Taken Date</label><input id="o_taken" type="date" value="'+new Date().toISOString().slice(0,10)+'"></div>'+
+ '<div class="field"><label>Delivery Date *</label><input id="o_delivery" type="date" required></div>'+
+ '<div class="field"><label>Total Amount *</label><input id="o_total" type="number" min="0" required></div>'+
+ '<div class="field"><label>Advance</label><input id="o_advance" type="number" min="0" value="0"></div>'+
+ '<div class="field full"><label>Note</label><textarea id="o_note" placeholder="Design, fitting, special instruction..."></textarea></div>'+
+ '</div><button class="primary">💾 Save Order</button></form>';
+}
+function saveOrder(e){
+ e.preventDefault();
+ const name=document.getElementById('o_customer').value.trim(), mobile=document.getElementById('o_mobile').value.trim();
+ let c=customers.find(x=>x.mobile&&mobile&&x.mobile===mobile)||customers.find(x=>x.name.toLowerCase()===name.toLowerCase());
+ if(!c){c={id:Date.now(),name,mobile,orders:0};customers.push(c)} c.orders=(c.orders||0)+1;
+ const o={id:Date.now(),customer:name,mobile,garment:document.getElementById('o_garment').value,taken:document.getElementById('o_taken').value,delivery:document.getElementById('o_delivery').value,total:Number(document.getElementById('o_total').value||0),advance:Number(document.getElementById('o_advance').value||0),note:document.getElementById('o_note').value,status:'Pending',created:new Date().toISOString()};
+ orders.push(o);save();closeModal();renderStats();toast('Order save ho gaya ✓');
+}
+function customersHTML(){
+ return '<input class="search" placeholder="🔎 Name ya mobile search..." oninput="filterCustomers(this.value)"><div id="customerList">'+customerRows(customers)+'</div><button class="primary" onclick="openModule(\'neworder\')">＋ New Customer / Order</button>';
+}
+function customerRows(arr){
+ if(!arr.length)return '<div class="empty">Abhi koi customer nahi hai.</div>';
+ return arr.map(c=>'<div class="row"><div><strong>'+esc(c.name)+'</strong><div class="muted">'+esc(c.mobile||'No mobile')+' • '+(c.orders||0)+' order(s)</div></div><button class="secondary" onclick="customerOrders('+c.id+')">Open</button></div>').join('');
+}
+function filterCustomers(q){const a=customers.filter(c=>(c.name+' '+c.mobile).toLowerCase().includes(q.toLowerCase()));document.getElementById('customerList').innerHTML=customerRows(a)}
+function customerOrders(id){const c=customers.find(x=>x.id===id);const os=orders.filter(o=>o.customer===c.name&&(c.mobile?o.mobile===c.mobile:true));document.getElementById('modalTitle').textContent='👤 '+c.name;document.getElementById('modalBody').innerHTML='<div class="notice">Customer ke purane orders yahan rahenge. Naya order add karne par purana data delete nahi hota.</div>'+(os.length?os.map(o=>'<div class="row"><div><strong>'+esc(o.garment)+'</strong><div class="muted">Delivery: '+esc(o.delivery||'-')+' • '+esc(o.status)+'</div></div><span class="amount">'+money(o.total)+'</span></div>').join(''):'<div class="empty">No orders</div>')+'<button class="primary" onclick="openModule(\'neworder\')">＋ New Order</button>'}
+function ordersHTML(){
+ if(!orders.length)return '<div class="empty">Abhi koi order nahi hai.</div><button class="primary" onclick="openModule(\'neworder\')">＋ New Order</button>';
+ return '<div>'+orders.slice().sort((a,b)=>(b.created||'').localeCompare(a.created||'')).map(o=>'<div class="row"><div><strong>'+esc(o.customer)+'</strong><div class="muted">'+esc(o.garment)+' • '+esc(o.delivery||'-')+'</div><div style="margin-top:4px"><span class="pill">'+esc(o.status)+'</span></div></div><div style="text-align:right"><strong>'+money(o.total)+'</strong><div class="muted">Bal. '+money(Math.max(0,o.total-o.advance))+'</div><button class="danger" style="margin-top:6px" onclick="deleteOrder('+o.id+')">Delete</button></div></div>').join('')+'</div><button class="primary" onclick="openModule(\'neworder\')">＋ New Order</button>';
+}
+function deleteOrder(id){orders=orders.filter(o=>o.id!==id);save();renderStats();openModule('orders');toast('Order delete ho gaya')}
+function measurementsHTML(){
+ return '<div class="notice">Garment select karke measurements enter karein. Ye Free test mein basic measurement workflow hai.</div><select class="search" id="m_g"><option>Kurti</option><option>Blouse</option><option>Pant</option><option>Shirt</option></select><div class="formgrid">'+['Height','Shoulder','Armhole','Chest','Waist','Hip','Sleeve','Neck Front','Neck Back','Thigh','Mori'].map(x=>'<div class="field"><label>'+x+'</label><input placeholder="inch"></div>').join('')+'</div><button class="primary" onclick="toast(\'Measurements demo mein save ki gayi ✓\')">💾 Save Measurement</button>';
+}
+function paymentsHTML(){
+ const due=orders.reduce((s,o)=>s+Math.max(0,o.total-o.advance),0);
+ return '<div class="stats"><div class="stat"><b>'+money(orders.reduce((s,o)=>s+o.total,0))+'</b><small>Total Sales</small></div><div class="stat"><b>'+money(orders.reduce((s,o)=>s+o.advance,0))+'</b><small>Advance</small></div><div class="stat"><b>'+money(due)+'</b><small>Balance</small></div></div><div class="section" style="margin-top:15px;padding:0 14px">'+(orders.length?orders.map(o=>'<div class="row"><span>'+esc(o.customer)+'</span><strong>'+money(Math.max(0,o.total-o.advance))+'</strong></div>').join(''):'<div class="empty">No payment data</div>')+'</div>';
+}
+function deliveryHTML(){
+ const today=new Date().toISOString().slice(0,10);const list=orders.filter(o=>o.status!=='Delivered').sort((a,b)=>(a.delivery||'').localeCompare(b.delivery||''));
+ return (list.length?list.map(o=>'<div class="row"><div><strong>'+esc(o.customer)+'</strong><div class="muted">'+esc(o.garment)+' • '+esc(o.delivery||'-')+'</div></div><button class="secondary" onclick="markReady('+o.id+')">'+(o.status==='Pending'?'Mark Ready':'Mark Delivered')+'</button></div>').join(''):'<div class="empty">Koi pending delivery nahi.</div>')+'<div class="notice" style="margin-top:14px">Reminder logic next production version mein delivery date se 2 din pehle add kiya ja sakta hai.</div>';
+}
+function markReady(id){const o=orders.find(x=>x.id===id);if(o){o.status=o.status==='Pending'?'Ready':'Delivered';save();renderStats();openModule('delivery');toast('Status update ho gaya ✓')}}
+function reportsHTML(){
+ const sales=orders.reduce((s,o)=>s+o.total,0), due=orders.reduce((s,o)=>s+Math.max(0,o.total-o.advance),0);
+ return '<div class="row"><span>Total Customers</span><strong>'+customers.length+'</strong></div><div class="row"><span>Total Orders</span><strong>'+orders.length+'</strong></div><div class="row"><span>Pending Orders</span><strong>'+orders.filter(o=>o.status!=='Delivered').length+'</strong></div><div class="row"><span>Total Sales</span><strong>'+money(sales)+'</strong></div><div class="row"><span>Pending Payment</span><strong>'+money(due)+'</strong></div><div class="notice" style="margin-top:14px">Advanced monthly/yearly reports Premium plans ke scope mein rakhe ja sakte hain.</div>';
+}
+function profileHTML(){
+ return '<div class="notice">Profile compulsory hai. Shop name dashboard ke top par isi profile se dikhta hai.</div><form onsubmit="saveProfile(event)"><div class="formgrid">'+
+ [['name','User Name'],['mobile','Mobile Number'],['shop','Shop Name'],['email','Email ID'],['address','Address'],['state','State'],['city','City'],['pin','Pincode']].map(a=>'<div class="field '+(a[0]==='address'?'full':'')+'"><label>'+a[1]+' *</label>'+(a[0]==='address'?'<textarea id="e_'+a[0]+'" required>'+esc(profile[a[0]])+'</textarea>':'<input id="e_'+a[0]+'" value="'+esc(profile[a[0]])+'" required>')+'</div>').join('')+
+ '</div><button class="primary">💾 Update Profile</button></form>';
+}
+function saveProfile(e){e.preventDefault();['name','mobile','shop','email','address','state','city','pin'].forEach(k=>profile[k]=document.getElementById('e_'+k).value.trim());localStorage.setItem(KEY,JSON.stringify(profile));renderHeader();document.getElementById('onboard').style.display='none';closeModal();toast('Profile update ho gaya ✓')}
+function backupHTML(){
+ return '<div class="notice"><strong>Free Plan:</strong> 1 GB cloud auto-backup ka final version backend se connect hoga. Is browser test mein backup sirf local demo hai.</div><div class="section" style="margin:0"><div class="row"><span>Demo Data Size</span><strong>'+Math.min(100,Math.round((JSON.stringify({customers,orders,workers}).length/1024/1024)*100))+' MB+</strong></div><button class="secondary" onclick="downloadDemo()">Demo Backup JSON</button><button class="primary" onclick="toast(\'Real cloud backup abhi connected nahi hai\')">☁️ Auto Backup Test</button></div>';
+}
+function downloadDemo(){const blob=new Blob([JSON.stringify({profile,customers,orders,workers},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='silai-guru-demo-backup.json';a.click();URL.revokeObjectURL(a.href)}
+function workersHTML(){
+ return '<div class="formgrid"><div class="field full"><label>Worker Name</label><input id="w_name"></div><div class="field"><label>Mobile</label><input id="w_mobile"></div><div class="field"><label>Work</label><input id="w_work" placeholder="Stitching / Finishing"></div></div><button class="primary" onclick="addWorker()">＋ Add Worker</button><div style="margin-top:10px">'+(workers.length?workers.map(w=>'<div class="row"><div><strong>'+esc(w.name)+'</strong><div class="muted">'+esc(w.work||'')+' • '+esc(w.mobile||'')+'</div></div><button class="danger" onclick="removeWorker('+w.id+')">Delete</button></div>').join(''):'<div class="empty">No workers added.</div>')+'</div>';
+}
+function addWorker(){const n=document.getElementById('w_name').value.trim();if(!n)return;workers.push({id:Date.now(),name:n,mobile:document.getElementById('w_mobile').value,work:document.getElementById('w_work').value});save();openModule('workers');toast('Worker add ho gaya ✓')}
+function removeWorker(id){workers=workers.filter(w=>w.id!==id);save();openModule('workers')}
+function garmentsHTML(){
+ return '<div class="notice">Free version ke default garments. Future version mein custom garment + detailed design options add kiye ja sakte hain.</div>'+['Kurti','Blouse','Pant','Dress','Shirt','Other'].map(x=>'<div class="row"><span>👗 '+x+'</span><span class="pill">Available</span></div>').join('');
+}
+function settingsHTML(){
+ return '<div class="row"><span>Plan</span><strong>FREE</strong></div><div class="row"><span>Photo Upload</span><span class="pill" style="background:#fff0f2;color:#d53f55">OFF</span></div><div class="row"><span>WhatsApp Sharing</span><span class="pill" style="background:#fff0f2;color:#d53f55">OFF</span></div><div class="row"><span>Cloud Backup</span><span class="pill" style="background:#fff0f2;color:#d53f55">Demo only</span></div><button class="primary" onclick="if(confirm(\'Demo ka saara local data delete karein?\')){localStorage.removeItem(CKEY);localStorage.removeItem(OKEY);localStorage.removeItem(WKEY);location.reload()}">🗑️ Reset Demo Data</button>';
+}
+document.getElementById('profileForm').addEventListener('submit',e=>{e.preventDefault();profile={name:p_name.value.trim(),mobile:p_mobile.value.trim(),shop:p_shop.value.trim(),email:p_email.value.trim(),address:p_address.value.trim(),state:p_state.value.trim(),city:p_city.value.trim(),pin:p_pin.value.trim()};localStorage.setItem(KEY,JSON.stringify(profile));document.getElementById('onboard').style.display='none';init();toast('Welcome to SILAI GURU ✓')});
+init();
 </script>
-</body></html>
+</body>
+</html>

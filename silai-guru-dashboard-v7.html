@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SILAI GURU — Dashboard</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5f6fb;color:#20213a}.top{background:linear-gradient(135deg,#5541dc,#8a63ee);color:#fff;padding:22px 16px 35px;border-radius:0 0 30px 30px}.brand{font-size:27px;font-weight:900}.shop{font-size:19px;font-weight:800;margin-top:16px}.owner{font-size:13px;margin-top:4px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:-18px 12px 18px}.stat{background:#fff;border-radius:17px;padding:14px;text-align:center;box-shadow:0 5px 18px #0001}.stat b{display:block;color:#5541dc;font-size:22px;margin-bottom:4px}.icons{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;padding:0 12px}.icon{border:0;background:#fff;border-radius:18px;min-height:92px;box-shadow:0 4px 15px #0001;font-size:27px;cursor:pointer}.icon span{display:block;font-size:11px;font-weight:800;margin-top:7px}.profile{background:#fff;margin:20px 12px;padding:18px;border-radius:19px}.modal{display:none;position:fixed;inset:0;background:#0008;z-index:20;align-items:flex-end}.modal.on{display:flex}.sheet{background:#fff;width:100%;max-height:92vh;overflow:auto;border-radius:27px 27px 0 0;padding:20px}.close{float:right;width:42px;height:42px;border:0;border-radius:50%;font-size:25px;background:#eee}.sheet h2{color:#5541dc;margin:5px 55px 15px 0}.field{margin:10px 0}.field label{display:block;font-weight:700;margin-bottom:5px}input,select,textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:12px;font-size:16px}.garment{background:#f5f3ff;border-radius:16px;padding:13px;margin:12px 0;border-left:4px solid #5541dc}.btn{width:100%;border:0;border-radius:13px;padding:13px;background:#5541dc;color:#fff;font-weight:800;margin-top:8px}.btn.red{background:#e95353}.btn.light{background:#eee;color:#333}.customer{background:#fff;border:1px solid #eee;border-radius:17px;padding:14px;margin:10px 0;box-shadow:0 3px 10px #0001}.row{display:flex;gap:8px}.row .btn{flex:1}.pill{display:inline-block;background:#eee9ff;color:#5541dc;border-radius:20px;padding:5px 9px;font-size:12px;font-weight:700;margin:3px}.empty{padding:25px;text-align:center;color:#777;background:#f7f7fa;border-radius:15px}.danger{color:#c33}.search{margin-bottom:12px}@media(max-width:560px){.icons{grid-template-columns:repeat(4,1fr)}.row{flex-direction:column}}
+</style></head>
+<body>
+<header class="top"><div class="brand">✂️ SILAI GURU</div><div class="shop" id="shop">Shop</div><div class="owner" id="owner"></div></header>
+<section class="stats"><div class="stat"><b id="cc">0</b>Customers</div><div class="stat"><b id="oc">0</b>Orders</div><div class="stat"><b id="pa">₹0</b>Pending</div></section>
+<section class="icons" id="icons"></section>
+<section class="profile"><h3>Shop Profile</h3><div id="pv"></div></section>
+<div class="modal" id="modal"><div class="sheet"><button class="close" id="close">×</button><div id="content"></div></div></div>
+<script>
+const profileKey='sg_v7_profile', ordersKey='sg_v7_orders';
+const q=new URLSearchParams(location.search);
+const profile={user:q.get('user')||'',mobile:q.get('mobile')||'',shop:q.get('shop')||'',email:q.get('email')||'',address:q.get('address')||'',state:q.get('state')||'',city:q.get('city')||'',pincode:q.get('pincode')||''};
+if(profile.shop){localStorage.setItem(profileKey,JSON.stringify(profile))}
+const saved=JSON.parse(localStorage.getItem(profileKey)||'null'); if(saved)Object.assign(profile,saved);
+let orders=JSON.parse(localStorage.getItem(ordersKey)||'[]');
+const names=['New Order','Customers','Orders','Measurements','Payments','Delivery','Reports','Shop Profile','Backup','Workers','Garments','Settings','Plans & Upgrade'];
+const icons=['🧾','👥','📦','📏','💰','🚚','📊','🏪','☁️','👷','👗','⚙️','💎'];
+const $=x=>document.getElementById(x);
+$('shop').textContent=(profile.shop||'SILAI GURU')+(profile.city?' • '+profile.city+', '+profile.state:'');
+$('owner').textContent=profile.user?'Owner: '+profile.user+' • '+profile.mobile:'';
+$('pv').innerHTML='<b>User:</b> '+esc(profile.user)+'<br><b>Mobile:</b> '+esc(profile.mobile)+'<br><b>Email:</b> '+esc(profile.email)+'<br><b>Address:</b> '+esc(profile.address)+'<br><b>State/City:</b> '+esc(profile.state)+' / '+esc(profile.city)+'<br><b>Pincode:</b> '+esc(profile.pincode);
+$('icons').innerHTML=names.map((n,i)=>'<button class="icon" onclick="openScreen('+i+')">'+icons[i]+'<span>'+n+'</span></button>').join('');
+function esc(s){return String(s||'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
+function stats(){const mobiles=[...new Set(orders.map(x=>x.mobile))];let pending=orders.reduce((a,x)=>a+(+x.total||0)-(+x.advance||0),0);$('cc').textContent=mobiles.length;$('oc').textContent=orders.length;$('pa').textContent='₹'+pending}
+stats();
+function fields(type,vals={}){
+ let f=type==='Pant'?['Height','Hip','Thigh','Mori']:type==='Blouse'?['Height','Shoulder','Armhole','Upper Chest','Chest','Waist','Neck Front','Neck Back','Sleeve']:['Height','Shoulder','Armhole','Upper Chest','Chest','Waist','Hip','Neck Front','Neck Back','Sleeve'];
+ return f.map(x=>'<div class="field"><label>'+x+'</label><input data-m="'+x+'" value="'+esc(vals[x]||'')+'"></div>').join('')
+}
+function garmentHTML(g={name:'Kurti',measurements:{}}){
+ return '<div class="garment"><div class="field"><label>Garment Type</label><select class="gtype">'+['Kurti','Blouse','Pant','Dress','Shirt','Other'].map(x=>'<option '+(x===g.name?'selected':'')+'>'+x+'</option>').join('')+'</select></div><div class="measure">'+fields(g.name,g.measurements)+'</div><button class="btn red removeG">− Remove Garment</button></div>'
+}
+function bindGarments(){
+ document.querySelectorAll('.garment').forEach(d=>{
+  const sel=d.querySelector('.gtype');sel.onchange=()=>d.querySelector('.measure').innerHTML=fields(sel.value,{});
+  d.querySelector('.removeG').onclick=()=>{if(document.querySelectorAll('.garment').length>1)d.remove();else alert('कम से कम 1 garment रखना जरूरी है');}
+ })
+}
+function openScreen(n){
+ let h='<h2>'+names[n]+'</h2>';
+ if(n===0)h+=newOrderHTML();
+ if(n===1)h+=customersHTML();
+ if(n===2)h+=ordersHTML();
+ if(n===3)h+='<p>Customer ke garment-wise measurements yahan se dekhein.</p>'+orders.map(x=>'<div class="customer"><b>'+esc(x.name)+'</b>'+x.garments.map(g=>'<div class="garment"><b>👗 '+esc(g.name)+'</b>'+Object.entries(g.measurements||{}).filter(a=>a[1]).map(a=>'<span class="pill">'+esc(a[0])+': '+esc(a[1])+'</span>').join('')+'</div>').join('')+'</div>').join('')||'<div class="empty">No measurements yet.</div>';
+ if(n===4)h+='<div class="customer"><b>Total Sales</b><br>₹'+orders.reduce((a,x)=>a+(+x.total||0),0)+'</div><div class="customer"><b>Advance Received</b><br>₹'+orders.reduce((a,x)=>a+(+x.advance||0),0)+'</div><div class="customer"><b>Pending</b><br>₹'+orders.reduce((a,x)=>a+(+x.total||0)-(+x.advance||0),0)+'</div>';
+ if(n===5)h+=orders.length?orders.map(x=>'<div class="customer">🚚 <b>'+esc(x.name)+'</b><br>Delivery: '+(x.delivery||'Not set')+'<br>Mobile: '+esc(x.mobile)+'</div>').join(''):'<div class="empty">No deliveries.</div>';
+ if(n===6)h+='<div class="customer"><b>Customers:</b> '+[...new Set(orders.map(x=>x.mobile))].length+'</div><div class="customer"><b>Orders:</b> '+orders.length+'</div><div class="customer"><b>Pending Payment:</b> ₹'+orders.reduce((a,x)=>a+(+x.total||0)-(+x.advance||0),0)+'</div>';
+ if(n===7)h+='<div class="customer">'+$('pv').innerHTML+'</div>';
+ if(n===8)h+='<div class="customer">☁️ <b>Free Plan</b><br>1 GB SILAI GURU cloud backup concept<br>Restore inside SILAI GURU.</div><button class="btn" onclick="alert(\'Demo backup saved locally on this device. Real cloud will be connected in production.\')">Abhi Backup Karen</button>';
+ if(n===9)h+='<div class="field"><label>Worker Name</label><input id="worker"></div><div class="field"><label>Mobile</label><input id="workerMob"></div><button class="btn" onclick="alert(\'Worker saved in demo screen.\')">Save Worker</button>';
+ if(n===10)h+='<div class="customer">👗 Kurti — Height, Shoulder, Armhole, Chest, Waist, Hip, Neck, Sleeve</div><div class="customer">👚 Blouse — Height, Shoulder, Armhole, Chest, Waist, Neck, Sleeve</div><div class="customer">👖 Pant — Height, Hip, Thigh, Mori</div>';
+ if(n===11)h+='<div class="customer">🔔 Delivery reminder: delivery date se 2 din pehle reminder concept.</div><button class="btn" onclick="alert(\'Reminder setting saved.\')">Save Reminder Setting</button>';
+ if(n===12)h+='<div class="customer"><b>FREE ₹0</b><br>Basic use + 1 GB backup</div><div class="customer"><b>STANDARD ₹149/month</b><br>5 GB SILAI GURU cloud</div><div class="customer"><b>PREMIUM ₹249/month</b><br>10 GB SILAI GURU cloud</div><div class="customer"><b>PREMIUM PRO ₹449/month</b><br>25 GB + Google Drive backup</div>';
+ $('content').innerHTML=h;$('modal').className='modal on';bindGarments();
+ if(n===0){$('addG').onclick=()=>{$('garments').insertAdjacentHTML('beforeend',garmentHTML());bindGarments()};$('saveOrder').onclick=saveNewOrder}
+ if(n===1){$('customerSearch').oninput=()=>filterCustomers($('customerSearch').value)}
+}
+function newOrderHTML(){
+ return '<p>Ek customer ke andar multiple garments. Har garment ke neeche uski alag measurements.</p><div class="field"><label>Customer Name *</label><input id="newName"></div><div class="field"><label>Mobile *</label><input id="newMobile" inputmode="numeric"></div><div id="garments">'+garmentHTML()+'</div><button class="btn light" id="addG">＋ Add Another Garment</button><div class="field"><label>Work Taken Date</label><input id="workDate" type="date"></div><div class="field"><label>Delivery Date</label><input id="delivery" type="date"></div><div class="field"><label>Total Amount</label><input id="total" type="number" min="0"></div><div class="field"><label>Advance</label><input id="advance" type="number" min="0"></div><button class="btn" id="saveOrder">Save Customer & Order</button>'
+}
+function collectGarments(){return [...document.querySelectorAll('.garment')].map(d=>{let m={};d.querySelectorAll('[data-m]').forEach(x=>m[x.dataset.m]=x.value);return{name:d.querySelector('.gtype').value,measurements:m}})}
+function saveNewOrder(){
+ const name=$('newName').value.trim(),mobile=$('newMobile').value.trim(),gs=collectGarments();
+ if(!name||!mobile||!gs.length){alert('Customer Name, Mobile aur kam se kam 1 garment bhariye');return}
+ const existing=orders.find(x=>x.mobile===mobile);
+ const order={id:Date.now(),name,mobile,garments:gs,workDate:$('workDate').value,delivery:$('delivery').value,total:$('total').value||0,advance:$('advance').value||0};
+ if(existing){existing.name=name;existing.garments.push(...gs);existing.total=+existing.total+(+order.total||0);existing.advance=+existing.advance+(+order.advance||0);existing.delivery=order.delivery||existing.delivery;existing.workDate=order.workDate||existing.workDate}
+ else orders.push(order);
+ localStorage.setItem(ordersKey,JSON.stringify(orders));stats();closeModal();alert('Customer & Order saved ✅');
+}
+function customersHTML(){return '<input class="search" id="customerSearch" placeholder="Name ya mobile search karein">'+customerList(orders)}
+function customerList(list){if(!list.length)return '<div class="empty">No customers yet.</div>';return list.map((x,i)=>'<div class="customer"><b>'+esc(x.name)+'</b><br>📱 '+esc(x.mobile)+'<br><span class="pill">'+x.garments.length+' garments</span><div>'+x.garments.map((g,j)=>'<span class="pill">👗 '+esc(g.name)+'</span>').join('')+'</div><div class="row"><button class="btn" onclick="addGarmentTo('+i+')">＋ Add Garment</button><button class="btn light" onclick="editCustomer('+i+')">✏️ Edit</button></div><button class="btn red" onclick="removeCustomer('+i+')">Delete Customer</button></div>').join('')}
+function filterCustomers(v){let a=v.toLowerCase();document.querySelector('#content').innerHTML='<h2>Customers</h2><input class="search" id="customerSearch" value="'+esc(v)+'" placeholder="Name ya mobile search karein">'+customerList(orders.filter(x=>x.name.toLowerCase().includes(a)||x.mobile.includes(a)));$('customerSearch').oninput=()=>filterCustomers($('customerSearch').value)}
+function addGarmentTo(i){let x=orders[i];$('content').innerHTML='<h2>Add Garment — '+esc(x.name)+'</h2><div id="garments">'+garmentHTML()+'</div><button class="btn light" id="addG">＋ Add Another Garment</button><button class="btn" id="saveExtra">Save Garment(s)</button>';bindGarments();$('addG').onclick=()=>{$('garments').insertAdjacentHTML('beforeend',garmentHTML());bindGarments()};$('saveExtra').onclick=()=>{x.garments.push(...collectGarments());localStorage.setItem(ordersKey,JSON.stringify(orders));closeModal();alert('Garment added ✅')}}
+function editCustomer(i){let x=orders[i];$('content').innerHTML='<h2>Edit Customer</h2><div class="field"><label>Name</label><input id="en" value="'+esc(x.name)+'"></div><div class="field"><label>Mobile</label><input id="em" value="'+esc(x.mobile)+'"></div><div id="garments">'+x.garments.map(garmentHTML).join('')+'</div><button class="btn light" id="addG">＋ Add Garment</button><div class="field"><label>Delivery Date</label><input id="ed" type="date" value="'+esc(x.delivery)+'"></div><div class="field"><label>Total</label><input id="et" type="number" value="'+esc(x.total)+'"></div><div class="field"><label>Advance</label><input id="ea" type="number" value="'+esc(x.advance)+'"></div><button class="btn" id="update">Update Customer</button>';bindGarments();$('addG').onclick=()=>{$('garments').insertAdjacentHTML('beforeend',garmentHTML());bindGarments()};$('update').onclick=()=>{x.name=$('en').value.trim();x.mobile=$('em').value.trim();x.garments=collectGarments();x.delivery=$('ed').value;x.total=$('et').value||0;x.advance=$('ea').value||0;localStorage.setItem(ordersKey,JSON.stringify(orders));stats();closeModal();alert('Customer updated ✅')}}
+function removeCustomer(i){if(confirm('Is customer ko delete karein?')){orders.splice(i,1);localStorage.setItem(ordersKey,JSON.stringify(orders));stats();openScreen(1)}}
+function ordersHTML(){return orders.length?orders.map((x,i)=>'<div class="customer"><b>Order '+(i+1)+' — '+esc(x.name)+'</b><br>'+x.garments.map(g=>'👗 '+esc(g.name)).join(' • ')+'<br>Delivery: '+(x.delivery||'Not set')+'<br>Total ₹'+(+x.total||0)+' • Advance ₹'+(+x.advance||0)+' • Balance ₹'+((+x.total||0)-(+x.advance||0))+'</div>').join(''):'<div class="empty">No orders yet.</div>'}
+function closeModal(){$('modal').className='modal'}
+$('close').onclick=closeModal;
+</script></body></html>

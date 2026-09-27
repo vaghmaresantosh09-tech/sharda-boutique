@@ -15,10 +15,30 @@
 <div id="modal" class="modal"><div class="sheet"><button class="close" onclick="closeM()">✕</button><h2 id="mt"></h2><div id="mb"></div></div></div>
 <script>
 const K='sg_profile',CK='sg_customers',OK='sg_orders',PK='sg_plan',TK='sg_theme',DK='sg_profile_extra';let p=JSON.parse(localStorage.getItem(K)||'null'),cs=JSON.parse(localStorage.getItem(CK)||'[]'),os=JSON.parse(localStorage.getItem(OK)||'[]'),plan=localStorage.getItem(PK)||'free';
-const mods=[['➕','New Order','order'],['👥','Customers','customers'],['📋','Orders','orders'],['📏','Measurements','measure'],['💰','Payments','payments'],['🚚','Delivery','delivery'],['📊','Reports','reports'],['🏪','Shop Profile','profile'],['☁️','Backup','backup'],['🧑‍🔧','Workers','workers'],['👗','Garments','garments'],['⚙️','Settings','settings'],['💎','Plans & Upgrade','plans']];
+const mods=[['New Order','order'],['Customers','customers'],['Orders','orders'],['Measurements','measure'],['Payments','payments'],['Delivery','delivery'],['Reports','reports'],['Shop Profile','profile'],['Backup','backup'],['Workers','workers'],['Garments','garments'],['Settings','settings'],['Plans & Upgrade','plans']];
+function dashboardIcon(t){
+ const s='stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"';
+ const F=b=>'<svg viewBox="0 0 64 64" aria-hidden="true">'+b+'</svg>';
+ const shapes={
+  'New Order':`<rect x="14" y="9" width="36" height="46" rx="6" fill="#eef0ff" ${s}/><path d="M23 20h18M23 29h18M23 38h9" ${s}/><path d="M40 37l7 7-12 7-3-9z" fill="#6b5ce7" ${s}/>`,
+  'Customers':`<circle cx="25" cy="23" r="9" fill="#dceeff" ${s}/><circle cx="43" cy="25" r="7" fill="#eee9ff" ${s}/><path d="M10 51c1-10 7-15 15-15s14 5 15 15M36 39c7-4 16 1 18 12" fill="#e8f4ff" ${s}/>`,
+  'Orders':`<rect x="14" y="8" width="36" height="48" rx="6" fill="#fff4d6" ${s}/><path d="M24 8v7h16V8M22 25h20M22 34h15M22 43h11" ${s}/><circle cx="46" cy="45" r="7" fill="#6b5ce7" ${s}/><path d="m43 45 2 2 4-5" stroke="#fff" ${s}/>`,
+  'Measurements':`<path d="M18 52 51 19 45 13 12 46z" fill="#e6f5ff" ${s}/><path d="m22 48 4 4M28 42l4 4M34 36l4 4M40 30l4 4M17 17h12M17 24h8M17 31h12" ${s}/>`,
+  'Payments':`<circle cx="32" cy="32" r="22" fill="#fff2cf" ${s}/><path d="M21 25h22v15H21z" fill="#ffe39a" ${s}/><path d="M27 33h10M32 29v8M35 30c-1-2-6-2-6 1 0 3 7 1 7 5 0 3-5 4-7 1" ${s}/>`,
+  'Delivery':`<path d="M8 18h31v25H8z" fill="#e8f4ff" ${s}/><path d="M39 27h10l7 8v8H39z" fill="#eee9ff" ${s}/><circle cx="20" cy="47" r="6" fill="#fff" ${s}/><circle cx="48" cy="47" r="6" fill="#fff" ${s}/><path d="M45 27v8h10" ${s}/>`,
+  'Reports':`<path d="M12 52V12M12 52h43" ${s}/><rect x="20" y="34" width="7" height="18" rx="2" fill="#bfe4ff"/><rect x="31" y="25" width="7" height="27" rx="2" fill="#d9d1ff"/><rect x="42" y="17" width="7" height="35" rx="2" fill="#ffd98e"/><path d="m20 29 9-8 8 4 10-12" fill="none" ${s}/>`,
+  'Shop Profile':`<path d="M10 25 15 12h34l5 13" fill="#eee9ff" ${s}/><path d="M12 25h40v29H12z" fill="#f8f7ff" ${s}/><path d="M19 54V38h12v16M39 35h7M39 42h7" ${s}/><path d="M12 25c0 5 9 6 12 0 2 6 12 6 14 0 3 6 12 5 14 0" fill="#dceeff" ${s}/>`,
+  'Backup':`<path d="M19 46h28c7 0 10-5 8-10-1-4-5-7-9-7-2-8-14-12-21-5-7-1-13 4-13 11 0 6 3 11 7 11z" fill="#eaf4ff" ${s}/><path d="M32 25v20M25 38l7 7 7-7" ${s}/>`,
+  'Workers':`<circle cx="32" cy="19" r="8" fill="#dceeff" ${s}/><path d="M17 51c1-12 7-18 15-18s14 6 15 18" fill="#eee9ff" ${s}/><path d="M42 42h12M48 36v12" ${s}/>`,
+  'Garments':`<path d="M25 12h14l4 9 10 7-7 10-7-5v21H25V33l-7 5-7-10 10-7z" fill="#e8f4ff" ${s}/><path d="M28 12c0 5 8 8 8 0M25 31h14" fill="none" ${s}/>`,
+  'Settings':`<circle cx="32" cy="32" r="10" fill="#eee9ff" ${s}/><path d="M32 8v7M32 49v7M8 32h7M49 32h7M15 15l5 5M44 44l5 5M49 15l-5 5M20 44l-5 5" ${s}/><circle cx="32" cy="32" r="4" fill="#6b5ce7"/>`,
+  'Plans & Upgrade':`<path d="m32 7 18 10-5 30-13 10-13-10-5-30z" fill="#e8f4ff" ${s}/><path d="m32 7 8 13-8 11-8-11z" fill="#d8d0ff" ${s}/><path d="m24 20 8 11 8-11" fill="#ffe19a" ${s}/><path d="M18 48h28" ${s}/>`
+ };
+ return F(shapes[t]||`<circle cx="32" cy="32" r="20" fill="#eee9ff" ${s}/>`);
+}
 function esc(x){return String(x||'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}function money(x){return'₹'+Number(x||0).toLocaleString('en-IN')}function save(){localStorage.setItem(CK,JSON.stringify(cs));localStorage.setItem(OK,JSON.stringify(os))}
 function el(id){return document.getElementById(id)}function render(){if(!p)return;el('topshop').textContent=(p.shop||'My Shop')+' • '+(p.city||'')+', '+(p.state||'');el('topowner').textContent='Owner: '+(p.name||'')+' • Plan: '+PLAN_INFO[plan].name;el('nc').textContent=cs.length;el('no').textContent=os.length;const balance=os.reduce((s,o)=>s+Math.max(0,Number(o.total||0)-Number(o.advance||0)),0);el('nb').textContent=money(balance);const t=new Date().toISOString().slice(0,10),m=t.slice(0,7);el('td').textContent=os.filter(o=>o.delivery===t).length;el('ppay').textContent=money(balance);el('mo').textContent=os.filter(o=>(o.created||'').slice(0,7)===m).length;el('ad').textContent=plan==='free'?'ADVERTISEMENT · FREE PLAN':plan==='standard'?'ADVERTISEMENT · ADVANCE (1×/DAY)':'✓ '+PLAN_INFO[plan].name+' · AD-FREE';el('recent').innerHTML=os.slice(-5).reverse().map(o=>'<div class="row"><span><b>'+esc(o.customer)+'</b><br><small>'+esc(o.garment)+' • '+esc(o.delivery)+'</small></span><b>'+money(o.total)+'</b></div>').join('')||'<div class="empty">अभी कोई order नहीं है।</div>'}
-icons.innerHTML=mods.map((x,i)=>'<button class="ico" onclick="openM(\''+x[2]+'\')"><i>'+x[0]+'</i><small>'+x[1]+'</small></button>').join('');
+icons.innerHTML=mods.map(x=>'<button class="ico" onclick="openM(\''+x[1]+'\')"><i class="dash-icon">'+dashboardIcon(x[0])+'</i><small>'+x[0]+'</small></button>').join('');
 const PLAN_INFO={
 free:{name:'FREE',price:'₹0',storage:'1 GB',devices:1,photos:'OFF',wa:'OFF',ads:'Banner + App-open'},
 standard:{name:'ADVANCE',price:'₹149/month',storage:'5 GB',devices:2,photos:'Up to 10',wa:'Normal WhatsApp Bill',ads:'App-open once/day'},

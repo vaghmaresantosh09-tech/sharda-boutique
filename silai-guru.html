@@ -269,14 +269,22 @@ function openDesignCatalog(type){
   const saved=loadSavedDesigns();
   const chips=['All Designs'].concat(designs.slice(0,5).map(x=>x.name));
   const T=JSON.stringify(type);
+  const q=encodeURIComponent(type+' garment designs');
+  const fileLabel=(mode)=>'<label class="source-chip">'+(mode==='camera'?'📷 Camera':'🖼️ Gallery')+'<input type="file" accept="image/*" '+(mode==='camera'?'capture="environment"':'')+' onchange="saveUploadedDesign('+T+')" style="position:absolute;opacity:0;width:1px;height:1px"></label>';
   mt.textContent='👗 '+type+' Designs';
-  mb.innerHTML=`<div class="design-back"><button class="secondary" onclick="openGarmentLibrary()">← Garments</button><b>${esc(type)} · ${designs.length} Designs</b></div><div class="design-sources">
-    <button class="source-chip active" onclick="showGarmentSource('library',${T})">🎨 SILAI GURU</button>
-    <button class="source-chip" onclick="showGarmentSource('camera',${T})">📷 Camera</button>
-    <button class="source-chip" onclick="showGarmentSource('gallery',${T})">🖼️ Gallery</button>
-    <button class="source-chip" onclick="showGarmentSource('web',${T})">🌐 Websites</button>
-    <button class="source-chip" onclick="showGarmentSource('link',${T})">🔗 Add Link</button>
-  </div><div id="garmentSourceArea"></div><input class="design-search" id="designSearch" placeholder="🔎 Search ${esc(type)} design..." oninput="filterDesigns(${T})"><div class="design-toolbar">${chips.map((x,i)=>'<button class="design-chip '+(i===0?'active':'')+'">'+esc(x)+'</button>').join('')}</div><div id="designGrid" class="design-grid">${designs.map(d=>designCardHtml(d,saved)).join('')}</div><div class="library-note">💡 Yahi catalogue New Order ke design selection me bhi use hoga.</div>`;
+  mb.innerHTML=`<div class="design-back"><button type="button" class="secondary" onclick="openGarmentLibrary()">← Garments</button><b>${esc(type)} · ${designs.length} Designs</b></div>
+  <div class="design-sources">
+    <button type="button" class="source-chip active" onclick="showGarmentSource('library',${T})">🎨 SILAI GURU</button>
+    ${fileLabel('camera')}
+    ${fileLabel('gallery')}
+    <a class="source-chip" href="https://www.google.com/search?tbm=isch&q=${q}" target="_blank" rel="noopener">🌐 Websites ↗</a>
+    <button type="button" class="source-chip" onclick="showGarmentSource('link',${T})">🔗 Add Link</button>
+  </div>
+  <div id="garmentSourceArea"></div>
+  <input class="design-search" id="designSearch" placeholder="🔎 Search ${esc(type)} design..." oninput="filterDesigns(${T})">
+  <div class="design-toolbar">${chips.map((x,i)=>'<button type="button" class="design-chip '+(i===0?'active':'')+'">'+esc(x)+'</button>').join('')}</div>
+  <div id="designGrid" class="design-grid">${designs.map(d=>designCardHtml(d,saved)).join('')}</div>
+  <div class="library-note">💡 New Order me bhi yahi Design Library use hogi.</div>`;
   showGarmentSource('library',type);
 }
 function showGarmentSource(mode,type){
@@ -386,15 +394,17 @@ function openOrderDesignPicker(index){
 }
 function openDesignCatalogForOrder(type,index){
   const designs=garmentDesignsFor(type).concat(loadSavedDesigns().filter(x=>x.type===type).map(x=>({...x,svg:x.svg||designVisual(type,0)})));
-  const T=JSON.stringify(type),I=JSON.stringify(index);
+  const T=JSON.stringify(type),I=JSON.stringify(index),q=encodeURIComponent(type+' garment designs');
   window.orderDesignTargetIndex=index;
+  const camera='<label class="source-chip">📷 Camera<input type="file" accept="image/*" capture="environment" onchange="saveOrderUploadedDesign('+T+','+I+')" style="position:absolute;opacity:0;width:1px;height:1px"></label>';
+  const gallery='<label class="source-chip">🖼️ Gallery<input type="file" accept="image/*" onchange="saveOrderUploadedDesign('+T+','+I+')" style="position:absolute;opacity:0;width:1px;height:1px"></label>';
   mt.textContent='🎨 '+type+' Design';
   mb.innerHTML=`<div class="design-back"><button type="button" class="secondary" onclick="backToOrderPicker()">← Back to Order</button><b>${esc(type)} · Select Design</b></div>
   <div class="design-sources">
     <button type="button" class="source-chip active" onclick="showOrderDesignSource('library',${T},${I})">🎨 SILAI GURU</button>
-    <button type="button" class="source-chip" onclick="openOrderCamera(${T},${I})">📷 Camera</button>
-    <button type="button" class="source-chip" onclick="openOrderGallery(${T},${I})">🖼️ Gallery</button>
-    <button type="button" class="source-chip" onclick="showOrderDesignSource('web',${T},${I})">🌐 Websites</button>
+    ${camera}
+    ${gallery}
+    <a class="source-chip" href="https://www.google.com/search?tbm=isch&q=${q}" target="_blank" rel="noopener">🌐 Websites ↗</a>
   </div>
   <div id="orderDesignSourceArea"></div>
   <input class="design-search" id="orderDesignSearch" placeholder="🔎 Search ${esc(type)} design..." oninput="filterOrderDesigns(${T})">

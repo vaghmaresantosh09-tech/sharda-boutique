@@ -277,7 +277,7 @@ function openDesignCatalog(type){
     <button type="button" class="source-chip active" onclick="showGarmentSource('library',${T})">🎨 SILAI GURU</button>
     ${fileLabel('camera')}
     ${fileLabel('gallery')}
-    <a class="source-chip" href="https://www.pinterest.com/search/pins/?q='+encodeURIComponent(type+' designs')+'" target="_blank" rel="noopener noreferrer" style="display:inline-block;text-decoration:none;color:inherit;">🌐 Websites</a>
+    <a class="source-chip" href="https://www.pinterest.com/search/pins/?q='+encodeURIComponent(type+' designs')+'" target="_blank" rel="noopener noreferrer" style="display:inline-block;text-decoration:none;color:inherit;">✨ Design Inspiration</a>
     <button type="button" class="source-chip" onclick="showGarmentSource('link',${T})">🔗 Add Link</button>
   </div>
   <div id="garmentSourceArea"></div>
@@ -424,7 +424,7 @@ function openDesignCatalogForOrder(type,index){
     <button type="button" class="source-chip active" onclick="showOrderDesignSource('library',${T},${I})">🎨 SILAI GURU</button>
     ${camera}
     ${gallery}
-    <button type="button" class="source-chip" id="orderWebsitesBtn" onclick="openOrderWebsites(${T},${I});return false;">🌐 Websites</button>
+    <button type="button" class="source-chip" id="orderWebsitesBtn" onclick="openOrderWebsites(${T},${I});return false;">✨ Design Inspiration</button>
   </div>
   <div id="orderDesignSourceArea"></div>
   <input class="design-search" id="orderDesignSearch" placeholder="🔎 Search ${esc(type)} design..." oninput="filterOrderDesigns(${T})">
@@ -438,7 +438,7 @@ function openOrderWebsites(type,index){
   const box=document.getElementById('orderDesignSourceArea');
   if(!box)return;
   const q=encodeURIComponent(type+' designs');
-  box.innerHTML='<div class="design-source-box"><b>🌐 Design Websites</b><small>Design dekhne ke liye website select karein.</small><div class="design-source-grid">'+
+  box.innerHTML='<div class="design-source-box"><b>✨ Design Inspiration</b><small>Sirf design inspiration ke liye source select karein.</small><div class="design-source-grid">'+
     '<a class="source-card" href="https://www.pinterest.com/search/pins/?q='+q+'" target="_blank" rel="noopener noreferrer"><b>📌 Pinterest</b><small>'+esc(type)+' Designs</small><span>Open Website ↗</span></a>'+
     '<a class="source-card" href="https://www.bing.com/images/search?q='+q+'" target="_blank" rel="noopener noreferrer"><b>🖼️ Bing Images</b><small>'+esc(type)+' Designs</small><span>Open Images ↗</span></a>'+
     '<a class="source-card" href="https://www.google.com/search?tbm=isch&q='+q+'" target="_blank" rel="noopener noreferrer"><b>🔎 Google Images</b><small>More '+esc(type)+' designs</small><span>Open Images ↗</span></a>'+
@@ -455,7 +455,7 @@ function showWebsiteChoices(type,index){
     ['🛒 Meesho','https://www.meesho.com/search?q='+q],
     ['🔎 Google Images','https://www.google.com/search?tbm=isch&q='+q]
   ];
-  box.innerHTML='<div class="design-source-box"><b>🌐 Design Websites</b><small>Jis website par design dekhna ho, uska button dabayein.</small><div class="design-source-grid">'+
+  box.innerHTML='<div class="design-source-box"><b>✨ Design Inspiration</b><small>Sirf design inspiration ke liye source select karein.</small><div class="design-source-grid">'+
     items.map(s=>'<div class="source-card"><b>'+s[0]+'</b><small>'+esc(type)+' Designs</small><a class="secondary" href="'+s[1]+'" target="_blank" rel="noopener noreferrer" style="display:block;text-decoration:none;text-align:center">Open Website ↗</a></div>').join('')+
     '</div></div>';
 }
@@ -472,7 +472,7 @@ function showOrderWebsiteChoices(type,index){
   }
   if(!box)return false;
   const q=encodeURIComponent(type+' designs');
-  box.innerHTML='<div class="design-source-box"><b>🌐 Design Websites</b><small>Jis website par design dekhna ho, uska button dabayein.</small><div class="design-source-grid">'+
+  box.innerHTML='<div class="design-source-box"><b>✨ Design Inspiration</b><small>Sirf design inspiration ke liye source select karein.</small><div class="design-source-grid">'+
     '<a class="source-card" href="https://www.pinterest.com/search/pins/?q='+q+'" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit"><b>📌 Pinterest</b><small>'+esc(type)+' Designs</small><span>Open ↗</span></a>'+
     '<a class="source-card" href="https://www.myntra.com/search?q='+q+'" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit"><b>🛍️ Myntra</b><small>'+esc(type)+' Designs</small><span>Open ↗</span></a>'+
     '<a class="source-card" href="https://www.meesho.com/search?q='+q+'" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit"><b>🛒 Meesho</b><small>Designs</small><span>Open ↗</span></a>'+
@@ -514,7 +514,7 @@ function showOrderDesignSource(mode,type,index){
   if(mode==='gallery'){box.innerHTML='<div class="design-source-box"><b>🖼️ Gallery</b><small>Phone Gallery se design photo select karein.</small><input id="orderDesignPhotoInput" type="file" accept="image/*" onchange="saveOrderUploadedDesign('+T+','+I+')" style="display:block;width:100%;margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:12px"></div>';return}
   if(mode==='web'){
     const q=encodeURIComponent(type+' designs');
-    box.innerHTML='<div class="design-source-box"><b>🌐 Design Websites</b><small>Jis website par design dekhna ho, uska button dabayein.</small><div class="design-source-grid">'+
+    box.innerHTML='<div class="design-source-box"><b>✨ Design Inspiration</b><small>Sirf design inspiration ke liye source select karein.</small><div class="design-source-grid">'+
       '<a class="source-card" href="https://www.pinterest.com/search/pins/?q='+q+'" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;display:block"><b>📌 Pinterest</b><small>'+esc(type)+' Designs</small><span>Open Website ↗</span></a>'+
       '<a class="source-card" href="https://www.myntra.com/search?q='+q+'" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;display:block"><b>🛍️ Myntra</b><small>'+esc(type)+' Designs</small><span>Open Website ↗</span></a>'+
       '<a class="source-card" href="https://www.meesho.com/search?q='+q+'" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;display:block"><b>🛒 Meesho</b><small>'+esc(type)+' Designs</small><span>Open Website ↗</span></a>'+

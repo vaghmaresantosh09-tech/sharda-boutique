@@ -386,22 +386,36 @@ function openOrderDesignPicker(index){
 }
 function openDesignCatalogForOrder(type,index){
   const designs=garmentDesignsFor(type).concat(loadSavedDesigns().filter(x=>x.type===type).map(x=>({...x,svg:x.svg||designVisual(type,0)})));
-  const T=JSON.stringify(type), I=JSON.stringify(index);
+  const T=JSON.stringify(type),I=JSON.stringify(index);
+  window.orderDesignTargetIndex=index;
   mt.textContent='🎨 '+type+' Design';
-  mb.innerHTML=`<div class="design-back"><button class="secondary" onclick="backToOrderPicker()">← Back to Order</button><b>${esc(type)} · Select Design</b></div>
+  mb.innerHTML=`<div class="design-back"><button type="button" class="secondary" onclick="backToOrderPicker()">← Back to Order</button><b>${esc(type)} · Select Design</b></div>
   <div class="design-sources">
-    <button class="source-chip active" onclick="showOrderDesignSource('library',${T},${I})">🎨 SILAI GURU</button>
-    <button class="source-chip" onclick="showOrderDesignSource('camera',${T},${I})">📷 Camera</button>
-    <button class="source-chip" onclick="showOrderDesignSource('gallery',${T},${I})">🖼️ Gallery</button>
-    <button class="source-chip" onclick="showOrderDesignSource('web',${T},${I})">🌐 Websites</button>
+    <button type="button" class="source-chip active" onclick="showOrderDesignSource('library',${T},${I})">🎨 SILAI GURU</button>
+    <button type="button" class="source-chip" onclick="openOrderCamera(${T},${I})">📷 Camera</button>
+    <button type="button" class="source-chip" onclick="openOrderGallery(${T},${I})">🖼️ Gallery</button>
+    <button type="button" class="source-chip" onclick="showOrderDesignSource('web',${T},${I})">🌐 Websites</button>
   </div>
   <div id="orderDesignSourceArea"></div>
   <input class="design-search" id="orderDesignSearch" placeholder="🔎 Search ${esc(type)} design..." oninput="filterOrderDesigns(${T})">
   <div id="orderDesignGrid" class="design-grid">${designs.map(d=>{
     const DTYPE=JSON.stringify(d.type),DNAME=JSON.stringify(d.name);
-    return '<div class="design-card"><div class="design-img">'+(d.image?'<img src="'+d.image+'" alt="'+esc(d.name)+'" loading="lazy">':d.svg)+'</div><div class="design-name">'+esc(d.name)+'</div><div class="design-actions"><button class="primary" onclick="selectDesignForOrder('+I+','+DTYPE+','+DNAME+')">✓ Select</button><button class="secondary" onclick="showDesignToCustomer('+DTYPE+','+DNAME+','+I+')">👁 Show</button></div></div>';
+    return '<div class="design-card"><div class="design-img">'+(d.image?'<img src="'+d.image+'" alt="'+esc(d.name)+'" loading="lazy">':d.svg)+'</div><div class="design-name">'+esc(d.name)+'</div><div class="design-actions"><button type="button" class="primary" onclick="selectDesignForOrder('+I+','+DTYPE+','+DNAME+')">✓ Select</button><button type="button" class="secondary" onclick="showDesignToCustomer('+DTYPE+','+DNAME+','+I+')">👁 Show</button></div></div>';
   }).join('')}</div>`;
   showOrderDesignSource('library',type,index);
+}
+function openOrderCamera(type,index){window.orderDesignTargetIndex=index;openOrderFilePicker(type,index,true)}
+function openOrderGallery(type,index){window.orderDesignTargetIndex=index;openOrderFilePicker(type,index,false)}
+function openOrderFilePicker(type,index,camera){
+  let input=document.getElementById('orderDesignPhotoInput');
+  if(!input){
+    input=document.createElement('input');input.type='file';input.id='orderDesignPhotoInput';input.accept='image/*';input.style.display='none';
+    document.body.appendChild(input);
+  }
+  input.setAttribute('capture',camera?'environment':'');
+  input.onchange=function(){saveOrderUploadedDesign(type,index)};
+  input.value='';
+  input.click();
 }
 function filterOrderDesigns(type){
   const q=String(document.getElementById('orderDesignSearch')?.value||'').toLowerCase().trim();

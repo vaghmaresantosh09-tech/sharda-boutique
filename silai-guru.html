@@ -414,15 +414,18 @@ function openDesignCatalogForOrder(type,index){
   }).join('')}</div>`;
   showOrderDesignSource('library',type,index);
 }
-function openDesignWebsite(url){window.location.href=url}
+function openDesignWebsite(url){window.open(url,'_blank','noopener,noreferrer')}
 function showWebsiteChoices(type,index){
   const box=document.getElementById('garmentSourceArea');if(!box)return;
   const q=encodeURIComponent(type+' designs');
+  const items=[
+    ['📌 Pinterest','https://www.pinterest.com/search/pins/?q='+q],
+    ['🛍️ Myntra','https://www.myntra.com/search?q='+q],
+    ['🛒 Meesho','https://www.meesho.com/search?q='+q],
+    ['🔎 Google Images','https://www.google.com/search?tbm=isch&q='+q]
+  ];
   box.innerHTML='<div class="design-source-box"><b>🌐 Design Websites</b><small>Jis website par design dekhna ho, uska button dabayein.</small><div class="design-source-grid">'+
-    '<button type="button" class="source-card" onclick="openDesignWebsite(\'https://www.pinterest.com/search/pins/?q='+q+'\')"><b>📌 Pinterest</b><small>'+esc(type)+' Designs</small><span>Open ↗</span></button>'+
-    '<button type="button" class="source-card" onclick="openDesignWebsite(\'https://www.myntra.com/search?q='+q+'\')"><b>🛍️ Myntra</b><small>'+esc(type)+' Designs</small><span>Open ↗</span></button>'+
-    '<button type="button" class="source-card" onclick="openDesignWebsite(\'https://www.meesho.com/search?q='+q+'\')"><b>🛒 Meesho</b><small>Designs</small><span>Open ↗</span></button>'+
-    '<button type="button" class="source-card" onclick="openDesignWebsite(\'https://www.google.com/search?tbm=isch&q='+q+'\')"><b>🔎 Google Images</b><small>More designs</small><span>Open ↗</span></button>'+
+    items.map(s=>'<div class="source-card"><b>'+s[0]+'</b><small>'+esc(type)+' Designs</small><a class="secondary" href="'+s[1]+'" target="_blank" rel="noopener noreferrer" style="display:block;text-decoration:none;text-align:center">Open Website ↗</a></div>').join('')+
     '</div></div>';
 }
 function showOrderWebsiteChoices(type,index){

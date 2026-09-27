@@ -268,7 +268,7 @@ function openDesignCatalog(type){
   const designs=garmentDesignsFor(type).concat(loadSavedDesigns().filter(x=>x.type===type).map(x=>({...x,svg:x.svg||designVisual(type,0)})));
   const saved=loadSavedDesigns();
   const chips=['All Designs'].concat(designs.slice(0,5).map(x=>x.name));
-  const T=JSON.stringify(type);
+  const T=esc(JSON.stringify(type));
   const q=encodeURIComponent(type+' garment designs');
   const fileLabel=(mode)=>'<label class="source-chip">'+(mode==='camera'?'📷 Camera':'🖼️ Gallery')+'<input type="file" accept="image/*" '+(mode==='camera'?'capture="environment"':'')+' onchange="saveUploadedDesign('+T+',this)" style="position:absolute;opacity:0;width:1px;height:1px"></label>';
   mt.textContent='👗 '+type+' Designs';
@@ -277,7 +277,7 @@ function openDesignCatalog(type){
     <button type="button" class="source-chip active" onclick="showGarmentSource('library',${T})">🎨 SILAI GURU</button>
     ${fileLabel('camera')}
     ${fileLabel('gallery')}
-    <button type="button" class="source-chip" <a href="https://www.pinterest.com/search/pins/?q=kurti%20designs" target="_blank" style="text-decoration:none;"><button type="button">🌐 Websites</button></a>>
+    <a class="source-chip" href="https://www.pinterest.com/search/pins/?q='+encodeURIComponent(type+' designs')+'" target="_blank" rel="noopener noreferrer" style="display:inline-block;text-decoration:none;color:inherit;">🌐 Websites</a>
     <button type="button" class="source-chip" onclick="showGarmentSource('link',${T})">🔗 Add Link</button>
   </div>
   <div id="garmentSourceArea"></div>
@@ -414,7 +414,7 @@ function openOrderDesignPicker(index){
 }
 function openDesignCatalogForOrder(type,index){
   const designs=garmentDesignsFor(type).concat(loadSavedDesigns().filter(x=>x.type===type).map(x=>({...x,svg:x.svg||designVisual(type,0)})));
-  const T=JSON.stringify(type),I=JSON.stringify(index),q=encodeURIComponent(type+' garment designs');
+  const T=esc(JSON.stringify(type)),I=JSON.stringify(index),q=encodeURIComponent(type+' garment designs');
   window.orderDesignTargetIndex=index;
   const camera='<label class="source-chip">📷 Camera<input type="file" accept="image/*" capture="environment" onchange="saveOrderUploadedDesign('+T+','+I+')" style="position:absolute;opacity:0;width:1px;height:1px"></label>';
   const gallery='<label class="source-chip">🖼️ Gallery<input type="file" accept="image/*" onchange="saveOrderUploadedDesign('+T+','+I+')" style="position:absolute;opacity:0;width:1px;height:1px"></label>';

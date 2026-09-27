@@ -2,6 +2,15 @@
 :root{--p:#5b4bdb;--p2:#8267f5;--bg:#f6f7fb;--card:#fff;--text:#202238;--muted:#73778c;--line:#e5e6ef}*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}button,input,select,textarea{font:inherit}button{border:0;border-radius:12px;padding:11px 14px;font-weight:700}.app{max-width:760px;margin:auto;padding-bottom:80px}.hero{background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;padding:20px 16px 24px;border-radius:0 0 25px 25px}.brand{font-size:26px;font-weight:900}.shop{margin-top:5px;font-size:14px}.wrap{padding:14px}.card{background:#fff;border-radius:18px;padding:15px;margin:12px 0;box-shadow:0 5px 18px #2022380c}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.stat{background:#f0efff;border-radius:14px;padding:12px;text-align:center}.stat b{display:block;font-size:21px}.stat small{color:var(--muted)}.icons{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.ico{background:#fff;border:1px solid var(--line);padding:11px 4px;min-height:90px;box-shadow:0 4px 12px #2221}.ico i{display:block;font-style:normal;font-size:28px;margin-bottom:6px}.ico .dash-icon{height:52px;display:flex;align-items:center;justify-content:center}.ico .dash-icon svg{width:52px;height:52px;display:block}.ico small{font-weight:700;font-size:11px}.banner{background:#fff1cf;color:#765500;padding:13px;text-align:center;border-radius:13px;font-size:12px;font-weight:700}.row{display:flex;justify-content:space-between;gap:8px;padding:11px 0;border-bottom:1px solid var(--line)}.muted{color:var(--muted);font-size:12px}.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);z-index:20}.bottomin{max-width:760px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr)}.nav{background:none;color:var(--muted);text-align:center;padding:8px}.nav b{display:block;font-size:21px;color:var(--p)}.modal,.onboard{position:fixed;inset:0;background:#0007;z-index:50;display:none;align-items:flex-end}.onboard{display:flex;background:linear-gradient(135deg,#5b4bdb,#8267f5);align-items:center;padding:14px}.sheet,.oncard{background:#fff;width:100%;max-width:760px;margin:auto;border-radius:24px 24px 0 0;padding:18px;max-height:92vh;overflow:auto}.oncard{border-radius:25px;max-width:620px}.onboard[hidden]{display:none!important}.modal.show{display:flex}.form{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{display:flex;flex-direction:column;gap:5px}.garment-card{background:#f8f7ff;border:1px solid #ddd8ff;border-radius:16px;padding:14px;margin:12px 0}.garment-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}.garment-title{font-weight:800;color:#5144bd}.measure-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.remove-g{background:#ffe9e9;color:#b42318;padding:8px 10px;font-size:12px}.add-g{background:#efeeff;color:#5144bd;width:100%;margin:8px 0}.section-title{font-weight:800;margin:14px 0 6px}@media(max-width:500px){.measure-grid{grid-template-columns:1fr}}.full{grid-column:1/-1}label{font-size:12px;font-weight:700}input,select,textarea{padding:11px;border:1px solid var(--line);border-radius:11px;width:100%;background:#fff}.primary{background:var(--p);color:#fff;width:100%;margin-top:10px}.secondary{background:#efeeff;color:#4f43b5}.close{float:right;background:#eee}.pill{display:inline-block;padding:4px 8px;background:#eeeefe;color:#5044b5;border-radius:99px;font-size:11px;font-weight:700}.empty{text-align:center;color:var(--muted);padding:20px}@media(max-width:500px){.form{grid-template-columns:1fr}.full{grid-column:auto}.icons{gap:7px}.ico{min-height:84px}}</style><style>
 .garment-library{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.garment-library-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:10px;cursor:pointer;position:relative;transition:.15s}.garment-library-card:hover{border-color:var(--p);transform:translateY(-1px)}.garment-library-card .libpic{height:105px;display:flex;align-items:center;justify-content:center;background:#faf9ff;border-radius:12px}.garment-library-card .libpic svg{width:92px;height:92px}.garment-library-card b{display:block;margin-top:8px;font-size:13px}.garment-library-card small{color:var(--p);font-weight:700}.design-toolbar{display:flex;gap:7px;overflow:auto;margin:10px 0;padding-bottom:3px}.design-chip{white-space:nowrap;border:1px solid var(--line);background:#fff;border-radius:20px;padding:8px 12px;color:var(--text);cursor:pointer}.design-chip.active{background:var(--p);color:#fff;border-color:var(--p)}.design-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.design-card{background:#fff;border:1px solid var(--line);border-radius:15px;overflow:hidden;position:relative}.design-card .design-img{height:150px;background:#faf9ff;display:flex;align-items:center;justify-content:center}.design-card .design-img .design-fallback{width:100%;height:100%;align-items:center;justify-content:center}.design-card .design-img svg{width:130px;height:145px}.design-card .design-img img{width:100%;height:100%;object-fit:contain}.preview-large img{width:100%;height:100%;object-fit:contain;border-radius:18px}.design-card .design-name{padding:8px 9px 2px;font-size:12px;font-weight:800}.design-card .design-actions{padding:7px;display:flex;gap:6px}.design-card button{flex:1;font-size:11px;padding:7px 5px}.preview-large{max-width:340px;height:360px;margin:12px auto;background:#faf9ff;border:1px solid var(--line);border-radius:20px;display:flex;align-items:center;justify-content:center}.preview-large svg{width:300px;height:340px}.folder-box{background:linear-gradient(135deg,#faf9ff,#f0edff);border:1px solid #ddd7ff;border-radius:16px;padding:13px;margin-top:12px}.folder-count{font-size:12px;color:var(--p);font-weight:700}.design-back{display:flex;align-items:center;gap:8px;margin-bottom:6px}.design-sources{display:flex;gap:8px;overflow:auto;padding:4px 0 10px}.source-chip{border:1px solid var(--line);background:#fff;border-radius:12px;padding:9px 11px;font-weight:800;white-space:nowrap}.source-chip.active{background:var(--p);color:#fff}.design-source-box{background:#f8f7ff;border:1px solid #ddd7ff;border-radius:16px;padding:12px;margin:10px 0}.design-source-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.source-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px}\n.source-card{display:block;text-decoration:none;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}.source-card span{display:block;color:var(--p);font-weight:800;margin-top:6px}.source-card b{display:block;margin-bottom:4px}.source-card small{display:block;color:#6f7080;line-height:1.4;margin-bottom:8px}.source-card button{width:100%;padding:8px}.selected-design{margin-top:9px;padding:9px;border-radius:12px;background:#f1fff8;border:1px solid #b9ead1;font-size:12px}.design-link-box{display:flex;gap:7px;margin-top:8px}.design-link-box input{flex:1}.order-design-btn{margin-top:8px;width:100%;padding:9px}.design-back button{padding:7px 10px}.library-note{font-size:12px;color:#6f7080;text-align:center;padding:10px}.design-search{width:100%;box-sizing:border-box;margin:5px 0 8px}.design-empty{text-align:center;padding:25px 10px;color:#777}.premium-lock{background:#fff7df;border:1px solid #f0d58b;border-radius:14px;padding:12px;text-align:center}
 @media(max-width:500px){.garment-library{grid-template-columns:repeat(2,1fr)}.design-grid{grid-template-columns:repeat(2,1fr)}.design-card .design-img{height:135px}.design-card .design-img svg{width:115px;height:130px}}
+</style><style>
+.gm-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;margin:10px 0}
+.gm-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.gm-title{font-size:16px;font-weight:900}.gm-rate{color:var(--p);font-weight:800}
+.gm-tags{display:flex;flex-wrap:wrap;gap:6px;margin:9px 0}.gm-tag{background:#f1efff;color:#5144bd;border-radius:99px;padding:5px 8px;font-size:11px;font-weight:700}
+.gm-actions{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-top:10px}.gm-actions button{font-size:11px;padding:8px 5px}
+.gm-editor{background:#f8f7ff;border:1px solid #ddd7ff;border-radius:16px;padding:13px;margin-top:12px}
+.gm-editor h3{margin:0 0 10px}.gm-list{display:grid;gap:7px}.gm-list-row{display:flex;gap:7px;align-items:center}.gm-list-row input{flex:1}.gm-list-row button{padding:8px 10px}
+.gm-top-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 </style><style>.free-garment-list{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}.free-g-option{display:flex;align-items:center;justify-content:space-between;padding:14px 13px;font-size:16px;font-weight:500;border-bottom:1px solid #eee;cursor:pointer}.free-g-option:last-child{border-bottom:0}.free-g-option input{width:22px;height:22px;accent-color:#6b6258;margin:0}.free-g-option:has(input:checked){background:#faf8f5}.free-g-option:has(input:checked) span{font-weight:600}</style><style>.photo-garment-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:6px}.photo-g-option{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:142px;padding:10px 6px;background:#fff;border:1px solid var(--line);border-radius:16px;cursor:pointer;text-align:center;font-size:11px;overflow:hidden}.photo-g-option .gpic{width:82px;height:82px;display:flex;align-items:center;justify-content:center}.photo-g-option .gpic svg{width:78px;height:78px;display:block}.photo-g-option input{position:absolute;top:8px;right:8px;width:20px;height:20px;margin:0;accent-color:var(--p);z-index:2}.photo-g-option:has(input:checked){border:2px solid var(--p);background:#f4f1ff;box-shadow:0 3px 10px #5b4bdb22}.photo-g-option:has(input:checked) b{color:var(--p)}.photo-g-option b{font-size:12px;line-height:1.1}@media(max-width:500px){.photo-garment-grid{grid-template-columns:repeat(2,1fr)}.photo-g-option{min-height:136px}.photo-g-option .gpic{width:76px;height:76px}.photo-g-option .gpic svg{width:72px;height:72px}} </style></head><body>
 <div id="onboard" class="onboard"><div class="oncard"><h1 style="text-align:center;color:#5b4bdb">✂️ SILAI GURU</h1><p style="text-align:center;color:#73778c">पहली बार app use करने के लिए profile पूरा करें</p><form id="pf" novalidate><div class="form"><div class="field"><label>User Name *</label><input id="pn" required></div><div class="field"><label>Mobile *</label><input id="pm" required inputmode="numeric"></div><div class="field"><label>Shop Name *</label><input id="ps" required></div><div class="field"><label>Email ID *</label><input id="pe" required type="email"></div><div class="field full"><label>Address *</label><textarea id="pa" required></textarea></div><div class="field"><label>State *</label><input id="pst" required></div><div class="field"><label>City *</label><input id="pc" required></div><div class="field"><label>Pincode *</label><input id="pp" required inputmode="numeric"></div></div><button type="button" class="primary" onclick="saveProfile()">Profile Save & Open App</button></form></div></div>
 <div class="app"><header class="hero"><div class="brand">✂️ SILAI GURU</div><div class="shop" id="topshop"></div><div id="topowner" style="font-size:12px;opacity:.85"></div></header><div class="wrap">
@@ -53,7 +62,7 @@ const rank={free:0,standard:1,premium:2,pro:3};
 if(rank[plan] < rank[required]){alert('यह feature '+PLAN_INFO[required].name+' plan में available है.\\nअभी Test Paid Plan से activate करें.');openM('plans');return false}
 return true;
 }
-function openM(t){modal.classList.add('modal','show');const title={order:'➕ New Order',customers:'👥 Customers',orders:'📋 Orders',measure:'📏 Measurements',payments:'💰 Payments',delivery:'🚚 Delivery',reports:'📊 Reports',profile:'🏪 Shop Profile',backup:'☁️ Backup',workers:'🧑‍🔧 Workers',garments:'👗 Garments',settings:'⚙️ Settings',plans:'💎 Plans & Upgrade'}[t]||t;mt.textContent=title;mb.innerHTML=content(t)}
+function openM(t){modal.classList.add('modal','show');if(t==='garments'){openGarmentsManager();return}const title={order:'➕ New Order',customers:'👥 Customers',orders:'📋 Orders',measure:'📏 Measurements',payments:'💰 Payments',delivery:'🚚 Delivery',reports:'📊 Reports',profile:'🏪 Shop Profile',backup:'☁️ Backup',workers:'🧑‍🔧 Workers',garments:'👗 Garments',settings:'⚙️ Settings',plans:'💎 Plans & Upgrade'}[t]||t;mt.textContent=title;mb.innerHTML=content(t)}
 function closeM(){modal.classList.remove('show')}
 function loadExtra(){try{return JSON.parse(localStorage.getItem(DK)||'[]')}catch(e){return []}}
 function saveExtra(a){localStorage.setItem(DK,JSON.stringify(a))}
@@ -259,6 +268,100 @@ const KURTI_IMAGE_URLS={'Straight Kurti':'https://www.jiomart.com/images/product
 function garmentDesignsFor(type){
   const arr=DESIGN_TYPES[type]||DESIGN_TYPES.Other;
   return arr.map((name,i)=>({id:type.replace(/\W/g,'_')+'_'+i,type,name,index:i,svg:designVisual(type,i),image:(type==='Kurti'?KURTI_IMAGE_URLS[name]:'')}));
+}
+const GARMENT_MASTER_KEY='sg_garment_master';
+const DEFAULT_GARMENT_MASTER=[
+  {name:'Blouse',rate:0,services:['Lining','Padding','Lace','Embroidery']},
+  {name:'Kurti',rate:0,services:['Lining','Pocket','Lace','Embroidery']},
+  {name:'Salwar Suit',rate:0,services:['Lining','Dupatta','Lace','Embroidery']},
+  {name:'Shirt',rate:0,services:['Pocket','Lining','Button']},
+  {name:'Pant',rate:0,services:['Pocket','Lining','Alteration']},
+  {name:'Dress',rate:0,services:['Lining','Lace','Embroidery']},
+  {name:'Lehenga',rate:0,services:['Lining','Can-Can','Lace','Embroidery']},
+  {name:'Gown',rate:0,services:['Lining','Can-Can','Lace','Embroidery']},
+  {name:'Kameez',rate:0,services:['Lining','Pocket','Lace','Embroidery']},
+  {name:'Choli',rate:0,services:['Padding','Lining','Lace','Embroidery']}
+];
+function getGarmentMaster(){
+  try{const a=JSON.parse(localStorage.getItem(GARMENT_MASTER_KEY)||'null');if(Array.isArray(a)&&a.length)return a}catch(e){}
+  const a=JSON.parse(JSON.stringify(DEFAULT_GARMENT_MASTER));localStorage.setItem(GARMENT_MASTER_KEY,JSON.stringify(a));return a;
+}
+function saveGarmentMaster(a){localStorage.setItem(GARMENT_MASTER_KEY,JSON.stringify(a))}
+function garmentMasterRate(type){const x=getGarmentMaster().find(x=>x.name===type);return Number(x?.rate||0)}
+function openGarmentsManager(){
+  mt.textContent='👗 Garments';
+  const a=getGarmentMaster();
+  mb.innerHTML='<div class="banner" style="margin-bottom:12px">👗 यहाँ आपकी दुकान के garments, default stitching rate, measurement template और extra services manage होंगी। New Order के design/measurement functions अलग रहेंगे.</div>'+
+  '<div class="gm-top-actions"><button class="primary" onclick="addGarmentMaster()">＋ Add New Garment</button><button class="secondary" onclick="openGarmentMeasurementManager()">📏 Measurement Templates</button></div>'+
+  '<div style="margin-top:14px">'+a.map((g,i)=>garmentMasterCard(g,i)).join('')+'</div>';
+}
+function garmentMasterCard(g,i){
+  const fields=measurementNames(g.name),services=g.services||[];
+  return '<div class="gm-card"><div class="gm-head"><div><div class="gm-title">👗 '+esc(g.name)+'</div><small class="muted">'+fields.length+' measurements • '+services.length+' services</small></div><div class="gm-rate">₹'+Number(g.rate||0).toLocaleString('en-IN')+'</div></div>'+
+  '<div class="gm-tags">'+(services.length?services.map(s=>'<span class="gm-tag">🧵 '+esc(s)+'</span>').join(''):'<span class="muted">No extra services</span>')+'</div>'+
+  '<div class="gm-actions"><button class="secondary" onclick="editGarmentMaster('+i+')">✏️ Edit & Rate</button><button class="secondary" onclick="openGarmentMeasurementEditor('+i+')">📏 Measurements</button><button class="secondary" onclick="openGarmentServiceEditor('+i+')">🧵 Services</button><button class="remove-g" onclick="deleteGarmentMaster('+i+')">🗑 Remove</button></div></div>';
+}
+function addGarmentMaster(){
+  const name=prompt('Garment ka naam:');if(!name||!name.trim())return;
+  const n=name.trim(),a=getGarmentMaster();
+  if(a.some(x=>x.name.toLowerCase()===n.toLowerCase())){alert('Ye garment already hai.');return}
+  a.push({name:n,rate:0,services:[]});saveGarmentMaster(a);
+  const cfg=getMeasureConfig();if(!cfg[n]){cfg[n]=['Height','Shoulder','Chest','Waist','Hip','Length'];saveMeasureConfig(cfg)}
+  openGarmentsManager();
+}
+function editGarmentMaster(i){
+  const a=getGarmentMaster(),g=a[i];if(!g)return;
+  const old=g.name,n=prompt('Garment ka naam:',old);if(!n||!n.trim())return;
+  const rate=prompt('Default stitching rate ₹:',String(g.rate||0)),name=n.trim(),r=Math.max(0,Number(rate||0));
+  if(name!==old&&a.some((x,j)=>j!==i&&x.name.toLowerCase()===name.toLowerCase())){alert('Ye garment already hai.');return}
+  g.name=name;g.rate=r;saveGarmentMaster(a);
+  if(name!==old){const cfg=getMeasureConfig();if(cfg[old]&&!cfg[name]){cfg[name]=cfg[old];delete cfg[old];saveMeasureConfig(cfg)}}
+  openGarmentsManager();
+}
+function deleteGarmentMaster(i){
+  const a=getGarmentMaster(),g=a[i];if(!g)return;
+  if(!confirm('“'+g.name+'” garment ko Garments list se remove karein?'))return;
+  a.splice(i,1);saveGarmentMaster(a);openGarmentsManager();
+}
+function openGarmentMeasurementManager(){
+  mt.textContent='📏 Measurement Templates';
+  mb.innerHTML='<div class="banner">Measurement names yahan manage karein. Changes New Order me bhi use honge.</div>'+measurementManager()+'<button class="secondary" style="width:100%;margin-top:10px" onclick="openGarmentsManager()">← Back to Garments</button>';
+}
+function openGarmentMeasurementEditor(i){
+  const a=getGarmentMaster(),g=a[i];if(!g)return;
+  mt.textContent='📏 '+g.name+' Measurements';
+  mb.innerHTML='<div class="gm-editor"><h3>📏 '+esc(g.name)+' Measurement Template</h3><div class="muted">Yahan measurement names add, edit ya remove kar sakte hain.</div><div class="gm-list" id="gmMeasureList">'+measurementNames(g.name).map((n,j)=>'<div class="gm-list-row"><input value="'+esc(n)+'" id="gmm-'+j+'"><button class="remove-g" onclick="removeGarmentMeasure('+j+')">−</button></div>').join('')+'</div><button class="secondary" style="width:100%;margin-top:9px" onclick="addGarmentMeasureRow()">＋ Add Measurement</button><button class="primary" onclick="saveGarmentMeasurements('+i+')">💾 Save Measurements</button></div><button class="secondary" style="width:100%;margin-top:10px" onclick="openGarmentsManager()">← Back to Garments</button>';
+}
+function addGarmentMeasureRow(){
+  const list=document.getElementById('gmMeasureList');if(!list)return;
+  const j=list.children.length;list.insertAdjacentHTML('beforeend','<div class="gm-list-row"><input id="gmm-'+j+'" placeholder="Measurement name"><button class="remove-g" onclick="removeGarmentMeasure('+j+')">−</button></div>');
+}
+function removeGarmentMeasure(j){
+  const list=document.getElementById('gmMeasureList');if(!list||!list.children[j])return;
+  list.children[j].remove();Array.from(list.children).forEach((row,k)=>{row.querySelector('input').id='gmm-'+k;row.querySelector('button').setAttribute('onclick','removeGarmentMeasure('+k+')')});
+}
+function saveGarmentMeasurements(i){
+  const a=getGarmentMaster(),g=a[i];if(!g)return;
+  const names=Array.from(document.querySelectorAll('#gmMeasureList input')).map(x=>x.value.trim()).filter(Boolean);
+  if(!names.length){alert('Kam se kam 1 measurement rakhiye.');return}
+  const cfg=getMeasureConfig();cfg[g.name]=names;saveMeasureConfig(cfg);openGarmentsManager();
+}
+function openGarmentServiceEditor(i){
+  const a=getGarmentMaster(),g=a[i];if(!g)return;
+  mt.textContent='🧵 '+g.name+' Services';
+  mb.innerHTML='<div class="gm-editor"><h3>🧵 Extra Services</h3><div class="muted">Is garment ke saath available extra work/services add karein.</div><div class="gm-list" id="gmServiceList">'+(g.services||[]).map((s,j)=>'<div class="gm-list-row"><input value="'+esc(s)+'" id="gms-'+j+'"><button class="remove-g" onclick="removeGarmentService('+j+')">−</button></div>').join('')+'</div><button class="secondary" style="width:100%;margin-top:9px" onclick="addGarmentServiceRow()">＋ Add Service</button><button class="primary" onclick="saveGarmentServices('+i+')">💾 Save Services</button></div><button class="secondary" style="width:100%;margin-top:10px" onclick="openGarmentsManager()">← Back to Garments</button>';
+}
+function addGarmentServiceRow(){
+  const list=document.getElementById('gmServiceList');if(!list)return;
+  const j=list.children.length;list.insertAdjacentHTML('beforeend','<div class="gm-list-row"><input id="gms-'+j+'" placeholder="Service name"><button class="remove-g" onclick="removeGarmentService('+j+')">−</button></div>');
+}
+function removeGarmentService(j){
+  const list=document.getElementById('gmServiceList');if(!list||!list.children[j])return;
+  list.children[j].remove();Array.from(list.children).forEach((row,k)=>{row.querySelector('input').id='gms-'+k;row.querySelector('button').setAttribute('onclick','removeGarmentService('+k+')')});
+}
+function saveGarmentServices(i){
+  const a=getGarmentMaster(),g=a[i];if(!g)return;
+  g.services=Array.from(document.querySelectorAll('#gmServiceList input')).map(x=>x.value.trim()).filter(Boolean);saveGarmentMaster(a);openGarmentsManager();
 }
 function openGarmentLibrary(){
   mt.textContent='👗 Garments';

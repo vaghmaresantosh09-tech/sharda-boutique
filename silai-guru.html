@@ -24,7 +24,7 @@
 <div id="modal" class="modal"><div class="sheet"><button class="close" onclick="closeM()">✕</button><h2 id="mt"></h2><div id="mb"></div></div></div>
 <script>
 const K='sg_profile',CK='sg_customers',OK='sg_orders',PK='sg_plan',TK='sg_theme',DK='sg_profile_extra';let p=JSON.parse(localStorage.getItem(K)||'null'),cs=JSON.parse(localStorage.getItem(CK)||'[]'),os=JSON.parse(localStorage.getItem(OK)||'[]'),plan=localStorage.getItem(PK)||'free';let orderDesignTargets={};let orderFormSnapshot=null;
-const mods=[['New Order','order'],['Customers','customers'],['Orders','orders'],['Measurements','measure'],['Payments','payments'],['Delivery','delivery'],['Reports','reports'],['Shop Profile','profile'],['Backup','backup'],['Workers','workers'],['Garments','garments'],['Settings','settings'],['Plans & Upgrade','plans']];
+const mods=[['New Order','order'],['Customers','customers'],['Orders','orders'],['Measurements','measure'],['Payments','payments'],['Delivery','delivery'],['Reports','reports'],['Shop Profile','profile'],['Backup','backup'],['Workers','workers'],['Garments','garments'],['Design Library','designs'],['Settings','settings'],['Plans & Upgrade','plans']];
 function dashboardIcon(t){
  const s='stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"';
  const F=b=>'<svg viewBox="0 0 64 64" aria-hidden="true">'+b+'</svg>';
@@ -40,6 +40,7 @@ function dashboardIcon(t){
   'Backup':`<path d="M19 46h28c7 0 10-5 8-10-1-4-5-7-9-7-2-8-14-12-21-5-7-1-13 4-13 11 0 6 3 11 7 11z" fill="#eaf4ff" ${s}/><path d="M32 25v20M25 38l7 7 7-7" ${s}/>`,
   'Workers':`<circle cx="32" cy="19" r="8" fill="#dceeff" ${s}/><path d="M17 51c1-12 7-18 15-18s14 6 15 18" fill="#eee9ff" ${s}/><path d="M42 42h12M48 36v12" ${s}/>`,
   'Garments':`<path d="M25 12h14l4 9 10 7-7 10-7-5v21H25V33l-7 5-7-10 10-7z" fill="#e8f4ff" ${s}/><path d="M28 12c0 5 8 8 8 0M25 31h14" fill="none" ${s}/>`,
+  'Design Library':`<path d="M12 17h40v34H12z" fill="#eee9ff" ${s}/><path d="M17 17V11h30v6M21 27h22M21 35h16" ${s}/><path d="m44 41 5 5-8 8-5-5z" fill="#ffd98e" ${s}/><path d="m40 45 4 4" ${s}/>`,
   'Settings':`<circle cx="32" cy="32" r="10" fill="#eee9ff" ${s}/><path d="M32 8v7M32 49v7M8 32h7M49 32h7M15 15l5 5M44 44l5 5M49 15l-5 5M20 44l-5 5" ${s}/><circle cx="32" cy="32" r="4" fill="#6b5ce7"/>`,
   'Plans & Upgrade':`<path d="m32 7 18 10-5 30-13 10-13-10-5-30z" fill="#e8f4ff" ${s}/><path d="m32 7 8 13-8 11-8-11z" fill="#d8d0ff" ${s}/><path d="m24 20 8 11 8-11" fill="#ffe19a" ${s}/><path d="M18 48h28" ${s}/>`
  };
@@ -62,7 +63,7 @@ const rank={free:0,standard:1,premium:2,pro:3};
 if(rank[plan] < rank[required]){alert('यह feature '+PLAN_INFO[required].name+' plan में available है.\\nअभी Test Paid Plan से activate करें.');openM('plans');return false}
 return true;
 }
-function openM(t){modal.classList.add('modal','show');if(t==='garments'){openGarmentsManager();return}const title={order:'➕ New Order',customers:'👥 Customers',orders:'📋 Orders',measure:'📏 Measurements',payments:'💰 Payments',delivery:'🚚 Delivery',reports:'📊 Reports',profile:'🏪 Shop Profile',backup:'☁️ Backup',workers:'🧑‍🔧 Workers',garments:'👗 Garments',settings:'⚙️ Settings',plans:'💎 Plans & Upgrade'}[t]||t;mt.textContent=title;mb.innerHTML=content(t)}
+function openM(t){modal.classList.add('modal','show');if(t==='garments'){openGarmentsManager();return}if(t==='designs'){if(!planGate('pro'))return;openGarmentLibrary();return}const title={order:'➕ New Order',customers:'👥 Customers',orders:'📋 Orders',measure:'📏 Measurements',payments:'💰 Payments',delivery:'🚚 Delivery',reports:'📊 Reports',profile:'🏪 Shop Profile',backup:'☁️ Backup',workers:'🧑‍🔧 Workers',garments:'👗 Garments',designs:'🎨 Design Library',settings:'⚙️ Settings',plans:'💎 Plans & Upgrade'}[t]||t;mt.textContent=title;mb.innerHTML=content(t)}
 function closeM(){modal.classList.remove('show')}
 function loadExtra(){try{return JSON.parse(localStorage.getItem(DK)||'[]')}catch(e){return []}}
 function saveExtra(a){localStorage.setItem(DK,JSON.stringify(a))}

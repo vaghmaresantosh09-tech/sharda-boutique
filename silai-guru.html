@@ -378,9 +378,60 @@ function collectGarments(){return Array.from(document.querySelectorAll('#garment
 function snapshotOrderForm(){const ids=['cn','cm','cwd','cd','ct','ca','co'];const s={};ids.forEach(id=>{const x=document.getElementById(id);if(x)s[id]=x.value});s.garments=Array.from(document.querySelectorAll('#garmentsWrap .garment-card')).map(card=>({type:card.querySelector('input[name^="garmentType"]:checked')?.value||'Kurti',measurements:Object.fromEntries(Array.from(card.querySelectorAll('.g-measure')).map(x=>[x.dataset.name,x.value]))}));return s}
 function restoreOrderForm(s){if(!s)return;Object.entries(s).forEach(([id,v])=>{const x=document.getElementById(id);if(x&&typeof v==='string')x.value=v});const w=document.getElementById('garmentsWrap');if(w&&s.garments?.length){w.innerHTML=s.garments.map((g,i)=>garmentCard(i,g.type)).join('');s.garments.forEach((g,i)=>{const card=document.getElementById('garment-'+i);Object.entries(g.measurements||{}).forEach(([k,v])=>{const x=Array.from(card.querySelectorAll('.g-measure')).find(y=>y.dataset.name===k);if(x)x.value=v})})}renderOrderDesignBadges()}
 function renderOrderDesignBadges(){Object.entries(orderDesignTargets).forEach(([i,d])=>{if(!/^\d+$/.test(i))return;const box=document.getElementById('selected-design-'+i);if(box&&d)box.innerHTML='<div class="selected-design">✓ <b>'+esc(d.name)+'</b><br><small>'+esc(d.source)+'</small></div>'})}
-function openOrderDesignPicker(index){orderFormSnapshot=snapshotOrderForm();const card=document.getElementById('garment-'+index);const type=card?.querySelector('input[name="garmentType'+index+'"]:checked')?.value||'Kurti';openDesignCatalogForOrder(type,index)}
-function openDesignCatalogForOrder(type,index){mt.textContent='🎨 '+type+' Design';mb.innerHTML='<div class="design-back"><button class="secondary" onclick="backToOrderPicker()">← Back to Order</button><b>'+type+' · Select from Garments</b></div><div class="design-source-box"><b>🎨 Garments Catalogue</b><small>Designs dashboard ke Garments section se aate hain.</small></div><div class="design-grid">'+garmentDesignsFor(type).map(d=>'<div class="design-card"><div class="design-img">'+(d.image?'<img src="'+d.image+'" alt="'+esc(d.name)+'" loading="lazy">':d.svg)+'</div><div class="design-name">'+esc(d.name)+'</div><div class="design-actions"><button class="primary" onclick="selectDesignForOrder('+index+',\''+esc(d.type).replace(/'/g,"\\'")+'\',\''+esc(d.name).replace(/'/g,"\\'")+'\')">✓ Select</button><button class="secondary" onclick="showDesignToCustomer(\''+esc(d.type).replace(/'/g,"\\'")+'\',\''+esc(d.name).replace(/'/g,"\\'")+'\','+index+')">👁 Show</button></div></div>').join('')+'</div>'}
-function selectDesignForOrder(index,type,name){const d=garmentDesignsFor(type).find(x=>x.name===name);if(!d)return;orderDesignTargets[index]={source:'SILAI GURU',name:d.name,url:'',image:d.image||''};backToOrderPicker()}
+function openOrderDesignPicker(index){
+  orderFormSnapshot=snapshotOrderForm();
+  const card=document.getElementById('garment-'+index);
+  const type=card?.querySelector('input[name="garmentType'+index+'"]:checked')?.value||'Kurti';
+  openDesignCatalogForOrder(type,index);
+}
+function openDesignCatalogForOrder(type,index){
+  const designs=garmentDesignsFor(type).concat(loadSavedDesigns().filter(x=>x.type===type).map(x=>({...x,svg:x.svg||designVisual(type,0)})));
+  const T=JSON.stringify(type), I=JSON.stringify(index);
+  mt.textContent='🎨 '+type+' Design';
+  mb.innerHTML=`<div class="design-back"><button class="secondary" onclick="backToOrderPicker()">← Back to Order</button><b>${esc(type)} · Select Design</b></div>
+  <div class="design-sources">
+    <button class="source-chip active" onclick="showOrderDesignSource('library',${T},${I})">🎨 SILAI GURU</button>
+    <button class="source-chip" onclick="showOrderDesignSource('camera',${T},${I})">📷 Camera</button>
+    <button class="source-chip" onclick="showOrderDesignSource('gallery',${T},${I})">🖼️ Gallery</button>
+    <button class="source-chip" onclick="showOrderDesignSource('web',${T},${I})">🌐 Websites</button>
+  </div>
+  <div id="orderDesignSourceArea"></div>
+  <input class="design-search" id="orderDesignSearch" placeholder="🔎 Search ${esc(type)} design..." oninput="filterOrderDesigns(${T})">
+  <div id="orderDesignGrid" class="design-grid">${designs.map(d=>{
+    const DTYPE=JSON.stringify(d.type),DNAME=JSON.stringify(d.name);
+    return '<div class="design-card"><div class="design-img">'+(d.image?'<img src="'+d.image+'" alt="'+esc(d.name)+'" loading="lazy">':d.svg)+'</div><div class="design-name">'+esc(d.name)+'</div><div class="design-actions"><button class="primary" onclick="selectDesignForOrder('+I+','+DTYPE+','+DNAME+')">✓ Select</button><button class="secondary" onclick="showDesignToCustomer('+DTYPE+','+DNAME+','+I+')">👁 Show</button></div></div>';
+  }).join('')}</div>`;
+  showOrderDesignSource('library',type,index);
+}
+function filterOrderDesigns(type){
+  const q=String(document.getElementById('orderDesignSearch')?.value||'').toLowerCase().trim();
+  const all=garmentDesignsFor(type).concat(loadSavedDesigns().filter(x=>x.type===type).map(x=>({...x,svg:x.svg||designVisual(type,0)})));
+  const grid=document.getElementById('orderDesignGrid');if(!grid)return;
+  const idx=window.orderDesignTargetIndex||0;
+  const list=q?all.filter(x=>String(x.name||'').toLowerCase().includes(q)):all;
+  grid.innerHTML=list.map(d=>{
+    const DTYPE=JSON.stringify(d.type),DNAME=JSON.stringify(d.name),I=JSON.stringify(idx);
+    return '<div class="design-card"><div class="design-img">'+(d.image?'<img src="'+d.image+'" alt="'+esc(d.name)+'" loading="lazy">':d.svg)+'</div><div class="design-name">'+esc(d.name)+'</div><div class="design-actions"><button class="primary" onclick="selectDesignForOrder('+I+','+DTYPE+','+DNAME+')">✓ Select</button><button class="secondary" onclick="showDesignToCustomer('+DTYPE+','+DNAME+','+I+')">👁 Show</button></div></div>';
+  }).join('')||'<div class="empty">Design nahi mila.</div>';
+}
+function showOrderDesignSource(mode,type,index){
+  window.orderDesignTargetIndex=index;
+  const box=document.getElementById('orderDesignSourceArea');if(!box)return;
+  const T=JSON.stringify(type),I=JSON.stringify(index);
+  if(mode==='library'){box.innerHTML='<div class="design-source-box"><b>🎨 SILAI GURU Design Library</b><small>Ready designs aur aapke My Designs yahan milenge.</small></div>';return}
+  if(mode==='camera'||mode==='gallery'){
+    box.innerHTML='<div class="design-source-box"><b>'+(mode==='camera'?'📷 Camera se Design':'🖼️ Gallery se Design')+'</b><small>Photo select karte hi My Designs me save hogi aur isi order me select kar sakte hain.</small><input id="orderDesignPhotoInput" type="file" accept="image/*" '+(mode==='camera'?'capture="environment"':'')+' onchange="saveOrderUploadedDesign('+T+','+I+')" style="margin-top:10px;width:100%"></div>';return;
+  }
+  if(mode==='web'){
+    box.innerHTML='<div class="design-source-box"><b>🌐 Design Websites</b><small>Website se design dekhein. Agar design pasand aaye to screenshot Gallery se upload karke My Designs me save kar sakte hain.</small><div class="row"><button class="secondary" onclick="window.open(\'https://www.pinterest.com/search/pins/?q='+encodeURIComponent(type+' design')+'\',\'_blank\')">Pinterest</button><button class="secondary" onclick="window.open(\'https://www.myntra.com/\',\'_blank\')">Myntra</button><button class="secondary" onclick="window.open(\'https://www.meesho.com/\',\'_blank\')">Meesho</button></div></div>';return;
+  }
+}
+function saveOrderUploadedDesign(type,index){
+  const input=document.getElementById('orderDesignPhotoInput'),file=input&&input.files&&input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(e){const img=new Image();img.onload=function(){const max=900,scale=Math.min(1,max/Math.max(img.width,img.height));const cv=document.createElement('canvas');cv.width=Math.round(img.width*scale);cv.height=Math.round(img.height*scale);cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);const data=cv.toDataURL('image/jpeg',.78);const name=(file.name||type+' Design').replace(/\.[^.]+$/,'').slice(0,60);const d={id:'upload_'+Date.now(),type,name,image:data,savedAt:Date.now(),source:'Camera/Gallery'};const a=loadSavedDesigns();a.push(d);saveSavedDesigns(a);orderDesignTargets[index]={source:'Camera/Gallery',name,image:data,url:''};alert('Design My Designs me save ho gaya aur order ke liye select ho gaya ✓');backToOrderPicker()};img.src=e.target.result};reader.readAsDataURL(file);
+}
+function selectDesignForOrder(index,type,name){const all=garmentDesignsFor(type).concat(loadSavedDesigns().filter(x=>x.type===type));const d=all.find(x=>x.name===name);if(!d)return;orderDesignTargets[index]={source:'SILAI GURU',name:d.name,url:d.url||'',image:d.image||''};backToOrderPicker()}
 function backToOrderPicker(){const s=orderFormSnapshot;openM('order');setTimeout(()=>restoreOrderForm(s),30)}
 function addO(e){e.preventDefault();const name=document.getElementById('cn').value.trim(),mob=document.getElementById('cm').value.trim(),c=cs.find(x=>x.mobile===mob),garments=collectGarments();if(!name||!mob||!garments.length){alert('Customer name, mobile aur kam se kam ek garment zaroor bhariye.');return false}let customer=c;if(!customer){customer={id:Date.now(),name,mobile:mob,orders:0};cs.push(customer)}customer.orders++;os.push({id:Date.now(),customer:name,mobile:mob,garment:garments[0].type,garments,workDate:document.getElementById('cwd').value,delivery:document.getElementById('cd').value,total:+document.getElementById('ct').value||0,advance:+document.getElementById('ca').value||0,note:document.getElementById('co').value,status:'Pending',created:new Date().toISOString()});save();closeM();render();alert('Customer & Order save ho gaya ✓');return false}
 function statusO(id){let o=os.find(x=>x.id===id);o.status=o.status==='Pending'?'Ready':'Delivered';save();render();openM('delivery')}function saveProfile(){try{const v=id=>String((document.getElementById(id)||{}).value||"").trim();const fields=["pn","pm","ps","pe","pa","pst","pc","pp"];for(const id of fields){if(!v(id)){alert("Kripya sabhi * wali details bhariye.");const e=document.getElementById(id);if(e){e.focus();e.scrollIntoView({behavior:"smooth",block:"center"});}return false;}}const profile={name:v("pn"),mobile:v("pm"),shop:v("ps"),email:v("pe"),address:v("pa"),state:v("pst"),city:v("pc"),pin:v("pp")};localStorage.setItem(K,JSON.stringify(profile));p=profile;try{cs=JSON.parse(localStorage.getItem(CK)||"[]");}catch(_){cs=[];localStorage.setItem(CK,"[]");}try{os=JSON.parse(localStorage.getItem(OK)||"[]");}catch(_){os=[];localStorage.setItem(OK,"[]");}const saved=JSON.parse(localStorage.getItem(K)||"null");if(!saved||saved.mobile!==profile.mobile){alert("Profile save nahi hua. Dobara try karein.");return false;}const ob=document.getElementById("onboard");if(ob){ob.hidden=true;ob.style.display="none";}render();window.scrollTo(0,0);return false;}catch(err){console.error("saveProfile error:",err);alert("Profile save ho gaya hai, lekin app open karte waqt error aaya. Page refresh karke dobara kholiye.");return false;}}try{p=JSON.parse(localStorage.getItem(K)||'null');plan=localStorage.getItem(PK)||'free';applyTheme(localStorage.getItem(TK)||'default')}catch(e){p=null;plan='free'}const o=document.getElementById('onboard');if(p&&p.name&&p.mobile&&p.shop&&p.email&&p.address&&p.state&&p.city&&p.pin){o.hidden=true;o.style.display='none';}else{o.hidden=false;o.style.display='flex';}render();

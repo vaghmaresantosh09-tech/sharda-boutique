@@ -431,16 +431,17 @@ function filterOrderDesigns(type){
 function showOrderDesignSource(mode,type,index){
   window.orderDesignTargetIndex=index;
   const box=document.getElementById('orderDesignSourceArea');if(!box)return;
-  const q=encodeURIComponent(type+' garment designs');
+  const T=JSON.stringify(type),I=JSON.stringify(index),q=encodeURIComponent(type+' garment designs');
   if(mode==='library'){box.innerHTML='<div class="design-source-box"><b>🎨 SILAI GURU Design Library</b><small>Ready designs aur aapke My Designs yahan milenge.</small></div>';return}
+  if(mode==='camera'){box.innerHTML='<div class="design-source-box"><b>📷 Camera</b><small>Camera se design photo lene ke liye neeche photo box dabayein.</small><input id="orderDesignPhotoInput" type="file" accept="image/*" capture="environment" onchange="saveOrderUploadedDesign('+T+','+I+')" style="display:block;width:100%;margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:12px"></div>';return}
+  if(mode==='gallery'){box.innerHTML='<div class="design-source-box"><b>🖼️ Gallery</b><small>Phone Gallery se design photo select karein.</small><input id="orderDesignPhotoInput" type="file" accept="image/*" onchange="saveOrderUploadedDesign('+T+','+I+')" style="display:block;width:100%;margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:12px"></div>';return}
   if(mode==='web'){
-    box.innerHTML='<div class="design-source-box"><h3 style="margin:0 0 8px">🌐 '+esc(type)+' Design Websites</h3><p class="muted">Website se design dekhein. Pasand aane par screenshot Gallery se save kar sakte hain.</p><div class="design-source-grid">'+
-      '<div class="source-card"><b>Pinterest</b><small>'+esc(type)+' designs</small><button type="button" class="secondary" onclick="window.open(\'https://www.pinterest.com/search/pins/?q='+q+'\',\'_blank\')">Open Website ↗</button></div>'+
-      '<div class="source-card"><b>Myntra</b><small>'+esc(type)+' designs</small><button type="button" class="secondary" onclick="window.open(\'https://www.myntra.com/\',\'_blank\')">Open Website ↗</button></div>'+
-      '<div class="source-card"><b>Meesho</b><small>'+esc(type)+' designs</small><button type="button" class="secondary" onclick="window.open(\'https://www.meesho.com/search?q='+q+'\',\'_blank\')">Open Website ↗</button></div>'+
-      '<div class="source-card"><b>Google Images</b><small>'+esc(type)+' designs</small><button type="button" class="secondary" onclick="window.open(\'https://www.google.com/search?tbm=isch&q='+q+'\',\'_blank\')">Open Website ↗</button></div>'+
-      '</div></div>';return;
-  }
+    box.innerHTML='<div class="design-source-box"><h3 style="margin:0 0 8px">🌐 '+esc(type)+' Design Websites</h3><p class="muted">Neeche website button dabakar designs dekhein.</p><div class="design-source-grid">'+
+      '<div class="source-card"><b>Pinterest</b><button type="button" class="secondary" onclick="window.open(\'https://www.pinterest.com/search/pins/?q='+q+'\',\'_blank\')">Open Website ↗</button></div>'+
+      '<div class="source-card"><b>Myntra</b><button type="button" class="secondary" onclick="window.open(\'https://www.myntra.com/\',\'_blank\')">Open Website ↗</button></div>'+
+      '<div class="source-card"><b>Meesho</b><button type="button" class="secondary" onclick="window.open(\'https://www.meesho.com/search?q='+q+'\',\'_blank\')">Open Website ↗</button></div>'+
+      '<div class="source-card"><b>Google Images</b><button type="button" class="secondary" onclick="window.open(\'https://www.google.com/search?tbm=isch&q='+q+'\',\'_blank\')">Open Website ↗</button></div>'+
+      '</div></div>';return}
 }
 function saveOrderUploadedDesign(type,index){
   const input=document.getElementById('orderDesignPhotoInput'),file=input&&input.files&&input.files[0];if(!file)return;

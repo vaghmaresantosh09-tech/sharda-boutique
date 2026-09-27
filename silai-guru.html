@@ -32,7 +32,7 @@ const rank={free:0,standard:1,premium:2,pro:3};
 if(rank[plan] < rank[required]){alert('यह feature '+PLAN_INFO[required].name+' plan में available है.\\nअभी Test Paid Plan से activate करें.');openM('plans');return false}
 return true;
 }
-function openM(t){modal.classList.add('modal','show');const title={order:'➕ New Order',customers:'👥 Customers',orders:'📋 Orders',measure:'📏 Measurements',payments:'💰 Payments',delivery:'🚚 Delivery',reports:'📊 Reports',profile:'🏪 Shop Profile',backup:'☁️ Backup',workers:'🧑‍🔧 Workers',garments:'👗 Garments',settings:'⚙️ Settings',plans:'💎 Plans & Upgrade'}[t]||t;mt.textContent=title;mb.innerHTML=content(t)}
+function openM(t){modal.classList.add('modal','show');if(t==='garments'){if(!planGate('premium'))return;openGarmentLibrary();return}const title={order:'➕ New Order',customers:'👥 Customers',orders:'📋 Orders',measure:'📏 Measurements',payments:'💰 Payments',delivery:'🚚 Delivery',reports:'📊 Reports',profile:'🏪 Shop Profile',backup:'☁️ Backup',workers:'🧑‍🔧 Workers',garments:'👗 Garments',settings:'⚙️ Settings',plans:'💎 Plans & Upgrade'}[t]||t;mt.textContent=title;mb.innerHTML=content(t)}
 function closeM(){modal.classList.remove('show')}
 function loadExtra(){try{return JSON.parse(localStorage.getItem(DK)||'[]')}catch(e){return []}}
 function saveExtra(a){localStorage.setItem(DK,JSON.stringify(a))}

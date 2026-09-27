@@ -275,7 +275,7 @@ function openDesignCatalog(type){
 function showGarmentSource(mode,type){
   const box=document.getElementById('garmentSourceArea');if(!box)return;
   if(mode==='library'){box.innerHTML='<div class="design-source-box"><b>🎨 SILAI GURU Design Library</b><small>Ready designs aur My Designs yahan milenge.</small></div>';return}
-  if(mode==='camera'||mode==='gallery'){box.innerHTML='<div class="design-source-box"><b>'+(mode==='camera'?'📷 Camera se Design':'🖼️ Gallery se Design')+'</b><small>Photo select karein. Save hone ke baad ye My Designs me rahega.</small><input id="designPhotoInput" type="file" accept="image/*" '+(mode==='camera'?'capture="environment"':'')+' onchange="saveUploadedDesign(\''+esc(type).replace(/'/g,"\\'")+'\')" style="margin-top:8px"></div>';return}
+  if(mode==='camera'||mode==='gallery'){box.innerHTML='<div class="design-source-box"><b>'+(mode==='camera'?'📷 Camera se Design':'🖼️ Gallery se Design')+'</b><small>Ye feature sabhi plans me available hai. Upload ke baad photo My Designs me save hogi; cloud backup/storage aapke plan ke according apply hoga.</small><input id="designPhotoInput" type="file" accept="image/*" '+(mode==='camera'?'capture="environment"':'')+' onchange="saveUploadedDesign(\''+esc(type).replace(/'/g,"\\'")+'\')" style="margin-top:8px"></div>';return}
   if(mode==='web'){
     const q=encodeURIComponent(type+' garment designs');
     const src=[['Pinterest','https://www.pinterest.com/search/pins/?q='+q],['Myntra','https://www.myntra.com/'+encodeURIComponent(type.toLowerCase())],['Meesho','https://www.meesho.com/search?q='+q],['Google Images','https://www.google.com/search?tbm=isch&q='+q]];
@@ -286,6 +286,7 @@ function showGarmentSource(mode,type){
 }
 function saveUploadedDesign(type){
   const input=document.getElementById('designPhotoInput'),file=input&&input.files&&input.files[0];if(!file)return;
+  // Camera/Gallery is available to every plan; storage quota is enforced separately by the user's plan.
   const reader=new FileReader();
   reader.onload=function(e){const img=new Image();img.onload=function(){const max=900,scale=Math.min(1,max/Math.max(img.width,img.height));const cv=document.createElement('canvas');cv.width=Math.round(img.width*scale);cv.height=Math.round(img.height*scale);cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);const data=cv.toDataURL('image/jpeg',.78);const name=(file.name||type+' Design').replace(/\.[^.]+$/,'').slice(0,60);const a=loadSavedDesigns();a.push({id:'upload_'+Date.now(),type,name,image:data,savedAt:Date.now(),source:'Camera/Gallery'});try{saveSavedDesigns(a);alert('Design My Designs me save ho gaya ✓');openDesignCatalog(type)}catch(err){alert('Photo save nahi ho paayi. Photo size kam karke dobara try karein.')}};img.src=e.target.result};reader.readAsDataURL(file);
 }

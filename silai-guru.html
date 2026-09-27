@@ -169,31 +169,68 @@ function loadSavedDesigns(){try{return JSON.parse(localStorage.getItem('sg_garme
 function saveSavedDesigns(a){localStorage.setItem('sg_garment_designs',JSON.stringify(a))}
 function designVisual(type,index){
   const palettes=['#e98aa5','#5e9be8','#d6a64a','#6db9a8','#9a83dc','#e77b55','#5c718f','#d56c8a','#7da05a','#b78663','#6c83c4','#b96a9e'];
-  const col=palettes[index%palettes.length],dark=col;
-  const shape={
-    Blouse:'<path d="M29 31l11-8h20l11 8 10 9-9 15-10-8v27H37V47l-10 8-9-15z" fill="__C__" stroke="#553b50" stroke-width="2"/><path d="M40 23q10 12 20 0" fill="none" stroke="#553b50" stroke-width="3"/>',
-    'Saree Blouse':'<path d="M29 31l11-8h20l11 8 10 9-9 15-10-8v27H37V47l-10 8-9-15z" fill="__C__" stroke="#553b50" stroke-width="2"/><path d="M40 23q10 12 20 0" fill="none" stroke="#553b50" stroke-width="3"/><path d="M35 62h30" stroke="#fff" stroke-width="3"/>',
-    Kurti:'<path d="M39 18h22l8 14 10 8-8 14-9-7v34H38V47l-9 7-8-14 10-8z" fill="__C__" stroke="#4c4668" stroke-width="2"/><path d="M44 20q6 8 12 0M50 30v43" fill="none" stroke="#4c4668" stroke-width="2"/>',
-    'Salwar Suit':'<path d="M39 19h22l7 13 9 9-8 12-8-7v32H39V46l-8 7-8-12 9-9z" fill="__C__" stroke="#4c4668" stroke-width="2"/><path d="M24 58q26 12 52 0" fill="none" stroke="#fff" stroke-width="3"/>',
-    Kameez:'<path d="M39 18h22l7 13 10 9-8 13-8-7v32H38V46l-8 7-8-13 10-9z" fill="__C__" stroke="#4c4668" stroke-width="2"/><path d="M44 20q6 8 12 0M50 30v44" fill="none" stroke="#4c4668" stroke-width="2"/>',
-    Lehenga:'<path d="M39 19h22v18l19 44H20l19-44z" fill="__C__" stroke="#5b3d54" stroke-width="2"/><path d="M28 62h44M24 73h52" stroke="#fff" stroke-width="3"/>',
-    Gown:'<path d="M39 17h22l5 19 17 46H17l17-46z" fill="__C__" stroke="#51456f" stroke-width="2"/><path d="M38 18q12 10 24 0M31 63h38" fill="none" stroke="#fff" stroke-width="3"/>',
-    Dress:'<path d="M39 18h22l4 20 17 44H18l17-44z" fill="__C__" stroke="#65402d" stroke-width="2"/><path d="M39 18q11 10 22 0M34 62h32" fill="none" stroke="#fff" stroke-width="3"/>',
-    Shirt:'<path d="M35 20l15 8 15-8 10 10 8 13-11 7-5-7v37H33V43l-5 7-11-7 8-13z" fill="__C__" stroke="#38516b" stroke-width="2"/><path d="M50 28l-8 10 8 8 8-8z" fill="#fff" stroke="#38516b" stroke-width="2"/>',
-    Pant:'<path d="M31 18h38l-4 29-7 35H47l-1-31-5 31H26l5-35z" fill="__C__" stroke="#334b6e" stroke-width="2"/><path d="M31 28h38M50 28v22" stroke="#334b6e" stroke-width="2"/>',
-    Salwar:'<path d="M34 20h32l-2 29-7 31H43l7-31-6 31H24l9-31z" fill="__C__" stroke="#72502a" stroke-width="2"/><path d="M34 30h32M50 30v19" stroke="#72502a" stroke-width="2"/>',
-    Choli:'<path d="M35 22l15 7 15-7 9 9 7 12-10 7-7-9v25H36V41l-7 9-10-7 7-12z" fill="__C__" stroke="#6a4c20" stroke-width="2"/><path d="M42 26q8 9 16 0" fill="none" stroke="#6a4c20" stroke-width="2"/>',
-    Sherwani:'<path d="M38 17h24l8 14 9 9-9 12-7-7v35H37V45l-7 7-9-12 9-9z" fill="__C__" stroke="#675126" stroke-width="2"/><path d="M43 18q7 9 14 0M50 28v48M45 39h10M45 49h10M45 59h10" fill="none" stroke="#675126" stroke-width="2"/>',
-    Suit:'<path d="M39 18l11 8 11-8 10 10 10 47H19l10-47z" fill="__C__" stroke="#3c4351" stroke-width="2"/><path d="M50 26v49M39 18l11 25 11-25M34 43l16 32 16-32" fill="none" stroke="#eee" stroke-width="2"/>',
-    Blazer:'<path d="M39 18l11 8 11-8 10 10 10 47H19l10-47z" fill="__C__" stroke="#30394a" stroke-width="2"/><path d="M50 26v49M39 18l11 25 11-25M45 49h10M45 58h10" fill="none" stroke="#eee" stroke-width="2"/>',
-    Waistcoat:'<path d="M39 18l11 8 11-8 9 10 3 45H27l3-45z" fill="__C__" stroke="#765016" stroke-width="2"/><path d="M39 18l11 24 11-24M50 42v31" fill="none" stroke="#765016" stroke-width="2"/>',
-    Pajama:'<path d="M32 20h36l-3 29-7 30H45l5-30-6 30H25l8-30z" fill="__C__" stroke="#42685f" stroke-width="2"/><path d="M32 30h36M50 30v19" stroke="#42685f" stroke-width="2"/>',
-    'School Uniform':'<path d="M35 19h30l7 12 9 9-8 12-8-7v29H35V45l-8 7-8-12 9-9z" fill="__C__" stroke="#315a9b" stroke-width="2"/><path d="M39 20l11 10 11-10M50 30v44" fill="none" stroke="#315a9b" stroke-width="4"/>',
-    Coat:'<path d="M38 17h24l8 14 10 10-9 14-8-7v27H37V48l-8 7-9-14 10-10z" fill="__C__" stroke="#543e32" stroke-width="2"/><path d="M44 18q6 9 12 0M50 29v46" fill="none" stroke="#543e32" stroke-width="2"/>',
-    Other:'<circle cx="50" cy="50" r="30" fill="__C__" stroke="#555" stroke-width="2"/><path d="M34 62l14-25 8 8-14 25zM55 38l6-6 8 8-6 6z" fill="#fff" stroke="#555" stroke-width="2"/>'
+  const col=palettes[index%palettes.length];
+  const stroke='#4b4562';
+  const card='<rect x="3" y="3" width="94" height="94" rx="18" fill="#fff"/>';
+  const kurti=[
+    '<path d="M39 18h22l8 14 10 8-8 14-9-7v34H38V47l-9 7-8-14 10-8z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/><path d="M44 20q6 8 12 0M50 30v43" fill="none" stroke="'+stroke+'" stroke-width="2"/>',
+    '<path d="M40 18h20l7 13 8 9-7 13-8-6v35H40V47l-8 6-7-13 8-9z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/><path d="M43 19q7 10 14 0M50 29v43M40 69h20" fill="none" stroke="#fff" stroke-width="3"/>',
+    '<path d="M39 18h22l8 14 9 8-8 13-8-7v19q0 13-12 18-12-5-12-18V46l-8 7-8-13 9-8z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/><path d="M44 20q6 9 12 0M50 30v38" fill="none" stroke="'+stroke+'" stroke-width="2"/>',
+    '<path d="M41 18h18l8 14 10 9-8 13-9-7v35H40V47l-9 7-8-13 10-9z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/><path d="M44 20q6 7 12 0M50 30v43M40 72h20" fill="none" stroke="#fff" stroke-width="3"/>',
+    '<path d="M40 18h20l8 14 9 8-8 14-9-7v34H39V47l-9 7-8-14 9-8z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/><path d="M44 20q6 8 12 0M50 30v43M43 53h14M43 61h14" fill="none" stroke="'+stroke+'" stroke-width="2"/>',
+    '<path d="M39 18h22l7 14 10 8-8 14-9-7v34H38V47l-9 7-8-14 10-8z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/><path d="M44 20q6 8 12 0M50 30v43" fill="none" stroke="'+stroke+'" stroke-width="2"/><circle cx="45" cy="42" r="2" fill="#fff"/><circle cx="55" cy="50" r="2" fill="#fff"/><circle cx="45" cy="58" r="2" fill="#fff"/>',
+    '<path d="M39 18h22l8 14 10 8-8 14-9-7v34H38V47l-9 7-8-14 10-8z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/><path d="M44 20q6 8 12 0M50 30v43" fill="none" stroke="'+stroke+'" stroke-width="2"/><path d="M38 72q12-8 24 0" fill="none" stroke="#fff" stroke-width="3"/>',
+    '<path d="M39 18h22l8 14 10 8-8 14-9-7v34H38V47l-9 7-8-14 10-8z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/><path d="M43 20q7 11 14 0M50 30v43" fill="none" stroke="'+stroke+'" stroke-width="2"/><path d="M42 45h16M42 55h16" stroke="#fff" stroke-width="3"/>',
+    '<path d="M39 18h22l8 14 10 8-8 14-9-7v34H38V47l-9 7-8-14 10-8z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/><path d="M44 20q6 8 12 0M50 30v43" fill="none" stroke="'+stroke+'" stroke-width="2"/><path d="M40 73h20" stroke="#fff" stroke-width="5"/>',
+    '<path d="M39 18h22l8 14 10 8-8 14-9-7v34H38V47l-9 7-8-14 10-8z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/><path d="M44 20q6 8 12 0M50 30v43" fill="none" stroke="'+stroke+'" stroke-width="2"/><path d="M39 38h22" stroke="#fff" stroke-width="3"/>',
+    '<path d="M39 18h22l8 14 10 8-8 14-9-7v34H38V47l-9 7-8-14 10-8z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/><path d="M44 20q6 8 12 0M50 30v43" fill="none" stroke="'+stroke+'" stroke-width="2"/><circle cx="50" cy="48" r="7" fill="none" stroke="#fff" stroke-width="3"/>',
+    '<path d="M39 18h22l8 14 10 8-8 14-9-7v34H38V47l-9 7-8-14 10-8z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/><path d="M44 20q6 8 12 0M50 30v43" fill="none" stroke="'+stroke+'" stroke-width="2"/><path d="M40 68l10-10 10 10" fill="none" stroke="#fff" stroke-width="3"/>'
+  ];
+  const blouse=[
+    '<path d="M29 31l11-8h20l11 8 10 9-9 15-10-8v27H37V47l-10 8-9-15z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/><path d="M40 23q10 12 20 0" fill="none" stroke="'+stroke+'" stroke-width="3"/>',
+    '<path d="M29 31l11-8h20l11 8 10 9-9 15-10-8v27H37V47l-10 8-9-15z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/><path d="M40 23q10 5 20 0M43 28h14" fill="none" stroke="'+stroke+'" stroke-width="3"/>',
+    '<path d="M29 31l11-8h20l11 8 10 9-9 15-10-8v27H37V47l-10 8-9-15z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/><path d="M40 23l10 13 10-13" fill="none" stroke="'+stroke+'" stroke-width="3"/>',
+    '<path d="M29 31l11-8h20l11 8 10 9-9 15-10-8v27H37V47l-10 8-9-15z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/><path d="M40 23q10 12 20 0M37 64h26" fill="none" stroke="#fff" stroke-width="4"/>',
+    '<path d="M29 31l11-8h20l11 8 10 9-9 15-10-8v27H37V47l-10 8-9-15z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/><path d="M40 23q10 12 20 0M42 43h16M42 51h16" fill="none" stroke="#fff" stroke-width="3"/>',
+    '<path d="M29 31l11-8h20l11 8 10 9-9 15-10-8v27H37V47l-10 8-9-15z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/><path d="M40 23q10 12 20 0M50 38v34" fill="none" stroke="'+stroke+'" stroke-width="3"/>',
+    '<path d="M29 31l11-8h20l11 8 10 9-9 15-10-8v27H37V47l-10 8-9-15z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/><path d="M40 23q10 12 20 0" fill="none" stroke="'+stroke+'" stroke-width="3"/><circle cx="43" cy="43" r="2" fill="#fff"/><circle cx="57" cy="43" r="2" fill="#fff"/>',
+    '<path d="M29 31l11-8h20l11 8 10 9-9 15-10-8v27H37V47l-10 8-9-15z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/><path d="M40 23q10 12 20 0M34 59h32" stroke="#fff" stroke-width="5"/>',
+    '<path d="M29 31l11-8h20l11 8 10 9-9 15-10-8v27H37V47l-10 8-9-15z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/><path d="M40 23q10 12 20 0M37 35h26" stroke="#fff" stroke-width="3"/>',
+    '<path d="M29 31l11-8h20l11 8 10 9-9 15-10-8v27H37V47l-10 8-9-15z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/><path d="M40 23q10 12 20 0M39 43h22M39 52h22" stroke="#fff" stroke-width="3"/>',
+    '<path d="M29 31l11-8h20l11 8 10 9-9 15-10-8v27H37V47l-10 8-9-15z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/><path d="M40 23q10 12 20 0M50 31v42" stroke="#fff" stroke-width="3"/>',
+    '<path d="M29 31l11-8h20l11 8 10 9-9 15-10-8v27H37V47l-10 8-9-15z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/><path d="M40 23q10 12 20 0M35 64q15-9 30 0" fill="none" stroke="#fff" stroke-width="4"/>'
+  ];
+  const base={
+    'Salwar Suit':'<path d="M39 19h22l7 13 9 9-8 12-8-7v32H39V46l-8 7-8-12 9-9z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/>',
+    Kameez:'<path d="M39 18h22l7 13 10 9-8 13-8-7v32H38V46l-8 7-8-13 10-9z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/>',
+    Lehenga:'<path d="M39 19h22v18l19 44H20l19-44z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/>',
+    Gown:'<path d="M39 17h22l5 19 17 46H17l17-46z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/>',
+    Dress:'<path d="M39 18h22l4 20 17 44H18l17-44z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/>',
+    Shirt:'<path d="M35 20l15 8 15-8 10 10 8 13-11 7-5-7v37H33V43l-5 7-11-7 8-13z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/>',
+    Pant:'<path d="M31 18h38l-4 29-7 35H47l-1-31-5 31H26l5-35z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/>',
+    Salwar:'<path d="M34 20h32l-2 29-7 31H43l7-31-6 31H24l9-31z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/>',
+    Choli:'<path d="M35 22l15 7 15-7 9 9 7 12-10 7-7-9v25H36V41l-7 9-10-7 7-12z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/>',
+    Sherwani:'<path d="M38 17h24l8 14 9 9-9 12-7-7v35H37V45l-7 7-9-12 9-9z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/>',
+    Suit:'<path d="M39 18l11 8 11-8 10 10 10 47H19l10-47z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/>',
+    Blazer:'<path d="M39 18l11 8 11-8 10 10 10 47H19l10-47z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/>',
+    Waistcoat:'<path d="M39 18l11 8 11-8 9 10 3 45H27l3-45z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/>',
+    Pajama:'<path d="M32 20h36l-3 29-7 30H45l5-30-6 30H25l8-30z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/>',
+    'School Uniform':'<path d="M35 19h30l7 12 9 9-8 12-8-7v29H35V45l-8 7-8-12 9-9z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/>',
+    Coat:'<path d="M38 17h24l8 14 10 10-9 14-8-7v27H37V48l-8 7-9-14 10-10z" fill="__C__" stroke="'+stroke+'" stroke-width="2"/>',
+    Other:'<circle cx="50" cy="50" r="30" fill="__C__" stroke="'+stroke+'" stroke-width="2"/>'
   };
-  let body=shape[type]||shape.Other;
-  const svg='<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="94" height="94" rx="20" fill="#fff"/>'+body.replaceAll('__C__',col)+'</svg>';
+  let body;
+  if(type==='Kurti') body=kurti[index%kurti.length];
+  else if(type==='Blouse'||type==='Saree Blouse') body=blouse[index%blouse.length];
+  else body=base[type]||base.Other;
+  const extras=[
+    '<path d="M42 31h16M42 39h16" stroke="#fff" stroke-width="2"/>',
+    '<circle cx="45" cy="48" r="2" fill="#fff"/><circle cx="55" cy="58" r="2" fill="#fff"/>',
+    '<path d="M35 68h30" stroke="#fff" stroke-width="3"/>',
+    '<path d="M39 73q11-8 22 0" fill="none" stroke="#fff" stroke-width="3"/>',
+    '<path d="M44 45l6 6 6-6" fill="none" stroke="#fff" stroke-width="3"/>'
+  ];
+  const svg='<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">'+card+body.replaceAll('__C__',col)+(extras[index%extras.length])+'</svg>';
   return svg;
 }
 function garmentDesignsFor(type){

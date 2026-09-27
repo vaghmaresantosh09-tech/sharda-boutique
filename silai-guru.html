@@ -277,7 +277,7 @@ function openDesignCatalog(type){
     <button type="button" class="source-chip active" onclick="showGarmentSource('library',${T})">🎨 SILAI GURU</button>
     ${fileLabel('camera')}
     ${fileLabel('gallery')}
-    <button type="button" class="source-chip" onclick="showGarmentSource('web',${T})">🌐 Websites</button>
+    <button type="button" class="source-chip" onclick="showWebsiteChoices(${T},0)">🌐 Websites</button>
     <button type="button" class="source-chip" onclick="showGarmentSource('link',${T})">🔗 Add Link</button>
   </div>
   <div id="garmentSourceArea"></div>
@@ -404,7 +404,7 @@ function openDesignCatalogForOrder(type,index){
     <button type="button" class="source-chip active" onclick="showOrderDesignSource('library',${T},${I})">🎨 SILAI GURU</button>
     ${camera}
     ${gallery}
-    <button type="button" class="source-chip" onclick="showOrderDesignSource('web',${T},${I})">🌐 Websites</button>
+    <button type="button" class="source-chip" onclick="showOrderWebsiteChoices(${T},${I})">🌐 Websites</button>
   </div>
   <div id="orderDesignSourceArea"></div>
   <input class="design-search" id="orderDesignSearch" placeholder="🔎 Search ${esc(type)} design..." oninput="filterOrderDesigns(${T})">
@@ -414,7 +414,7 @@ function openDesignCatalogForOrder(type,index){
   }).join('')}</div>`;
   showOrderDesignSource('library',type,index);
 }
-function openDesignWebsite(url){window.location.assign(url)}
+function openDesignWebsite(url){window.location.href=url}
 function showWebsiteChoices(type,index){
   const box=document.getElementById('garmentSourceArea');if(!box)return;
   const q=encodeURIComponent(type+' designs');

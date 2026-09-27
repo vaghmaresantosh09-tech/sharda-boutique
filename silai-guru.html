@@ -328,7 +328,11 @@ function filterDesigns(type){
 }
 function toggleSavedDesign(id,type,name){
   const a=loadSavedDesigns(),i=a.findIndex(x=>x.id===id);
-  if(i>=0)a.splice(i,1);else a.push({id,type,name,savedAt:Date.now()});
+  if(i>=0)a.splice(i,1);
+  else{
+    const d=garmentDesignsFor(type).find(x=>x.id===id);
+    a.push({id,type,name,index:d?.index??0,svg:d?.svg||designVisual(type,d?.index??0),image:d?.image||'',savedAt:Date.now()});
+  }
   saveSavedDesigns(a);openDesignCatalog(type);
 }
 function openGarmentFolder(){

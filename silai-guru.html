@@ -53,7 +53,7 @@ const rank={free:0,standard:1,premium:2,pro:3};
 if(rank[plan] < rank[required]){alert('यह feature '+PLAN_INFO[required].name+' plan में available है.\\nअभी Test Paid Plan से activate करें.');openM('plans');return false}
 return true;
 }
-function openM(t){modal.classList.add('modal','show');if(t==='garments'){if(!planGate('premium'))return;openGarmentLibrary();return}const title={order:'➕ New Order',customers:'👥 Customers',orders:'📋 Orders',measure:'📏 Measurements',payments:'💰 Payments',delivery:'🚚 Delivery',reports:'📊 Reports',profile:'🏪 Shop Profile',backup:'☁️ Backup',workers:'🧑‍🔧 Workers',garments:'👗 Garments',settings:'⚙️ Settings',plans:'💎 Plans & Upgrade'}[t]||t;mt.textContent=title;mb.innerHTML=content(t)}
+function openM(t){modal.classList.add('modal','show');if(t==='garments'){openGarmentLibrary();return}const title={order:'➕ New Order',customers:'👥 Customers',orders:'📋 Orders',measure:'📏 Measurements',payments:'💰 Payments',delivery:'🚚 Delivery',reports:'📊 Reports',profile:'🏪 Shop Profile',backup:'☁️ Backup',workers:'🧑‍🔧 Workers',garments:'👗 Garments',settings:'⚙️ Settings',plans:'💎 Plans & Upgrade'}[t]||t;mt.textContent=title;mb.innerHTML=content(t)}
 function closeM(){modal.classList.remove('show')}
 function loadExtra(){try{return JSON.parse(localStorage.getItem(DK)||'[]')}catch(e){return []}}
 function saveExtra(a){localStorage.setItem(DK,JSON.stringify(a))}
@@ -260,23 +260,22 @@ function garmentDesignsFor(type){
   return arr.map((name,i)=>({id:type.replace(/\W/g,'_')+'_'+i,type,name,index:i,svg:designVisual(type,i),image:(type==='Kurti'?KURTI_IMAGE_URLS[name]:'')}));
 }
 function openGarmentLibrary(){
-  if(!planGate('premium'))return;
   mt.textContent='👗 Garments';
   const saved=loadSavedDesigns();
   mb.innerHTML='<div class="card"><h3>🎨 Garment Design Library</h3><p class="muted">Kisi bhi garment ko touch karke uske related designs dekhiye.</p><div class="garment-library">'+GARMENT_LIBRARY.map((g,i)=>'<div class="garment-library-card" onclick="openDesignCatalog('+JSON.stringify(g).replace(/"/g,'&quot;')+')"><div class="libpic">'+garmentVisual(g)+'</div><b>'+g+'</b><small>'+((DESIGN_TYPES[g]||[]).length)+' Designs ›</small></div>').join('')+'</div><div class="folder-box"><div style="display:flex;justify-content:space-between;align-items:center"><div><b>📁 My Garment Folder</b><div class="folder-count">'+saved.length+' saved designs</div></div><button class="primary" onclick="openGarmentFolder()">Open</button></div><div class="library-note">💡 Garment par tap karein aur uske alag-alag designs dekhein.</div></div></div>';
 }
 function openDesignCatalog(type){
-  if(!planGate('premium'))return;
-  const designs=garmentDesignsFor(type);
+  const designs=garmentDesignsFor(type).concat(loadSavedDesigns().filter(x=>x.type===type).map(x=>({...x,svg:x.svg||designVisual(type,0)})));
   const saved=loadSavedDesigns();
   const chips=['All Designs'].concat(designs.slice(0,5).map(x=>x.name));
   mt.textContent='👗 '+type+' Designs';
-  mb.innerHTML='<div class="design-back"><button class="secondary" onclick="openGarmentLibrary()">← Garments</button><b>'+type+' · '+designs.length+' Designs</b></div><div class="design-sources"><button class="source-chip active" onclick="showGarmentSource(\'library\',\''+esc(type).replace(/'/g,"\\'")+'\')">🎨 SILAI GURU Designs</button><button class="source-chip" onclick="showGarmentSource(\'web\',\''+esc(type).replace(/'/g,"\\'")+'\')">🌐 Websites</button><button class="source-chip" onclick="showGarmentSource(\'link\',\''+esc(type).replace(/'/g,"\\'")+'\')">🔗 Add Design Link</button></div><div id="garmentSourceArea"></div><input class="design-search" id="designSearch" placeholder="🔎 Search '+type+' design..." oninput="filterDesigns(\''+esc(type).replace(/'/g,"\\'")+'\')"><div class="design-toolbar">'+chips.map((x,i)=>'<button class="design-chip '+(i===0?'active':'')+'">'+esc(x)+'</button>').join('')+'</div><div id="designGrid" class="design-grid">'+designs.map(d=>designCardHtml(d,saved)).join('')+'</div><div class="library-note">💡 Yahi catalogue New Order ke design selection me bhi use hoga.</div>';
+  mb.innerHTML='<div class="design-back"><button class="secondary" onclick="openGarmentLibrary()">← Garments</button><b>'+type+' · '+designs.length+' Designs</b></div><div class="design-sources"><button class="source-chip active" onclick="showGarmentSource('library',''+esc(type).replace(/'/g,"\\'")+'')">🎨 SILAI GURU</button><button class="source-chip" onclick="showGarmentSource('camera',''+esc(type).replace(/'/g,"\\'")+'')">📷 Camera</button><button class="source-chip" onclick="showGarmentSource('gallery',''+esc(type).replace(/'/g,"\\'")+'')">🖼️ Gallery</button><button class="source-chip" onclick="showGarmentSource('web',''+esc(type).replace(/'/g,"\\'")+'')">🌐 Websites</button><button class="source-chip" onclick="showGarmentSource('link',''+esc(type).replace(/'/g,"\\'")+'')">🔗 Add Link</button></div></div><div id="garmentSourceArea"></div><input class="design-search" id="designSearch" placeholder="🔎 Search '+type+' design..." oninput="filterDesigns(\''+esc(type).replace(/'/g,"\\'")+'\')"><div class="design-toolbar">'+chips.map((x,i)=>'<button class="design-chip '+(i===0?'active':'')+'">'+esc(x)+'</button>').join('')+'</div><div id="designGrid" class="design-grid">'+designs.map(d=>designCardHtml(d,saved)).join('')+'</div><div class="library-note">💡 Yahi catalogue New Order ke design selection me bhi use hoga.</div>';
   showGarmentSource('library',type);
 }
 function showGarmentSource(mode,type){
   const box=document.getElementById('garmentSourceArea');if(!box)return;
-  if(mode==='library'){box.innerHTML='<div class="design-source-box"><b>🎨 SILAI GURU Design Library</b><small>In designs ko customer ko dikhakar New Order me select kiya ja sakta hai.</small></div>';return}
+  if(mode==='library'){box.innerHTML='<div class="design-source-box"><b>🎨 SILAI GURU Design Library</b><small>Ready designs aur My Designs yahan milenge.</small></div>';return}
+  if(mode==='camera'||mode==='gallery'){box.innerHTML='<div class="design-source-box"><b>'+(mode==='camera'?'📷 Camera se Design':'🖼️ Gallery se Design')+'</b><small>Photo select karein. Save hone ke baad ye My Designs me rahega.</small><input id="designPhotoInput" type="file" accept="image/*" '+(mode==='camera'?'capture="environment"':'')+' onchange="saveUploadedDesign(\''+esc(type).replace(/'/g,"\\'")+'\')" style="margin-top:8px"></div>';return}
   if(mode==='web'){
     const q=encodeURIComponent(type+' garment designs');
     const src=[['Pinterest','https://www.pinterest.com/search/pins/?q='+q],['Myntra','https://www.myntra.com/'+encodeURIComponent(type.toLowerCase())],['Meesho','https://www.meesho.com/search?q='+q],['Google Images','https://www.google.com/search?tbm=isch&q='+q]];
@@ -285,6 +284,11 @@ function showGarmentSource(mode,type){
   }
   box.innerHTML='<div class="design-source-box"><h3 style="margin:0 0 8px">🔗 Add External Design</h3><p class="muted">Website/app se design pasand aane par uska link save karein. Yeh design catalogue me reference ke roop me rahega.</p><div class="design-link-box"><input id="catalogExternalUrl" type="url" placeholder="https://..."><button class="primary" onclick="saveCatalogExternalDesign(\''+esc(type).replace(/'/g,"\\'")+'\')">Save Design</button></div></div>';
 }
+function saveUploadedDesign(type){
+  const input=document.getElementById('designPhotoInput'),file=input&&input.files&&input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(e){const img=new Image();img.onload=function(){const max=900,scale=Math.min(1,max/Math.max(img.width,img.height));const cv=document.createElement('canvas');cv.width=Math.round(img.width*scale);cv.height=Math.round(img.height*scale);cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);const data=cv.toDataURL('image/jpeg',.78);const name=(file.name||type+' Design').replace(/\.[^.]+$/,'').slice(0,60);const a=loadSavedDesigns();a.push({id:'upload_'+Date.now(),type,name,image:data,savedAt:Date.now(),source:'Camera/Gallery'});try{saveSavedDesigns(a);alert('Design My Designs me save ho gaya ✓');openDesignCatalog(type)}catch(err){alert('Photo save nahi ho paayi. Photo size kam karke dobara try karein.')}};img.src=e.target.result};reader.readAsDataURL(file);
+}
 function saveCatalogExternalDesign(type){
   const x=document.getElementById('catalogExternalUrl'),url=String(x?.value||'').trim();
   if(!/^https?:\/\//i.test(url)){alert('Valid website link dijiye.');return}
@@ -292,12 +296,13 @@ function saveCatalogExternalDesign(type){
 }
 function designCardHtml(d,saved){
   const isSaved=saved.some(x=>x.id===d.id);
-  return '<div class="design-card"><div class="design-img">'+(d.image?'<img src="'+d.image+'" alt="'+esc(d.name)+'" loading="lazy">':d.svg)+'</div><div class="design-name">'+esc(d.name)+'</div><div class="design-actions"><button class="secondary" onclick="toggleSavedDesign(\''+d.id+'\',\''+esc(d.type).replace(/'/g,"\\'")+'\',\''+esc(d.name).replace(/'/g,"\\'")+'\')">'+(isSaved?'✓ Saved':'☆ Save')+'</button><button class="primary" onclick="showDesignToCustomer(\''+esc(d.type).replace(/'/g,"\\'")+'\',\''+esc(d.name).replace(/'/g,"\\'")+'\')">👁 Show</button></div></div>';
+  return '<div class="design-card"><div class="design-img">'+(d.image?'<img src="'+d.image+'" alt="'+esc(d.name)+'" loading="lazy">':d.svg)+'</div><div class="design-name">'+esc(d.name)+'</div><div class="design-actions"><button class="secondary" onclick="toggleSavedDesign(\''+d.id+'\',\''+esc(d.type).replace(/'/g,"\\'")+'\',\''+esc(d.name).replace(/'/g,"\\'")+'\')">'+(isSaved?'✓ Saved':'☆ Save')+'</button><button class="secondary" onclick="buyMaterialForDesign('\'+esc(d.name).replace(/'/g,"\\'")+'\',\''+esc(d.type).replace(/'/g,"\\'")+'\')">🛍️ Buy Material</button><button class="primary" onclick="showDesignToCustomer(\''+esc(d.type).replace(/'/g,"\\'")+'\',\''+esc(d.name).replace(/'/g,"\\'")+'\')">👁 Show</button></div></div>';
 }
+function buyMaterialForDesign(name,type){const q=encodeURIComponent(type+' '+name+' fabric tailoring material');window.open('https://www.google.com/search?tbm=shop&q='+q,'_blank','noopener,noreferrer');}
 function filterDesigns(type){
   const q=String(el('designSearch')?.value||'').toLowerCase();
   const saved=loadSavedDesigns();
-  const designs=garmentDesignsFor(type).filter(d=>d.name.toLowerCase().includes(q));
+  const designs=garmentDesignsFor(type).concat(saved.filter(x=>x.type===type).map(x=>({...x,svg:x.svg||designVisual(type,0)}))).filter(d=>d.name.toLowerCase().includes(q));
   const grid=el('designGrid');if(grid)grid.innerHTML=designs.map(d=>designCardHtml(d,saved)).join('')||'<div class="design-empty">Design nahi mila.</div>';
 }
 function toggleSavedDesign(id,type,name){
@@ -306,7 +311,6 @@ function toggleSavedDesign(id,type,name){
   saveSavedDesigns(a);openDesignCatalog(type);
 }
 function openGarmentFolder(){
-  if(!planGate('premium'))return;
   const a=loadSavedDesigns();
   mt.textContent='📁 My Garment Folder';
   mb.innerHTML='<div class="design-back"><button class="secondary" onclick="openGarmentLibrary()">← Garments</button><b>'+a.length+' Saved Designs</b></div>'+(a.length?'<div class="design-grid">'+a.map(x=>{const d=garmentDesignsFor(x.type).find(y=>y.id===x.id)||{...x,index:0,svg:designVisual(x.type,0)};return designCardHtml(d,a)}).join('')+'</div>':'<div class="design-empty">Abhi koi design save nahi hai.<br>Garment select karke design par ☆ Save dabaiye.</div>');

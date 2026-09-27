@@ -297,7 +297,8 @@ function saveCatalogExternalDesign(type){
 }
 function designCardHtml(d,saved){
   const isSaved=saved.some(x=>x.id===d.id);
-  return '<div class="design-card"><div class="design-img">'+(d.image?'<img src="'+d.image+'" alt="'+esc(d.name)+'" loading="lazy">':d.svg)+'</div><div class="design-name">'+esc(d.name)+'</div><div class="design-actions"><button class="secondary" onclick="toggleSavedDesign(\''+d.id+'\',\''+esc(d.type).replace(/'/g,"\\'")+'\',\''+esc(d.name).replace(/'/g,"\\'")+'\')">'+(isSaved?'✓ Saved':'☆ Save')+'</button><button class="secondary" onclick="buyMaterialForDesign('\'+esc(d.name).replace(/'/g,"\\'")+'\',\''+esc(d.type).replace(/'/g,"\\'")+'\')">🛍️ Buy Material</button><button class="primary" onclick="showDesignToCustomer(\''+esc(d.type).replace(/'/g,"\\'")+'\',\''+esc(d.name).replace(/'/g,"\\'")+'\')">👁 Show</button></div></div>';
+  const id=JSON.stringify(d.id),type=JSON.stringify(d.type),name=JSON.stringify(d.name);
+  return '<div class="design-card"><div class="design-img">'+(d.image?'<img src="'+d.image+'" alt="'+esc(d.name)+'" loading="lazy">':d.svg)+'</div><div class="design-name">'+esc(d.name)+'</div><div class="design-actions"><button class="secondary" onclick="toggleSavedDesign('+id+','+type+','+name+')">'+(isSaved?'✓ Saved':'☆ Save')+'</button><button class="secondary" onclick="buyMaterialForDesign('+name+','+type+')">🛍️ Buy Material</button><button class="primary" onclick="showDesignToCustomer('+type+','+name+')">👁 Show</button></div></div>';
 }
 function buyMaterialForDesign(name,type){const q=encodeURIComponent(type+' '+name+' fabric tailoring material');window.open('https://www.google.com/search?tbm=shop&q='+q,'_blank','noopener,noreferrer');}
 function filterDesigns(type){

@@ -414,24 +414,25 @@ function openDesignCatalogForOrder(type,index){
   }).join('')}</div>`;
   showOrderDesignSource('library',type,index);
 }
+function openDesignWebsite(url){window.location.assign(url)}
 function showWebsiteChoices(type,index){
   const box=document.getElementById('garmentSourceArea');if(!box)return;
   const q=encodeURIComponent(type+' designs');
   box.innerHTML='<div class="design-source-box"><b>🌐 Design Websites</b><small>Jis website par design dekhna ho, uska button dabayein.</small><div class="design-source-grid">'+
-    '<a class="source-card" href="https://www.pinterest.com/search/pins/?q='+q+'" target="_blank" rel="noopener"><b>📌 Pinterest</b><small>'+esc(type)+' Designs</small><span>Open ↗</span></a>'+
-    '<a class="source-card" href="https://www.myntra.com/search?q='+q+'" target="_blank" rel="noopener"><b>🛍️ Myntra</b><small>'+esc(type)+' Designs</small><span>Open ↗</span></a>'+
-    '<a class="source-card" href="https://www.meesho.com/search?q='+q+'" target="_blank" rel="noopener"><b>🛒 Meesho</b><small>'+esc(type)+' Designs</small><span>Open ↗</span></a>'+
-    '<a class="source-card" href="https://www.google.com/search?tbm=isch&q='+q+'" target="_blank" rel="noopener"><b>🔎 Google Images</b><small>More designs</small><span>Open ↗</span></a>'+
+    '<button type="button" class="source-card" onclick="openDesignWebsite(\'https://www.pinterest.com/search/pins/?q='+q+'\')"><b>📌 Pinterest</b><small>'+esc(type)+' Designs</small><span>Open ↗</span></button>'+
+    '<button type="button" class="source-card" onclick="openDesignWebsite(\'https://www.myntra.com/search?q='+q+'\')"><b>🛍️ Myntra</b><small>'+esc(type)+' Designs</small><span>Open ↗</span></button>'+
+    '<button type="button" class="source-card" onclick="openDesignWebsite(\'https://www.meesho.com/search?q='+q+'\')"><b>🛒 Meesho</b><small>Designs</small><span>Open ↗</span></button>'+
+    '<button type="button" class="source-card" onclick="openDesignWebsite(\'https://www.google.com/search?tbm=isch&q='+q+'\')"><b>🔎 Google Images</b><small>More designs</small><span>Open ↗</span></button>'+
     '</div></div>';
 }
 function showOrderWebsiteChoices(type,index){
   const box=document.getElementById('orderDesignSourceArea');if(!box)return;
   const q=encodeURIComponent(type+' designs');
   box.innerHTML='<div class="design-source-box"><b>🌐 Design Websites</b><small>Jis website par design dekhna ho, uska button dabayein.</small><div class="design-source-grid">'+
-    '<a class="source-card" href="https://www.pinterest.com/search/pins/?q='+q+'" target="_blank" rel="noopener"><b>📌 Pinterest</b><small>'+esc(type)+' Designs</small><span>Open ↗</span></a>'+
-    '<a class="source-card" href="https://www.myntra.com/search?q='+q+'" target="_blank" rel="noopener"><b>🛍️ Myntra</b><small>'+esc(type)+' Designs</small><span>Open ↗</span></a>'+
-    '<a class="source-card" href="https://www.meesho.com/search?q='+q+'" target="_blank" rel="noopener"><b>🛒 Meesho</b><small>'+esc(type)+' Designs</small><span>Open ↗</span></a>'+
-    '<a class="source-card" href="https://www.google.com/search?tbm=isch&q='+q+'" target="_blank" rel="noopener"><b>🔎 Google Images</b><small>More designs</small><span>Open ↗</span></a>'+
+    '<button type="button" class="source-card" onclick="openDesignWebsite(\'https://www.pinterest.com/search/pins/?q='+q+'\')"><b>📌 Pinterest</b><small>'+esc(type)+' Designs</small><span>Open ↗</span></button>'+
+    '<button type="button" class="source-card" onclick="openDesignWebsite(\'https://www.myntra.com/search?q='+q+'\')"><b>🛍️ Myntra</b><small>'+esc(type)+' Designs</small><span>Open ↗</span></button>'+
+    '<button type="button" class="source-card" onclick="openDesignWebsite(\'https://www.meesho.com/search?q='+q+'\')"><b>🛒 Meesho</b><small>Designs</small><span>Open ↗</span></button>'+
+    '<button type="button" class="source-card" onclick="openDesignWebsite(\'https://www.google.com/search?tbm=isch&q='+q+'\')"><b>🔎 Google Images</b><small>More designs</small><span>Open ↗</span></button>'+
     '</div></div>';
 }
 function openOrderCamera(type,index){window.orderDesignTargetIndex=index;openOrderFilePicker(type,index,true)}

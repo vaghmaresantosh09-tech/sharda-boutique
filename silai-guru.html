@@ -294,13 +294,18 @@ function openGarmentFolder(){
   mt.textContent='📁 My Garment Folder';
   mb.innerHTML='<div class="design-back"><button class="secondary" onclick="openGarmentLibrary()">← Garments</button><b>'+a.length+' Saved Designs</b></div>'+(a.length?'<div class="design-grid">'+a.map(x=>{const d=garmentDesignsFor(x.type).find(y=>y.id===x.id)||{...x,index:0,svg:designVisual(x.type,0)};return designCardHtml(d,a)}).join('')+'</div>':'<div class="design-empty">Abhi koi design save nahi hai.<br>Garment select karke design par ☆ Save dabaiye.</div>');
 }
-function showDesignToCustomer(type,name){
+function showDesignToCustomer(type,name,orderIndex){
   const all=garmentDesignsFor(type);
   const d=all.find(x=>x.name===name)||all[0];
-  if(d){d.svg=designVisual(type,Math.max(0,all.findIndex(x=>x.name===name)));}
-
+  if(!d)return;
+  const safeType=esc(type).replace(/'/g,"\\'");
+  const safeName=esc(name).replace(/'/g,"\\'");
+  const preview=d.image?'<img src="'+d.image+'" alt="'+esc(d.name)+'" loading="eager">':d.svg;
+  const selectAction=(orderIndex!==undefined)?'selectDesignForOrder('+orderIndex+',\''+safeType+'\',\''+safeName+'\')':'openDesignCatalog(\''+safeType+'\')';
+  const selectText=(orderIndex!==undefined)?'✓ Select Design for Order':'✓ Select Design';
+  const backAction=(orderIndex!==undefined)?'openDesignCatalogForOrder(\''+safeType+'\','+orderIndex+')':'openDesignCatalog(\''+safeType+'\')';
   mt.textContent='👁 '+type+' Design Preview';
-  mb.innerHTML='<div class="design-back"><button class="secondary" onclick="openDesignCatalog(\''+esc(type).replace(/'/g,"\\'")+'\')">← Designs</button></div><div style="text-align:center"><div style="font-size:18px;font-weight:800;margin:8px 0 4px">'+esc(name)+'</div><div class="preview-large">'+(d?d.svg:'')+'</div><p class="muted">Customer ko yahi design dikhaye.</p><div style="display:flex;gap:8px;justify-content:center"><button class="primary" onclick="openDesignCatalog(\''+esc(type).replace(/'/g,"\\'")+'\')">✓ Select Design</button><button class="secondary" onclick="openDesignCatalog(\''+esc(type).replace(/'/g,"\\'")+'\')">Back</button></div></div>';
+  mb.innerHTML='<div class="design-back"><button class="secondary" onclick="'+backAction+'">← Designs</button></div><div style="text-align:center"><div style="font-size:18px;font-weight:800;margin:8px 0 4px">'+esc(name)+'</div><div class="preview-large">'+preview+'</div><p class="muted">Customer ko yahi design dikhaye.</p><div style="display:flex;gap:8px;justify-content:center"><button class="primary" onclick="'+selectAction+'">'+selectText+'</button><button class="secondary" onclick="'+backAction+'">Back</button></div></div>';
 }
 function garmentVisual(type){
   const common={fill:'#d9d6ff',stroke:'#5144bd'};

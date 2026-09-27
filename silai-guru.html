@@ -277,7 +277,7 @@ function openDesignCatalog(type){
     <button type="button" class="source-chip active" onclick="showGarmentSource('library',${T})">🎨 SILAI GURU</button>
     ${fileLabel('camera')}
     ${fileLabel('gallery')}
-    <a class="source-chip" href="https://www.google.com/search?tbm=isch&q=${q}" target="_blank" rel="noopener">🌐 Websites ↗</a>
+    <button type="button" class="source-chip" onclick="showGarmentSource('web',${T})">🌐 Websites</button>
     <button type="button" class="source-chip" onclick="showGarmentSource('link',${T})">🔗 Add Link</button>
   </div>
   <div id="garmentSourceArea"></div>
@@ -404,7 +404,7 @@ function openDesignCatalogForOrder(type,index){
     <button type="button" class="source-chip active" onclick="showOrderDesignSource('library',${T},${I})">🎨 SILAI GURU</button>
     ${camera}
     ${gallery}
-    <a class="source-chip" href="https://www.google.com/search?tbm=isch&q=${q}" target="_blank" rel="noopener">🌐 Websites ↗</a>
+    <button type="button" class="source-chip" onclick="showOrderDesignSource('web',${T},${I})">🌐 Websites</button>
   </div>
   <div id="orderDesignSourceArea"></div>
   <input class="design-search" id="orderDesignSearch" placeholder="🔎 Search ${esc(type)} design..." oninput="filterOrderDesigns(${T})">

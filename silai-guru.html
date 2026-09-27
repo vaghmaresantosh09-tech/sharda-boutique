@@ -268,8 +268,15 @@ function openDesignCatalog(type){
   const designs=garmentDesignsFor(type).concat(loadSavedDesigns().filter(x=>x.type===type).map(x=>({...x,svg:x.svg||designVisual(type,0)})));
   const saved=loadSavedDesigns();
   const chips=['All Designs'].concat(designs.slice(0,5).map(x=>x.name));
+  const T=JSON.stringify(type);
   mt.textContent='👗 '+type+' Designs';
-  mb.innerHTML='<div class="design-back"><button class="secondary" onclick="openGarmentLibrary()">← Garments</button><b>'+type+' · '+designs.length+' Designs</b></div><div class="design-sources"><button class="source-chip active" onclick="showGarmentSource('library',''+esc(type).replace(/'/g,"\\'")+'')">🎨 SILAI GURU</button><button class="source-chip" onclick="showGarmentSource('camera',''+esc(type).replace(/'/g,"\\'")+'')">📷 Camera</button><button class="source-chip" onclick="showGarmentSource('gallery',''+esc(type).replace(/'/g,"\\'")+'')">🖼️ Gallery</button><button class="source-chip" onclick="showGarmentSource('web',''+esc(type).replace(/'/g,"\\'")+'')">🌐 Websites</button><button class="source-chip" onclick="showGarmentSource('link',''+esc(type).replace(/'/g,"\\'")+'')">🔗 Add Link</button></div></div><div id="garmentSourceArea"></div><input class="design-search" id="designSearch" placeholder="🔎 Search '+type+' design..." oninput="filterDesigns(\''+esc(type).replace(/'/g,"\\'")+'\')"><div class="design-toolbar">'+chips.map((x,i)=>'<button class="design-chip '+(i===0?'active':'')+'">'+esc(x)+'</button>').join('')+'</div><div id="designGrid" class="design-grid">'+designs.map(d=>designCardHtml(d,saved)).join('')+'</div><div class="library-note">💡 Yahi catalogue New Order ke design selection me bhi use hoga.</div>';
+  mb.innerHTML=`<div class="design-back"><button class="secondary" onclick="openGarmentLibrary()">← Garments</button><b>${esc(type)} · ${designs.length} Designs</b></div><div class="design-sources">
+    <button class="source-chip active" onclick="showGarmentSource('library',${T})">🎨 SILAI GURU</button>
+    <button class="source-chip" onclick="showGarmentSource('camera',${T})">📷 Camera</button>
+    <button class="source-chip" onclick="showGarmentSource('gallery',${T})">🖼️ Gallery</button>
+    <button class="source-chip" onclick="showGarmentSource('web',${T})">🌐 Websites</button>
+    <button class="source-chip" onclick="showGarmentSource('link',${T})">🔗 Add Link</button>
+  </div><div id="garmentSourceArea"></div><input class="design-search" id="designSearch" placeholder="🔎 Search ${esc(type)} design..." oninput="filterDesigns(${T})"><div class="design-toolbar">${chips.map((x,i)=>'<button class="design-chip '+(i===0?'active':'')+'">'+esc(x)+'</button>').join('')}</div><div id="designGrid" class="design-grid">${designs.map(d=>designCardHtml(d,saved)).join('')}</div><div class="library-note">💡 Yahi catalogue New Order ke design selection me bhi use hoga.</div>`;
   showGarmentSource('library',type);
 }
 function showGarmentSource(mode,type){

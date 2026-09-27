@@ -440,9 +440,8 @@ function openOrderWebsites(type,index){
   const q=encodeURIComponent(type+' designs');
   box.innerHTML='<div class="design-source-box"><b>🌐 Design Websites</b><small>Design dekhne ke liye website select karein.</small><div class="design-source-grid">'+
     '<a class="source-card" href="https://www.pinterest.com/search/pins/?q='+q+'" target="_blank" rel="noopener noreferrer"><b>📌 Pinterest</b><small>'+esc(type)+' Designs</small><span>Open Website ↗</span></a>'+
-    '<a class="source-card" href="https://www.myntra.com/search?q='+q+'" target="_blank" rel="noopener noreferrer"><b>🛍️ Myntra</b><small>'+esc(type)+' Designs</small><span>Open Website ↗</span></a>'+
-    '<a class="source-card" href="https://www.meesho.com/search?q='+q+'" target="_blank" rel="noopener noreferrer"><b>🛒 Meesho</b><small>'+esc(type)+' Designs</small><span>Open Website ↗</span></a>'+
-    '<a class="source-card" href="https://www.google.com/search?tbm=isch&q='+q+'" target="_blank" rel="noopener noreferrer"><b>🔎 Google Images</b><small>More '+esc(type)+' designs</small><span>Open Website ↗</span></a>'+
+    '<a class="source-card" href="https://www.bing.com/images/search?q='+q+'" target="_blank" rel="noopener noreferrer"><b>🖼️ Bing Images</b><small>'+esc(type)+' Designs</small><span>Open Images ↗</span></a>'+
+    '<a class="source-card" href="https://www.google.com/search?tbm=isch&q='+q+'" target="_blank" rel="noopener noreferrer"><b>🔎 Google Images</b><small>More '+esc(type)+' designs</small><span>Open Images ↗</span></a>'+
     '</div></div>';
   box.scrollIntoView({behavior:'smooth',block:'nearest'});
 }

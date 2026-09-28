@@ -191,6 +191,8 @@ const DESIGN_TYPES={
   Kurti:['Straight Kurti','A-Line Kurti','Anarkali Kurti','Long Kurti','Rayon Kurti','Palazzo Kurti','High-Low Kurti','Cotton Kurti','Party Wear Kurti','Short Kurti','Embroidered Kurti','Flared Kurti'],
   Blouse:['Padded Blouse','Princess Cut Blouse','Boat Neck Blouse','Back Open Blouse','Patch Work Blouse','Silk Blouse','Collar Neck Blouse','Deep Neck Blouse','Elbow Sleeve Blouse','Cold Shoulder Blouse','High Neck Blouse','Net Blouse'],
   'Salwar Suit':['Straight Suit','Anarkali Suit','Palazzo Suit','Patiala Suit','Punjabi Suit','Sharara Suit','Churidar Suit','Cotton Suit','Party Wear Suit','Embroidered Suit','Printed Suit','Rayon Suit'],
+  Kurta:['Straight Kurta','Pathani Kurta','Short Kurta','Long Kurta','A-Line Kurta','Angrakha Kurta','Embroidered Kurta','Printed Kurta','Cotton Kurta','Silk Kurta','Party Wear Kurta','Designer Kurta'],
+  Plazo:['Straight Palazzo','Flared Palazzo','Wide Leg Palazzo','Pleated Palazzo','Printed Palazzo','Cotton Palazzo','Rayon Palazzo','Party Wear Palazzo','Embroidered Palazzo','High Waist Palazzo','Palazzo Pants','Designer Palazzo'],
   Kameez:['Straight Kameez','A-Line Kameez','Long Kameez','Embroidered Kameez','Front Slit Kameez','Side Slit Kameez','Cotton Kameez','Silk Kameez','Party Wear Kameez','Printed Kameez','High Neck Kameez','Designer Kameez'],
   'Saree Blouse':['Boat Neck','Sweetheart Neck','V Neck','Round Neck','Deep Back','Backless','High Neck','Elbow Sleeve','Puff Sleeve','Princess Cut','Peplum Blouse','Designer Blouse'],
   Lehenga:['Bridal Lehenga','A-Line Lehenga','Flared Lehenga','Panel Lehenga','Circular Lehenga','Sharara Lehenga','Printed Lehenga','Embroidered Lehenga','Party Lehenga','Silk Lehenga','Velvet Lehenga','Designer Lehenga'],
@@ -584,7 +586,7 @@ function openDesignCatalogForOrder(type,index){
     <button type="button" class="source-chip active" onclick="showOrderDesignSource('library',${T},${I})">🎨 SILAI GURU</button>
     ${camera}
     ${gallery}
-    <button type="button" class="source-chip" id="orderWebsitesBtn" onclick="openOrderWebsites(${T},${I});return false;">✨ Design Inspiration</button>
+    <button type="button" class="source-chip" id="orderWebsitesBtn" onclick="openOrderWebsites(${T},${I});return false;">🌐 Websites</button>
   </div>
   <div id="orderDesignSourceArea"></div>
   <input class="design-search" id="orderDesignSearch" placeholder="🔎 Search ${esc(type)} design..." oninput="filterOrderDesigns(${T})">

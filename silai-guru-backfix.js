@@ -62,6 +62,13 @@
     setHashView(view,false);
   }
 
+  /* Called directly by the app's real navigation functions. This is synchronous. */
+  window.__sgRecordView=function(view){
+    if(restoring)return;
+    if(!view)return;
+    setHashView(String(view),false);
+  };
+
   function wrap(name){
     const fn=window[name];
     if(typeof fn!=='function' || fn.__sgBackWrapped)return;

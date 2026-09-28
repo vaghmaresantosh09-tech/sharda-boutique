@@ -1,47 +1,28 @@
 (function(){
-  'use strict';
-  const ROOT_ID='sg-direct-order-layout';
-  function addDefaultGarment(){
-    const wrap=document.getElementById('garmentsWrap');
-    if(!wrap || wrap.children.length) return;
-    if(typeof window.garmentCard==='function'){
-      try{ wrap.insertAdjacentHTML('beforeend', window.garmentCard(0,'Kurti')); return; }catch(e){}
-    }
-    const card=document.createElement('div');
-    card.className='garment-card';
-    card.innerHTML='<div class="garment-head"><div class="garment-title">Garment 1 • Kurti</div></div><div class="field"><label>Garment Type</label><select class="g-type"><option selected>Kurti</option><option>Blouse</option><option>Pant</option><option>Plazo</option><option>Shirt</option><option>Blazer</option><option>Salwar</option><option>Dress</option><option>Lehenga</option><option>Gown</option><option>Other</option></select></div><div class="measure-grid">'+['Height','Shoulder','Armhole','Upper Chest','Chest','Waist','Hip','Neck Front','Neck Back','Sleeve'].map(function(x){return '<div class="field"><label>'+x+'</label><input class="g-measure" data-name="'+x+'"></div>';}).join('')+'</div>';
-    wrap.appendChild(card);
-  }
-  function ensureDirectOrder(){
-    const modal=document.getElementById('modal');
-    const title=document.getElementById('mt');
-    if(!modal || !modal.classList.contains('show') || !title || title.textContent.trim()!=='New Order') return;
-    const wrap=document.getElementById('garmentsWrap');
-    if(!wrap) return;
-    addDefaultGarment();
-    let add=document.getElementById('sgDirectAddGarment');
-    if(!add){
-      add=document.createElement('button');
-      add.type='button'; add.id='sgDirectAddGarment'; add.className='add-g'; add.textContent='＋ Add Another Garment';
-      wrap.insertAdjacentElement('afterend',add);
-      add.addEventListener('click',function(){
-        if(typeof window.garmentCard==='function'){
-          const idx=wrap.children.length;
-          try{wrap.insertAdjacentHTML('beforeend',window.garmentCard(idx,'Kurti'));return;}catch(e){}
-        }
-        const copy=wrap.firstElementChild;
-        if(copy){const clone=copy.cloneNode(true);wrap.appendChild(clone);}
-      });
-    }
-    const source=document.getElementById('orderDesignSourceArea');
-    if(source && add.nextElementSibling!==source) add.insertAdjacentElement('afterend',source);
-    if(typeof window.renderPanel==='function') window.renderPanel();
-  }
-  const mo=new MutationObserver(function(){setTimeout(ensureDirectOrder,50);});
-  function start(){
-    mo.observe(document.body,{childList:true,subtree:true});
-    setInterval(ensureDirectOrder,500);
-    ensureDirectOrder();
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start,{once:true}); else start();
+'use strict';
+const STYLE_ID='sg-clean-order-style';
+let lastModal=null;
+function addStyle(){if(document.getElementById(STYLE_ID))return;const s=document.createElement('style');s.id=STYLE_ID;s.textContent=`#garmentsWrap.sg-data{display:none!important}.sg-order-clean{display:block}.sg-order-clean .sg-block{background:#fff;border:1px solid #e5e6ef;border-radius:16px;padding:13px;margin:10px 0}.sg-order-clean h3{margin:0 0 9px;font-size:16px;color:#5144bd}.sg-order-clean .sg-measure-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.sg-order-clean .sg-garment{background:#f8f7ff;border:1px solid #ddd8ff;border-radius:14px;padding:11px}.sg-order-clean .sg-garment-head{display:flex;justify-content:space-between;align-items:center;gap:8px}.sg-order-clean .sg-actions{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:9px}.sg-order-clean button{cursor:pointer}.sg-order-clean .sg-web{background:#f1efff;color:#5144bd}.sg-order-clean .sg-file{background:#f4f8ff;color:#315ea8}.sg-order-clean .sg-selected{font-size:12px;color:#5144bd;margin-top:8px}.sg-order-clean .sg-hidden{display:none!important}@media(max-width:500px){.sg-order-clean .sg-measure-grid{grid-template-columns:1fr}}`;document.head.appendChild(s)}
+function field(id,label){const o=document.getElementById(id);return o?o.closest('.field')||o.parentElement:null}
+function makeHiddenGarment(){const w=document.getElementById('garmentsWrap');if(!w)return;w.classList.add('sg-data');w.innerHTML='';let card=document.createElement('div');card.className='garment-card';card.id='garment-0';card.innerHTML='<div class="field"><label>Garment Type</label><select class="g-type"><option>Kurti</option><option>Blouse</option><option>Pant</option><option>Plazo</option><option>Shirt</option><option>Blazer</option><option>Salwar</option><option>Dress</option><option>Lehenga</option><option>Gown</option><option>Other</option></select></div><div class="measure-grid">'+['Height','Shoulder','Armhole','Upper Chest','Chest','Waist','Hip','Neck Front','Neck Back','Sleeve'].map(function(n){return '<div class="field"><label>'+n+'</label><input class="g-measure" data-name="'+n+'"></div>'}).join('')+'</div>';w.appendChild(card);return card}
+function sync(src,dst){src.addEventListener('input',function(){dst.value=src.value;dst.dispatchEvent(new Event('input',{bubbles:true}))});src.addEventListener('change',function(){dst.value=src.value;dst.dispatchEvent(new Event('change',{bubbles:true}))})}
+function build(){const modal=document.getElementById('modal'),title=document.getElementById('mt'),mb=document.getElementById('mb');if(!modal||!modal.classList.contains('show')||!title||title.textContent.trim()!=='New Order'||!mb)return;if(lastModal===mb&&mb.querySelector('.sg-order-clean'))return;lastModal=mb;addStyle();
+const oldForm=mb.querySelector('#orderForm');if(!oldForm)return;
+const name=document.getElementById('cn'),mobile=document.getElementById('cm'),work=document.getElementById('cwd'),delivery=document.getElementById('cd'),total=document.getElementById('ct'),advance=document.getElementById('ca'),notes=document.getElementById('co');
+const w=document.getElementById('garmentsWrap');const card=makeHiddenGarment();if(!card)return;
+const type=card.querySelector('.g-type');
+const clean=document.createElement('div');clean.className='sg-order-clean';
+clean.innerHTML='<div class="sg-block"><h3>👤 Customer Details</h3><div class="form"><div class="field"><label>Customer Name *</label><input id="sgName"></div><div class="field"><label>Mobile Number *</label><input id="sgMobile" inputmode="numeric"></div></div></div><div class="sg-block"><h3>📏 Measurements</h3><div class="sg-garment"><div class="field"><label>Garment</label><select id="sgType"><option>Kurti</option><option>Blouse</option><option>Pant</option><option>Plazo</option><option>Shirt</option><option>Blazer</option><option>Salwar</option><option>Dress</option><option>Lehenga</option><option>Gown</option><option>Other</option></select></div><div class="sg-measure-grid" id="sgMeasures"></div></div></div><div class="sg-block"><h3>👗 Garment Design</h3><div class="sg-actions"><button type="button" class="secondary" id="sgLibrary">🎨 Design Library</button><button type="button" class="sg-file" id="sgCamera">📷 Camera</button><button type="button" class="sg-file" id="sgGallery">🖼️ Gallery</button><button type="button" class="sg-web" id="sgPinterest">🌐 Pinterest</button><button type="button" class="sg-web" id="sgGoogle">🔎 Google</button></div><div class="sg-selected" id="sgSelected">Design abhi select nahi hai.</div></div><div class="sg-block"><h3>📅 Order Details</h3><div class="form"><div class="field"><label>Work Taken Date</label><input id="sgWork" type="date"></div><div class="field"><label>Delivery Date *</label><input id="sgDelivery" type="date"></div><div class="field"><label>Amount ₹</label><input id="sgTotal" type="number" min="0"></div><div class="field"><label>Advance ₹</label><input id="sgAdvance" type="number" min="0"></div><div class="field full"><label>Note</label><textarea id="sgNotes" placeholder="Extra work / special instruction"></textarea></div></div></div>';
+const submit=document.createElement('button');submit.type='submit';submit.className='primary';submit.textContent='💾 Save Customer & Order';clean.appendChild(submit);
+oldForm.querySelectorAll(':scope > *').forEach(x=>x.classList.add('sg-hidden'));oldForm.prepend(clean);
+const sm=document.getElementById('sgMeasures');card.querySelectorAll('.g-measure').forEach(function(o){const f=document.createElement('div');f.className='field';f.innerHTML='<label>'+o.dataset.name+'</label><input>';const v=f.querySelector('input');sync(v,o);sm.appendChild(f)});
+const map=[[name,'sgName'],[mobile,'sgMobile'],[work,'sgWork'],[delivery,'sgDelivery'],[total,'sgTotal'],[advance,'sgAdvance'],[notes,'sgNotes']];map.forEach(function(a){const v=document.getElementById(a[1]);if(a[0]&&v){v.value=a[0].value||'';sync(v,a[0]);sync(a[0],v)}});
+const st=document.getElementById('sgType');st.value=type.value||'Kurti';sync(st,type);
+function fileInput(capture){const i=document.createElement('input');i.type='file';i.accept='image/*';if(capture)i.setAttribute('capture','environment');i.style.display='none';document.body.appendChild(i);i.addEventListener('change',function(){if(i.files&&i.files[0])document.getElementById('sgSelected').textContent='📷 '+i.files[0].name+' selected';});i.click()}
+document.getElementById('sgCamera').onclick=function(){fileInput(true)};document.getElementById('sgGallery').onclick=function(){fileInput(false)};
+document.getElementById('sgPinterest').onclick=function(){window.open('https://www.pinterest.com/','_blank','noopener,noreferrer')};document.getElementById('sgGoogle').onclick=function(){window.open('https://www.google.com/search?tbm=isch','_blank','noopener,noreferrer')};
+document.getElementById('sgLibrary').onclick=function(){if(typeof window.openGarmentLibrary==='function')window.openGarmentLibrary();else alert('Design Library abhi load nahi hui.')};
+}
+function start(){addStyle();const mo=new MutationObserver(function(){setTimeout(build,30)});mo.observe(document.body,{childList:true,subtree:true});setInterval(build,300);build()}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();

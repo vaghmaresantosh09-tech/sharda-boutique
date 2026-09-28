@@ -1,17 +1,17 @@
+/* SILAI GURU — deterministic Android/browser Back navigation */
 (function(){
   'use strict';
 
   const KEY='silaiGuruBackStack';
-  let stack=[];
-  let handling=false;
-  let restoring=false;
   let ready=false;
+  let restoring=false;
+  let navigating=false;
 
   const titleMap={
     '➕ New Order':'order','New Order':'order',
     '👥 Customers':'customers','Customers':'customers',
     '📋 Orders':'orders','Orders':'orders',
-    '📏 Measurements':'measurements','Measurements':'measurements',
+    '📏 Measurements':'measure','Measurements':'measure',
     '💰 Payments':'payments','Payments':'payments',
     '🚚 Delivery':'delivery','Delivery':'delivery',
     '📊 Reports':'reports','Reports':'reports',
@@ -25,20 +25,28 @@
     '📏 Measurement Templates':'garment-measurements'
   };
 
-  function currentView(){
+  function viewFromScreen(){
     const el=document.getElementById('mt');
     const raw=String(el&&el.textContent||'').trim();
-    if(titleMap[raw])return titleMap[raw];
-    if(/^📏 .+ Measurements$/.test(raw))return 'garment-measurement-editor:'+raw.slice(3,-13);
-    if(/^🧵 .+ Services$/.test(raw))return 'garment-services:'+raw.slice(3,-9);
-    if(/^👗 .+ Designs$/.test(raw))return 'design-catalog:'+raw.slice(3,-8);
-    if(raw)return 'custom:'+raw;
+    if(titleMap[raw]) return titleMap[raw];
+    if(/^📏 .+ Measurements$/.test(raw)) return 'garment-measurement-editor:'+raw.slice(3,-13);
+    if(/^🧵 .+ Services$/.test(raw)) return 'garment-services:'+raw.slice(3,-9);
+    if(/^👗 .+ Designs$/.test(raw)) return 'design-catalog:'+raw.slice(3,-8);
+    if(raw==='📁 My Garment Folder') return 'garment-folder';
+    if(raw) return 'custom:'+raw;
     return null;
   }
 
-  function writeState(){
+  function setState(view){
+    try{ history.replaceState({[KEY]:true,view:view||'dashboard'},'',location.href); }catch(e){}
+  }
+
+  function pushView(view){
+    if(!view || restoring || navigating) return;
     try{
-      history.replaceState({[KEY]:true,stack:stack.slice()},'',location.href);
+      const s=history.state||{};
+      if(s[KEY] && s.view===view) return;
+      history.pushState({[KEY]:true,view:view},'',location.href);
     }catch(e){}
   }
 
@@ -46,49 +54,9 @@
     if(ready)return;
     ready=true;
     try{
-      /* This entry represents the dashboard. Every in-app screen gets its own
-         history entry so Android/browser Back returns to the previous screen. */
-      stack=[];
-      history.replaceState({[KEY]:true,stack:[]},'',location.href);
+      /* Current page is the dashboard. Do not push an extra entry here. */
+      history.replaceState({[KEY]:true,view:'dashboard'},'',location.href);
     }catch(e){}
-  }
-
-  function recordView(key){
-    if(!key || restoring || handling)return;
-
-    const existing=stack.indexOf(key);
-
-    if(existing===stack.length-1){
-      writeState();
-      return;
-    }
-
-    if(existing>=0){
-      /* A "Back to ..." button may reopen an earlier screen. Move the browser
-         history back to that screen instead of creating a duplicate entry. */
-      const steps=stack.length-1-existing;
-      if(steps>0){
-        try{
-          history.go(-steps);
-          return;
-        }catch(e){}
-      }
-      stack=stack.slice(0,existing+1);
-      writeState();
-      return;
-    }
-
-    stack=stack.concat(key);
-    try{
-      history.pushState({[KEY]:true,stack:stack.slice()},'',location.href);
-    }catch(e){
-      writeState();
-    }
-  }
-
-  function closeDirect(){
-    const m=document.getElementById('modal');
-    if(m)m.classList.remove('show');
   }
 
   function wrap(name){
@@ -96,11 +64,18 @@
     if(typeof fn!=='function' || fn.__sgBackWrapped)return;
 
     function wrapped(){
-      const result=fn.apply(this,arguments);
-      if(!restoring)setTimeout(()=>recordView(currentView()),0);
+      const wasNavigating=navigating;
+      navigating=true;
+      let result;
+      try{ result=fn.apply(this,arguments); }
+      finally{
+        navigating=wasNavigating;
+      }
+      if(!restoring && !wasNavigating){
+        setTimeout(function(){ pushView(viewFromScreen()); },0);
+      }
       return result;
     }
-
     wrapped.__sgBackWrapped=true;
     window[name]=wrapped;
   }
@@ -115,10 +90,10 @@
     const close=window.closeM;
     if(typeof close==='function' && !close.__sgBackWrapped){
       function wrappedClose(){
-        if(restoring)return close.apply(this,arguments);
-        if(stack.length){
-          try{history.back();}catch(e){close.apply(this,arguments);}
-          return;
+        if(restoring) return close.apply(this,arguments);
+        const s=history.state||{};
+        if(s[KEY] && s.view && s.view!=='dashboard'){
+          try{ history.back(); return; }catch(e){}
         }
         return close.apply(this,arguments);
       }
@@ -127,45 +102,63 @@
     }
   }
 
-  window.addEventListener('popstate',function(e){
-    if(handling)return;
-
-    const state=e&&e.state||{};
-    if(!state[KEY]){
-      /* This is the browser history outside Silai Guru. Do not try to
-         "repair" it; the browser should leave the app normally. */
-      stack=[];
-      return;
-    }
-
-    handling=true;
+  function findGarmentIndex(name){
     try{
-      stack=Array.isArray(state.stack)?state.stack.slice():[];
+      const a=typeof window.getGarmentMaster==='function'?window.getGarmentMaster():[];
+      return a.findIndex(g=>String(g.name)===String(name));
+    }catch(e){ return -1; }
+  }
 
-      if(stack.length){
-        const view=stack[stack.length-1];
-        restoring=true;
-        try{
-          if(view==='garments' && typeof window.openGarmentsManager==='function'){
-            window.openGarmentsManager();
-          }else if(view==='garment-measurements' && typeof window.openGarmentMeasurementManager==='function'){
-            window.openGarmentMeasurementManager();
-          }else if(typeof window.openM==='function' && /^[a-z-]+$/.test(view)){
-            window.openM(view);
-          }else{
-            closeDirect();
-          }
-        }finally{
-          restoring=false;
-        }
-      }else{
-        closeDirect();
+  function restore(view){
+    restoring=true;
+    try{
+      if(!view || view==='dashboard'){
+        const m=document.getElementById('modal');
+        if(m)m.classList.remove('show');
+        return;
       }
 
-      writeState();
+      if(view==='garment-measurements' && typeof window.openGarmentMeasurementManager==='function'){
+        window.openGarmentMeasurementManager(); return;
+      }
+      if(view==='garments' && typeof window.openGarmentsManager==='function'){
+        window.openGarmentsManager(); return;
+      }
+      if(view.indexOf('garment-measurement-editor:')===0){
+        const i=findGarmentIndex(view.slice(29));
+        if(i>=0 && typeof window.openGarmentMeasurementEditor==='function') window.openGarmentMeasurementEditor(i);
+        return;
+      }
+      if(view.indexOf('garment-services:')===0){
+        const i=findGarmentIndex(view.slice(17));
+        if(i>=0 && typeof window.openGarmentServiceEditor==='function') window.openGarmentServiceEditor(i);
+        return;
+      }
+      if(view.indexOf('design-catalog:')===0 && typeof window.openDesignCatalog==='function'){
+        window.openDesignCatalog(view.slice(15)); return;
+      }
+      if(view==='garment-folder' && typeof window.openGarmentFolder==='function'){
+        window.openGarmentFolder(); return;
+      }
+      if(/^[a-z-]+$/.test(view) && typeof window.openM==='function'){
+        window.openM(view); return;
+      }
+
+      /* Unknown/custom screen: keep the modal closed rather than jumping Home. */
+      const m=document.getElementById('modal');
+      if(m)m.classList.remove('show');
     }finally{
-      setTimeout(()=>{handling=false;},0);
+      restoring=false;
     }
+  }
+
+  window.addEventListener('popstate',function(e){
+    const state=e&&e.state||{};
+    if(!state[KEY]){
+      /* User has navigated outside the app. Let the browser continue normally. */
+      return;
+    }
+    restore(state.view||'dashboard');
   },true);
 
   ensureGuard();

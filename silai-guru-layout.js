@@ -40,9 +40,7 @@
     let idx=Number(panel.dataset.active||0);
     if(idx>=cs.length) idx=cs.length-1;
     panel.dataset.active=idx;
-    cs.forEach((c,i)=>{
-      c.querySelectorAll('.measure-grid').forEach(g=>g.style.display='none');
-    });
+    cs.forEach((c)=>{c.querySelectorAll('.measure-grid').forEach(g=>g.style.display='none');});
     panel.innerHTML='<div class="sg-measure-title">📏 Measurements</div><div class="sg-measure-sub">Garments section ke baad yahan garment-wise measurements bharein.</div><div class="sg-measure-tabs"></div><div class="sg-measure-body"></div>';
     const tabs=panel.querySelector('.sg-measure-tabs');
     cs.forEach((c,i)=>{
@@ -84,34 +82,68 @@
   document.head.appendChild(css);
   setInterval(()=>{if(activeOrder()) install();},500);
 
-  /* Android/browser back button: keep the user inside the app. */
-  const SG_BACK_KEY='silaiGuruBackGuard';
-  try{
-    if(!history.state || !history.state[SG_BACK_KEY]){
-      history.pushState(Object.assign({},history.state||{}, {[SG_BACK_KEY]:true}), '', location.href);
-    }
-  }catch(e){}
+  /* SILAI GURU Android/browser back handling.
+     Keep several history guard entries so the first Back never closes the app/page. */
+  const SG_BACK_KEY='silaiGuruBackGuardV2';
+  const GUARD_COUNT=6;
+  let handlingBack=false;
 
-  function closeVisibleLayer(){
+  function addGuardEntries(){
+    try{
+      const base=Object.assign({},history.state||{});
+      if(base[SG_BACK_KEY]) return;
+      for(let i=0;i<GUARD_COUNT;i++){
+        history.pushState(Object.assign({},base,{[SG_BACK_KEY]:i+1}), '', location.href);
+      }
+    }catch(e){}
+  }
+
+  function closeOneAppLayer(){
+    /* Prefer the app's own close function when available. */
+    try{
+      const modal=document.getElementById('modal');
+      if(modal && modal.classList.contains('show')){
+        if(typeof window.closeM==='function') window.closeM();
+        else modal.classList.remove('show');
+        return true;
+      }
+    }catch(e){}
+
     const modal=document.getElementById('modal');
     if(modal && modal.classList.contains('show')){
       modal.classList.remove('show');
       return true;
     }
-    const onboard=document.querySelector('.onboard:not([hidden])');
-    if(onboard){
-      onboard.hidden=true;
-      return true;
+
+    const onboarding=document.getElementById('onboard');
+    if(onboarding && !onboarding.hidden && getComputedStyle(onboarding).display!=='none'){
+      return false;
     }
-    const extra=document.querySelector('.modal.show');
-    if(extra){extra.classList.remove('show');return true;}
+
+    const anyLayer=document.querySelector('.modal.show');
+    if(anyLayer){anyLayer.classList.remove('show');return true;}
     return false;
   }
 
-  window.addEventListener('popstate',function(){
-    closeVisibleLayer();
+  function restoreGuard(){
+    if(handlingBack) return;
+    handlingBack=true;
     try{
-      history.pushState(Object.assign({},history.state||{}, {[SG_BACK_KEY]:true}), '', location.href);
+      /* Back has consumed one guard entry. Put a fresh guard back immediately. */
+      history.pushState({[SG_BACK_KEY]:Date.now()}, '', location.href);
     }catch(e){}
-  });
+    closeOneAppLayer();
+    setTimeout(()=>{handlingBack=false;},0);
+  }
+
+  function initBackGuard(){
+    addGuardEntries();
+    window.addEventListener('popstate',restoreGuard,false);
+    window.addEventListener('pageshow',function(){
+      setTimeout(addGuardEntries,50);
+    },false);
+  }
+
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',initBackGuard);
+  else initBackGuard();
 })();

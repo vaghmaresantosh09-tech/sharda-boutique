@@ -1,10 +1,8 @@
-/* SILAI GURU — robust Android/browser Back navigation using URL hash history */
+/* SILAI GURU — app-level browser history for Android Back */
 (function(){
   'use strict';
-
-  const PREFIX='sg-screen=';
+  const KEY='__silaiGuruView';
   let restoring=false;
-  let navigating=false;
 
   const titleMap={
     '➕ New Order':'order','New Order':'order',
@@ -24,7 +22,7 @@
     '📏 Measurement Templates':'garment-measurements'
   };
 
-  function viewFromScreen(){
+  function currentView(){
     const el=document.getElementById('mt');
     const raw=String(el&&el.textContent||'').trim();
     if(titleMap[raw]) return titleMap[raw];
@@ -32,142 +30,69 @@
     if(/^🧵 .+ Services$/.test(raw)) return 'garment-services:'+raw.slice(3,-9);
     if(/^👗 .+ Designs$/.test(raw)) return 'design-catalog:'+raw.slice(3,-8);
     if(raw==='📁 My Garment Folder') return 'garment-folder';
-    if(raw) return 'custom:'+raw;
-    return null;
+    return raw ? 'custom:'+raw : 'dashboard';
   }
 
-  function getHashView(){
-    const h=String(location.hash||'');
-    if(h.indexOf('#'+PREFIX)===0){
-      try{return decodeURIComponent(h.slice(('#'+PREFIX).length));}catch(e){return h.slice(('#'+PREFIX).length);}
-    }
-    return null;
-  }
+  function state(){return history.state&&history.state[KEY]?history.state:null;}
 
-  function setHashView(view,replace){
-    if(!view)return;
-    const hash='#'+PREFIX+encodeURIComponent(view);
-    if(location.hash===hash)return;
-    if(replace){
-      try{ history.replaceState(null,'',location.pathname+location.search+hash); }catch(e){ location.hash=hash; }
-    }else{
-      location.hash=hash;
-    }
-  }
-
-  function pushCurrentView(){
-    if(restoring || navigating)return;
-    const view=viewFromScreen();
-    if(!view)return;
-    setHashView(view,false);
-  }
-
-  /* Called directly by the app's real navigation functions. This is synchronous. */
+  /* This is called by the actual navigation functions in silai-guru.html. */
   window.__sgRecordView=function(view){
-    if(restoring)return;
-    if(!view)return;
-    setHashView(String(view),false);
+    if(restoring || !view)return;
+    const v=String(view);
+    const s=state();
+    if(s && s.view===v)return;
+    history.pushState({[KEY]:true,view:v},'',location.href);
   };
 
-  function wrap(name){
-    const fn=window[name];
-    if(typeof fn!=='function' || fn.__sgBackWrapped)return;
-
-    function wrapped(){
-      const wasNavigating=navigating;
-      navigating=true;
-      let result;
-      try{ result=fn.apply(this,arguments); }
-      finally{ navigating=wasNavigating; }
-      if(!restoring && !wasNavigating) pushCurrentView();
-      return result;
-    }
-    wrapped.__sgBackWrapped=true;
-    window[name]=wrapped;
-  }
-
-  function installWrappers(){
-    [
-      'openM','openGarmentsManager','openGarmentMeasurementManager',
-      'openGarmentMeasurementEditor','openGarmentServiceEditor',
-      'openGarmentLibrary','openDesignCatalog','openGarmentFolder'
-    ].forEach(wrap);
-
-    const close=window.closeM;
-    if(typeof close==='function' && !close.__sgBackWrapped){
-      function wrappedClose(){
-        if(restoring) return close.apply(this,arguments);
-        if(getHashView()){
-          try{ history.back(); return; }catch(e){}
-        }
-        return close.apply(this,arguments);
-      }
-      wrappedClose.__sgBackWrapped=true;
-      window.closeM=wrappedClose;
-    }
-  }
+  /* The first page is the real Dashboard entry. */
+  try{
+    const s=state();
+    if(!s) history.replaceState({[KEY]:true,view:'dashboard'},'',location.href);
+  }catch(e){}
 
   function findGarmentIndex(name){
     try{
       const a=typeof window.getGarmentMaster==='function'?window.getGarmentMaster():[];
       return a.findIndex(g=>String(g.name)===String(name));
-    }catch(e){ return -1; }
+    }catch(e){return -1;}
   }
 
   function restore(view){
     restoring=true;
     try{
-      if(!view){
+      if(!view || view==='dashboard'){
         const m=document.getElementById('modal');
         if(m)m.classList.remove('show');
         return;
       }
-
-      if(view==='garment-measurements' && typeof window.openGarmentMeasurementManager==='function'){
-        window.openGarmentMeasurementManager(); return;
-      }
-      if(view==='garments' && typeof window.openGarmentsManager==='function'){
-        window.openGarmentsManager(); return;
-      }
+      if(view==='garment-measurements' && typeof window.openGarmentMeasurementManager==='function')return window.openGarmentMeasurementManager();
+      if(view==='garments' && typeof window.openGarmentsManager==='function')return window.openGarmentsManager();
       if(view.indexOf('garment-measurement-editor:')===0){
         const i=findGarmentIndex(view.slice(27));
-        if(i>=0 && typeof window.openGarmentMeasurementEditor==='function') window.openGarmentMeasurementEditor(i);
+        if(i>=0 && typeof window.openGarmentMeasurementEditor==='function')return window.openGarmentMeasurementEditor(i);
         return;
       }
       if(view.indexOf('garment-services:')===0){
         const i=findGarmentIndex(view.slice(17));
-        if(i>=0 && typeof window.openGarmentServiceEditor==='function') window.openGarmentServiceEditor(i);
+        if(i>=0 && typeof window.openGarmentServiceEditor==='function')return window.openGarmentServiceEditor(i);
         return;
       }
-      if(view.indexOf('design-catalog:')===0 && typeof window.openDesignCatalog==='function'){
-        window.openDesignCatalog(view.slice(15)); return;
-      }
-      if(view==='garment-folder' && typeof window.openGarmentFolder==='function'){
-        window.openGarmentFolder(); return;
-      }
-      if(/^[a-z-]+$/.test(view) && typeof window.openM==='function'){
-        window.openM(view); return;
-      }
-
-      const m=document.getElementById('modal');
-      if(m)m.classList.remove('show');
-    }finally{
-      restoring=false;
-    }
+      if(view.indexOf('design-catalog:')===0 && typeof window.openDesignCatalog==='function')return window.openDesignCatalog(view.slice(15));
+      if(view==='garment-folder' && typeof window.openGarmentFolder==='function')return window.openGarmentFolder();
+      if(/^[a-z-]+$/.test(view) && typeof window.openM==='function')return window.openM(view);
+      const m=document.getElementById('modal'); if(m)m.classList.remove('show');
+    }finally{restoring=false;}
   }
 
-  window.addEventListener('hashchange',function(){
-    restore(getHashView());
+  window.addEventListener('popstate',function(e){
+    const s=e&&e.state;
+    if(!s || !s[KEY])return;
+    restore(s.view||'dashboard');
   },true);
 
-  /* If a screen hash already exists, restore it after the app's functions load. */
-  setTimeout(function(){
-    const existing=getHashView();
-    if(existing) restore(existing);
-  },50);
-
-  installWrappers();
-  setTimeout(installWrappers,100);
-  setTimeout(installWrappers,500);
-  setInterval(installWrappers,1000);
+  window.addEventListener('load',function(){
+    try{
+      if(!state()) history.replaceState({[KEY]:true,view:'dashboard'},'',location.href);
+    }catch(e){}
+  });
 })();

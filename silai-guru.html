@@ -546,9 +546,9 @@ function garmentCard(i,type){
   const garmentTypes=['Blouse','Salwar Suit','Kurta','Shirt','Pant','Saree Blouse','Kurti','Salwar','Kameez','Lehenga','Choli','Gown','Dress','Blazer','Waistcoat','Sherwani','Pajama','Suit','School Uniform','Plazo','Other'];
   const selected=type||'Kurti';
   const fields=orderMeasurementNames(selected);
-  return '<div class="garment-card sg-garment-card" id="garment-'+i+'" data-selected-type="'+esc(selected)+'">'+
-    '<div class="garment-head"><div class="garment-title">📏 Measurements-'+(i+1)+'</div><button type="button" class="remove-g" onclick="removeGarment('+i+')">− Remove</button></div>'+
-    '<div class="measure-grid g-fields sg-order-measures">'+fields.map(n=>'<div class="field"><label>'+n+'</label><input class="g-measure" data-name="'+n+'" placeholder="inches"></div>').join('')+'</div>'+
+  return '<div class="garment-card sg-garment-card" id="garment-'+i+'" data-selected-type="'+esc(selected)+'" data-removed-measures="[]">'+
+    '<div class="garment-head"><div class="garment-title">📏 Measurements-'+(i+1)+'</div><div style="display:flex;gap:6px;align-items:center"><button type="button" class="secondary sg-add-garment" onclick="addGarment()">＋ Add</button><button type="button" class="remove-g" onclick="removeGarment('+i+')">− Remove</button></div></div>'+
+    '<div class="measure-grid g-fields sg-order-measures">'+fields.map(n=>'<div class="field"><div style="display:flex;align-items:center;justify-content:space-between;gap:6px"><label>'+n+'</label><button type="button" class="remove-g sg-remove-measure" onclick="removeOrderMeasurement('+i+','+JSON.stringify(n)+')" title="Remove this measurement">−</button></div><input class="g-measure" data-name="'+n+'" placeholder="inches"></div>').join('')+'</div>'+
     '<div class="sg-type-section"><div class="section-title" style="margin-top:14px">Garment Type</div>'+
     '<button type="button" class="sg-selected-garment sg-all-garments" onclick="toggleOrderGarmentTypes('+i+')"><span><b>All Garments</b><small>Tap to select garment type</small></span><span>⌄</span></button>'+
     '<div id="orderGarmentTypes-'+i+'" class="sg-garment-type-grid" style="display:none">'+garmentTypes.map((name)=>'<button type="button" class="sg-type-icon '+(name===selected?'active':'')+'" onclick="selectOrderGarmentType('+i+','+JSON.stringify(name)+')"><b>'+esc(name)+'</b></button>').join('')+'</div>'+
@@ -572,7 +572,16 @@ function refreshGarmentFields(i){
   const card=document.getElementById('garment-'+i);if(!card)return;
   const type=card.dataset.selectedType||'Kurti';
   const old=Object.fromEntries(Array.from(card.querySelectorAll('.g-measure')).map(x=>[x.dataset.name,x.value]));
-  card.querySelector('.g-fields').innerHTML=orderMeasurementNames(type).map(n=>'<div class="field"><label>'+n+'</label><input class="g-measure" data-name="'+n+'" placeholder="inches" value="'+esc(old[n]||'')+'"></div>').join('');
+  let removed=[];try{removed=JSON.parse(card.dataset.removedMeasures||'[]')}catch(_){}
+  card.querySelector('.g-fields').innerHTML=orderMeasurementNames(type).filter(n=>!removed.includes(n)).map(n=>'<div class="field"><div style="display:flex;align-items:center;justify-content:space-between;gap:6px"><label>'+n+'</label><button type="button" class="remove-g sg-remove-measure" onclick="removeOrderMeasurement('+i+','+JSON.stringify(n)+')" title="Remove this measurement">−</button></div><input class="g-measure" data-name="'+n+'" placeholder="inches" value="'+esc(old[n]||'')+'"></div>').join('');
+}
+function removeOrderMeasurement(i,name){
+  const card=document.getElementById('garment-'+i);if(!card)return;
+  let removed=[];try{removed=JSON.parse(card.dataset.removedMeasures||'[]')}catch(_){}
+  if(!removed.includes(name))removed.push(name);
+  card.dataset.removedMeasures=JSON.stringify(removed);
+  const field=Array.from(card.querySelectorAll('.g-measure')).find(x=>x.dataset.name===name)?.closest('.field');
+  if(field)field.remove();
 }
 function initGarments(){const w=document.getElementById('garmentsWrap');if(w&&!w.children.length)w.innerHTML=garmentCard(0,'Kurti')}
 function addGarment(){const w=document.getElementById('garmentsWrap');if(!w)return;const i=w.children.length;w.insertAdjacentHTML('beforeend',garmentCard(i,'Kurti'))}

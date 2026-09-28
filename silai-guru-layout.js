@@ -40,7 +40,9 @@
     let idx=Number(panel.dataset.active||0);
     if(idx>=cs.length) idx=cs.length-1;
     panel.dataset.active=idx;
-    cs.forEach((c)=>{c.querySelectorAll('.measure-grid').forEach(g=>g.style.display='none');});
+    cs.forEach(c=>{
+      c.querySelectorAll('.measure-grid').forEach(g=>g.style.display='none');
+    });
     panel.innerHTML='<div class="sg-measure-title">📏 Measurements</div><div class="sg-measure-sub">Garments section ke baad yahan garment-wise measurements bharein.</div><div class="sg-measure-tabs"></div><div class="sg-measure-body"></div>';
     const tabs=panel.querySelector('.sg-measure-tabs');
     cs.forEach((c,i)=>{
@@ -82,68 +84,95 @@
   document.head.appendChild(css);
   setInterval(()=>{if(activeOrder()) install();},500);
 
-  /* SILAI GURU Android/browser back handling.
-     Keep several history guard entries so the first Back never closes the app/page. */
-  const SG_BACK_KEY='silaiGuruBackGuardV2';
-  const GUARD_COUNT=6;
-  let handlingBack=false;
+  /* In-app Back navigation.
+     Every openM() screen gets one history entry. Android/browser Back therefore
+     returns to the previous Silai Guru screen instead of exiting the app. */
+  const SG_BACK_KEY='silaiGuruBackStack';
+  let sgStack=[];
+  let sgNavigating=false;
+  let sgReady=false;
 
-  function addGuardEntries(){
-    try{
-      const base=Object.assign({},history.state||{});
-      if(base[SG_BACK_KEY]) return;
-      for(let i=0;i<GUARD_COUNT;i++){
-        history.pushState(Object.assign({},base,{[SG_BACK_KEY]:i+1}), '', location.href);
-      }
-    }catch(e){}
-  }
-
-  function closeOneAppLayer(){
-    /* Prefer the app's own close function when available. */
-    try{
-      const modal=document.getElementById('modal');
-      if(modal && modal.classList.contains('show')){
-        if(typeof window.closeM==='function') window.closeM();
-        else modal.classList.remove('show');
-        return true;
-      }
-    }catch(e){}
-
+  function currentModalType(){
     const modal=document.getElementById('modal');
-    if(modal && modal.classList.contains('show')){
-      modal.classList.remove('show');
-      return true;
-    }
-
-    const onboarding=document.getElementById('onboard');
-    if(onboarding && !onboarding.hidden && getComputedStyle(onboarding).display!=='none'){
-      return false;
-    }
-
-    const anyLayer=document.querySelector('.modal.show');
-    if(anyLayer){anyLayer.classList.remove('show');return true;}
-    return false;
+    if(!modal || !modal.classList.contains('show')) return null;
+    const title=(document.getElementById('mt')||{}).textContent||'';
+    const map={
+      'Customers':'customers','New Order':'order','Orders':'orders',
+      'Garments':'garments','Measurements':'measurements','Workers':'workers',
+      'Offers':'offers','Shop Profile':'profile','Backup':'backup',
+      'Settings':'settings','Plans & Upgrade':'plans'
+    };
+    return map[title]||null;
   }
 
-  function restoreGuard(){
-    if(handlingBack) return;
-    handlingBack=true;
+  function pushScreen(type){
+    if(!type || sgNavigating) return;
+    sgStack.push(type);
     try{
-      /* Back has consumed one guard entry. Put a fresh guard back immediately. */
-      history.pushState({[SG_BACK_KEY]:Date.now()}, '', location.href);
+      history.pushState({[SG_BACK_KEY]:true,stack:sgStack.slice()},'',location.href);
     }catch(e){}
-    closeOneAppLayer();
-    setTimeout(()=>{handlingBack=false;},0);
   }
 
-  function initBackGuard(){
-    addGuardEntries();
-    window.addEventListener('popstate',restoreGuard,false);
-    window.addEventListener('pageshow',function(){
-      setTimeout(addGuardEntries,50);
-    },false);
+  function restoreScreen(type){
+    if(!type || typeof window.openM!=='function') return;
+    sgNavigating=true;
+    try{window.openM(type);}catch(e){}
+    sgNavigating=false;
   }
 
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',initBackGuard);
-  else initBackGuard();
+  function setupBackNavigation(){
+    if(sgReady) return;
+    sgReady=true;
+    try{
+      const st=history.state;
+      if(!st || !st[SG_BACK_KEY]){
+        history.replaceState({...(st||{}),[SG_BACK_KEY]:true,stack:[]},'',location.href);
+      }
+    }catch(e){}
+
+    const originalOpenM=window.openM;
+    const originalCloseM=window.closeM;
+    if(typeof originalOpenM==='function'){
+      window.openM=function(type){
+        const result=originalOpenM.apply(this,arguments);
+        pushScreen(type);
+        return result;
+      };
+    }
+    if(typeof originalCloseM==='function'){
+      window.closeM=function(){
+        if(sgNavigating){return originalCloseM.apply(this,arguments);}
+        if(sgStack.length){
+          history.back();
+          return;
+        }
+        return originalCloseM.apply(this,arguments);
+      };
+    }
+
+    window.addEventListener('popstate',function(e){
+      const state=e.state||{};
+      if(!state[SG_BACK_KEY]){
+        try{history.pushState({[SG_BACK_KEY]:true,stack:sgStack.slice()},'',location.href);}catch(err){}
+        return;
+      }
+      if(sgStack.length){
+        sgStack.pop();
+        const previous=sgStack.length?sgStack[sgStack.length-1]:null;
+        if(previous){
+          restoreScreen(previous);
+        }else if(typeof originalCloseM==='function'){
+          sgNavigating=true;
+          originalCloseM();
+          sgNavigating=false;
+        }
+        try{history.replaceState({[SG_BACK_KEY]:true,stack:sgStack.slice()},'',location.href);}catch(err){}
+      }else{
+        try{history.pushState({[SG_BACK_KEY]:true,stack:[]},'',location.href);}catch(err){}
+      }
+    });
+  }
+
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',setupBackNavigation,{once:true});
+  else setupBackNavigation();
 })();

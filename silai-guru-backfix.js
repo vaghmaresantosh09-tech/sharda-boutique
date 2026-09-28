@@ -44,26 +44,21 @@
     if(ready)return;
     ready=true;
     try{
-      const st=history.state;
-      if(!st || !st[KEY]){
-        stack=[];
-        history.replaceState({[KEY]:true,stack:[]},'',location.href);
-        history.pushState({[KEY]:true,stack:[]},'',location.href);
-      }else{
-        stack=Array.isArray(st.stack)?st.stack.slice():[];
-        /* Always create a real same-page guard entry for the current app. */
-        history.pushState({[KEY]:true,stack:stack.slice()},'',location.href);
-      }
+      /* A fresh page load starts a fresh in-app back stack. */
+      stack=[];
+      history.replaceState({[KEY]:true,stack:[]},'',location.href);
+      history.pushState({[KEY]:true,stack:[]},'',location.href);
     }catch(e){}
   }
 
   function recordView(key){
     if(!key || restoring || handling)return;
-    if(stack[stack.length-1]===key){
-      writeState();
-      return;
+    const existing=stack.indexOf(key);
+    if(existing>=0){
+      stack=stack.slice(0,existing+1);
+    }else{
+      stack.push(key);
     }
-    stack.push(key);
     writeState();
   }
 

@@ -72,7 +72,7 @@
         navigating=wasNavigating;
       }
       if(!restoring && !wasNavigating){
-        setTimeout(function(){ pushView(viewFromScreen()); },0);
+        pushView(viewFromScreen());
       }
       return result;
     }

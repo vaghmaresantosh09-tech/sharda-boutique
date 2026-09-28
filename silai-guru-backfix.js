@@ -37,29 +37,53 @@
   }
 
   function writeState(){
-    try{history.replaceState({[KEY]:true,stack:stack.slice()},'',location.href);}catch(e){}
+    try{
+      history.replaceState({[KEY]:true,stack:stack.slice()},'',location.href);
+    }catch(e){}
   }
 
   function ensureGuard(){
     if(ready)return;
     ready=true;
     try{
-      /* A fresh page load starts a fresh in-app back stack. */
+      /* This entry represents the dashboard. Every in-app screen gets its own
+         history entry so Android/browser Back returns to the previous screen. */
       stack=[];
       history.replaceState({[KEY]:true,stack:[]},'',location.href);
-      history.pushState({[KEY]:true,stack:[]},'',location.href);
     }catch(e){}
   }
 
   function recordView(key){
     if(!key || restoring || handling)return;
+
     const existing=stack.indexOf(key);
-    if(existing>=0){
-      stack=stack.slice(0,existing+1);
-    }else{
-      stack.push(key);
+
+    if(existing===stack.length-1){
+      writeState();
+      return;
     }
-    writeState();
+
+    if(existing>=0){
+      /* A "Back to ..." button may reopen an earlier screen. Move the browser
+         history back to that screen instead of creating a duplicate entry. */
+      const steps=stack.length-1-existing;
+      if(steps>0){
+        try{
+          history.go(-steps);
+          return;
+        }catch(e){}
+      }
+      stack=stack.slice(0,existing+1);
+      writeState();
+      return;
+    }
+
+    stack=stack.concat(key);
+    try{
+      history.pushState({[KEY]:true,stack:stack.slice()},'',location.href);
+    }catch(e){
+      writeState();
+    }
   }
 
   function closeDirect(){
@@ -70,11 +94,13 @@
   function wrap(name){
     const fn=window[name];
     if(typeof fn!=='function' || fn.__sgBackWrapped)return;
+
     function wrapped(){
       const result=fn.apply(this,arguments);
-      if(!restoring) setTimeout(()=>recordView(currentView()),0);
+      if(!restoring)setTimeout(()=>recordView(currentView()),0);
       return result;
     }
+
     wrapped.__sgBackWrapped=true;
     window[name]=wrapped;
   }
@@ -103,33 +129,39 @@
 
   window.addEventListener('popstate',function(e){
     if(handling)return;
-    if(e && e.stopImmediatePropagation)e.stopImmediatePropagation();
+
+    const state=e&&e.state||{};
+    if(!state[KEY]){
+      /* This is the browser history outside Silai Guru. Do not try to
+         "repair" it; the browser should leave the app normally. */
+      stack=[];
+      return;
+    }
 
     handling=true;
     try{
-      const state=e.state||{};
-      if(!state[KEY]){
-        stack=[];
-        closeDirect();
-        writeState();
-        return;
-      }
-
-      const target=Array.isArray(state.stack)?state.stack.slice():[];
-      stack=target;
+      stack=Array.isArray(state.stack)?state.stack.slice():[];
 
       if(stack.length){
         const view=stack[stack.length-1];
         restoring=true;
         try{
-          if(view==='garments' && typeof window.openGarmentsManager==='function') window.openGarmentsManager();
-          else if(view==='garment-measurements' && typeof window.openGarmentMeasurementManager==='function') window.openGarmentMeasurementManager();
-          else if(typeof window.openM==='function' && /^[a-z-]+$/.test(view)) window.openM(view);
-          else closeDirect();
-        }finally{restoring=false;}
+          if(view==='garments' && typeof window.openGarmentsManager==='function'){
+            window.openGarmentsManager();
+          }else if(view==='garment-measurements' && typeof window.openGarmentMeasurementManager==='function'){
+            window.openGarmentMeasurementManager();
+          }else if(typeof window.openM==='function' && /^[a-z-]+$/.test(view)){
+            window.openM(view);
+          }else{
+            closeDirect();
+          }
+        }finally{
+          restoring=false;
+        }
       }else{
         closeDirect();
       }
+
       writeState();
     }finally{
       setTimeout(()=>{handling=false;},0);

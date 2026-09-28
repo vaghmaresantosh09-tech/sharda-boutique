@@ -1,9 +1,8 @@
-/* SILAI GURU — deterministic Android/browser Back navigation */
+/* SILAI GURU — robust Android/browser Back navigation using URL hash history */
 (function(){
   'use strict';
 
-  const KEY='silaiGuruBackStack';
-  let ready=false;
+  const PREFIX='sg-screen=';
   let restoring=false;
   let navigating=false;
 
@@ -37,26 +36,30 @@
     return null;
   }
 
-  function setState(view){
-    try{ history.replaceState({[KEY]:true,view:view||'dashboard'},'',location.href); }catch(e){}
+  function getHashView(){
+    const h=String(location.hash||'');
+    if(h.indexOf('#'+PREFIX)===0){
+      try{return decodeURIComponent(h.slice(('#'+PREFIX).length));}catch(e){return h.slice(('#'+PREFIX).length);}
+    }
+    return null;
   }
 
-  function pushView(view){
-    if(!view || restoring || navigating) return;
-    try{
-      const s=history.state||{};
-      if(s[KEY] && s.view===view) return;
-      history.pushState({[KEY]:true,view:view},'',location.href);
-    }catch(e){}
+  function setHashView(view,replace){
+    if(!view)return;
+    const hash='#'+PREFIX+encodeURIComponent(view);
+    if(location.hash===hash)return;
+    if(replace){
+      try{ history.replaceState(null,'',location.pathname+location.search+hash); }catch(e){ location.hash=hash; }
+    }else{
+      location.hash=hash;
+    }
   }
 
-  function ensureGuard(){
-    if(ready)return;
-    ready=true;
-    try{
-      /* Current page is the dashboard. Do not push an extra entry here. */
-      history.replaceState({[KEY]:true,view:'dashboard'},'',location.href);
-    }catch(e){}
+  function pushCurrentView(){
+    if(restoring || navigating)return;
+    const view=viewFromScreen();
+    if(!view)return;
+    setHashView(view,false);
   }
 
   function wrap(name){
@@ -68,12 +71,8 @@
       navigating=true;
       let result;
       try{ result=fn.apply(this,arguments); }
-      finally{
-        navigating=wasNavigating;
-      }
-      if(!restoring && !wasNavigating){
-        pushView(viewFromScreen());
-      }
+      finally{ navigating=wasNavigating; }
+      if(!restoring && !wasNavigating) pushCurrentView();
       return result;
     }
     wrapped.__sgBackWrapped=true;
@@ -91,8 +90,7 @@
     if(typeof close==='function' && !close.__sgBackWrapped){
       function wrappedClose(){
         if(restoring) return close.apply(this,arguments);
-        const s=history.state||{};
-        if(s[KEY] && s.view && s.view!=='dashboard'){
+        if(getHashView()){
           try{ history.back(); return; }catch(e){}
         }
         return close.apply(this,arguments);
@@ -112,7 +110,7 @@
   function restore(view){
     restoring=true;
     try{
-      if(!view || view==='dashboard'){
+      if(!view){
         const m=document.getElementById('modal');
         if(m)m.classList.remove('show');
         return;
@@ -144,7 +142,6 @@
         window.openM(view); return;
       }
 
-      /* Unknown/custom screen: keep the modal closed rather than jumping Home. */
       const m=document.getElementById('modal');
       if(m)m.classList.remove('show');
     }finally{
@@ -152,16 +149,16 @@
     }
   }
 
-  window.addEventListener('popstate',function(e){
-    const state=e&&e.state||{};
-    if(!state[KEY]){
-      /* User has navigated outside the app. Let the browser continue normally. */
-      return;
-    }
-    restore(state.view||'dashboard');
+  window.addEventListener('hashchange',function(){
+    restore(getHashView());
   },true);
 
-  ensureGuard();
+  /* If a screen hash already exists, restore it after the app's functions load. */
+  setTimeout(function(){
+    const existing=getHashView();
+    if(existing) restore(existing);
+  },50);
+
   installWrappers();
   setTimeout(installWrappers,100);
   setTimeout(installWrappers,500);

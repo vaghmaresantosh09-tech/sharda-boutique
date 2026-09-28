@@ -83,4 +83,35 @@
   css.textContent='.sg-measure-panel{background:#fff;border:1px solid #ddd8ff;border-radius:18px;padding:14px;margin:12px 0}.sg-measure-title{font-size:18px;font-weight:900;color:#5144bd}.sg-measure-sub{font-size:12px;color:#73778c;margin:5px 0 10px}.sg-measure-tabs{display:flex;gap:7px;overflow:auto;padding-bottom:7px}.sg-measure-tab{white-space:nowrap;background:#efeeff;color:#5144bd;border:1px solid #ddd8ff;padding:8px 10px;border-radius:12px;font-size:11px;font-weight:800}.sg-measure-tab.active{background:#5b4bdb;color:#fff;border-color:#5b4bdb}.sg-measure-body .measure-grid{display:grid!important;margin-top:4px}.sg-measure-empty{text-align:center;color:#73778c;padding:16px}.garment-card .measure-grid{display:none!important}';
   document.head.appendChild(css);
   setInterval(()=>{if(activeOrder()) install();},500);
+
+  /* Android/browser back button: keep the user inside the app. */
+  const SG_BACK_KEY='silaiGuruBackGuard';
+  try{
+    if(!history.state || !history.state[SG_BACK_KEY]){
+      history.pushState(Object.assign({},history.state||{}, {[SG_BACK_KEY]:true}), '', location.href);
+    }
+  }catch(e){}
+
+  function closeVisibleLayer(){
+    const modal=document.getElementById('modal');
+    if(modal && modal.classList.contains('show')){
+      modal.classList.remove('show');
+      return true;
+    }
+    const onboard=document.querySelector('.onboard:not([hidden])');
+    if(onboard){
+      onboard.hidden=true;
+      return true;
+    }
+    const extra=document.querySelector('.modal.show');
+    if(extra){extra.classList.remove('show');return true;}
+    return false;
+  }
+
+  window.addEventListener('popstate',function(){
+    closeVisibleLayer();
+    try{
+      history.pushState(Object.assign({},history.state||{}, {[SG_BACK_KEY]:true}), '', location.href);
+    }catch(e){}
+  });
 })();

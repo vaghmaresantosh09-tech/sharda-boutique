@@ -1,82 +1,149 @@
 (function(){
   'use strict';
 
-  /* Single Android/browser Back guard.
-     silai-guru-layout.js owns the screen stack and wraps openM().
-     This listener is capture-phase so the older listener in layout.js cannot
-     also process the same popstate event. */
   const KEY='silaiGuruBackStack';
+  let stack=[];
   let handling=false;
+  let restoring=false;
   let ready=false;
 
-  function baseState(){
-    return {[KEY]:true,stack:[]};
+  const titleMap={
+    '➕ New Order':'order','New Order':'order',
+    '👥 Customers':'customers','Customers':'customers',
+    '📋 Orders':'orders','Orders':'orders',
+    '📏 Measurements':'measurements','Measurements':'measurements',
+    '💰 Payments':'payments','Payments':'payments',
+    '🚚 Delivery':'delivery','Delivery':'delivery',
+    '📊 Reports':'reports','Reports':'reports',
+    '🏪 Shop Profile':'profile','Shop Profile':'profile',
+    '☁️ Backup':'backup','Backup':'backup',
+    '🧑‍🔧 Workers':'workers','Workers':'workers',
+    '👗 Garments':'garments','Garments':'garments',
+    '🎨 Design Library':'designs','Design Library':'designs',
+    '⚙️ Settings':'settings','Settings':'settings',
+    '💎 Plans & Upgrade':'plans','Plans & Upgrade':'plans',
+    '📏 Measurement Templates':'garment-measurements'
+  };
+
+  function currentView(){
+    const el=document.getElementById('mt');
+    const raw=String(el&&el.textContent||'').trim();
+    if(titleMap[raw])return titleMap[raw];
+    if(/^📏 .+ Measurements$/.test(raw))return 'garment-measurement-editor:'+raw.slice(3,-13);
+    if(/^🧵 .+ Services$/.test(raw))return 'garment-services:'+raw.slice(3,-9);
+    if(/^👗 .+ Designs$/.test(raw))return 'design-catalog:'+raw.slice(3,-8);
+    if(raw)return 'custom:'+raw;
+    return null;
   }
 
-  function replaceState(stack){
-    try{
-      history.replaceState({[KEY]:true,stack:Array.isArray(stack)?stack.slice():[]},'',location.href);
-    }catch(e){}
+  function writeState(){
+    try{history.replaceState({[KEY]:true,stack:stack.slice()},'',location.href);}catch(e){}
   }
 
-  function ensureGuardEntry(){
+  function ensureGuard(){
     if(ready)return;
     ready=true;
     try{
       const st=history.state;
       if(!st || !st[KEY]){
-        history.replaceState(baseState(),'',location.href);
-        /* Create a real guard entry. Android/browser Back now reaches this
-           entry first instead of leaving the app immediately. */
-        history.pushState(baseState(),'',location.href);
-      }else if(!Array.isArray(st.stack)){
-        replaceState([]);
+        stack=[];
+        history.replaceState({[KEY]:true,stack:[]},'',location.href);
+        history.pushState({[KEY]:true,stack:[]},'',location.href);
+      }else{
+        stack=Array.isArray(st.stack)?st.stack.slice():[];
+        /* Always create a real same-page guard entry for the current app. */
+        history.pushState({[KEY]:true,stack:stack.slice()},'',location.href);
       }
     }catch(e){}
   }
 
-  function closeModalDirect(){
+  function recordView(key){
+    if(!key || restoring || handling)return;
+    if(stack[stack.length-1]===key){
+      writeState();
+      return;
+    }
+    stack.push(key);
+    writeState();
+  }
+
+  function closeDirect(){
     const m=document.getElementById('modal');
     if(m)m.classList.remove('show');
   }
 
+  function wrap(name){
+    const fn=window[name];
+    if(typeof fn!=='function' || fn.__sgBackWrapped)return;
+    function wrapped(){
+      const result=fn.apply(this,arguments);
+      if(!restoring) setTimeout(()=>recordView(currentView()),0);
+      return result;
+    }
+    wrapped.__sgBackWrapped=true;
+    window[name]=wrapped;
+  }
+
+  function installWrappers(){
+    [
+      'openM','openGarmentsManager','openGarmentMeasurementManager',
+      'openGarmentMeasurementEditor','openGarmentServiceEditor',
+      'openGarmentLibrary','openDesignCatalog','openGarmentFolder'
+    ].forEach(wrap);
+
+    const close=window.closeM;
+    if(typeof close==='function' && !close.__sgBackWrapped){
+      function wrappedClose(){
+        if(restoring)return close.apply(this,arguments);
+        if(stack.length){
+          try{history.back();}catch(e){close.apply(this,arguments);}
+          return;
+        }
+        return close.apply(this,arguments);
+      }
+      wrappedClose.__sgBackWrapped=true;
+      window.closeM=wrappedClose;
+    }
+  }
+
   window.addEventListener('popstate',function(e){
     if(handling)return;
-
-    /* Prevent the older bubble-phase back handler from running too. */
-    if(e && typeof e.stopImmediatePropagation==='function') e.stopImmediatePropagation();
+    if(e && e.stopImmediatePropagation)e.stopImmediatePropagation();
 
     handling=true;
     try{
       const state=e.state||{};
       if(!state[KEY]){
-        /* A history entry outside SILAI GURU was reached. Reinsert our guard
-           and keep the current app page visible. */
-        replaceState([]);
-        try{history.pushState(baseState(),'',location.href);}catch(err){}
+        stack=[];
+        closeDirect();
+        writeState();
         return;
       }
 
-      const stack=Array.isArray(state.stack)?state.stack.slice():[];
+      const target=Array.isArray(state.stack)?state.stack.slice():[];
+      stack=target;
 
       if(stack.length){
-        const previous=stack[stack.length-1];
-        if(typeof window.openM==='function'){
-          /* layout.js has already removed the current screen from its local
-             stack through its own logic; suppress duplicate browser history
-             changes by using a direct view restore flag. */
-          window.__sgBackRestoring=true;
-          try{window.openM(previous);}finally{window.__sgBackRestoring=false;}
-        }
-        replaceState(stack);
+        const view=stack[stack.length-1];
+        restoring=true;
+        try{
+          if(view==='garments' && typeof window.openGarmentsManager==='function') window.openGarmentsManager();
+          else if(view==='garment-measurements' && typeof window.openGarmentMeasurementManager==='function') window.openGarmentMeasurementManager();
+          else if(typeof window.openM==='function' && /^[a-z-]+$/.test(view)) window.openM(view);
+          else closeDirect();
+        }finally{restoring=false;}
       }else{
-        closeModalDirect();
-        replaceState([]);
+        closeDirect();
       }
+      writeState();
     }finally{
-      setTimeout(function(){handling=false;},0);
+      setTimeout(()=>{handling=false;},0);
     }
   },true);
 
-  ensureGuardEntry();
+  ensureGuard();
+  installWrappers();
+  setTimeout(installWrappers,100);
+  setTimeout(installWrappers,500);
+  setInterval(installWrappers,1000);
 })();

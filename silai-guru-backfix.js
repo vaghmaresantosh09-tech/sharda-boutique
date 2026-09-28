@@ -1,4 +1,4 @@
-/* SILAI GURU — app-level browser history + garment design/source fixes */
+/* SILAI GURU — app-level browser history + garment design/source fixes + WhatsApp add-on */
 (function(){
   'use strict';
   const KEY='__silaiGuruView';
@@ -48,7 +48,7 @@
     }finally{restoring=false;}
   }
   window.addEventListener('popstate',function(e){const s=e&&e.state;if(!s||!s[KEY])return;restore(s.view||'dashboard')},true);
-  window.addEventListener('load',function(){try{if(!state())history.replaceState({[KEY]:true,view:'dashboard'},'',location.href)}catch(e){}});
+  window.addEventListener('load',function(){try{if(!state())history.replaceState({[KEY]:true,view:'dashboard'},'',location.href)}catch(e){};installWhatsAppAddon();});
 
   /* Every garment icon in New Order opens its own related design library. */
   (function installGarmentDesignClickFix(){
@@ -96,4 +96,45 @@
      silai-guru.html already has garment-specific SVG designVisual() artwork
      for Blouse, Shirt, Pant, Blazer, Salwar, etc. Keeping those visuals avoids
      the previous bug where a Blouse card showed trousers or unrelated fashion photos. */
+
+  /* OPTIONAL WHATSAPP SERVICES ADD-ON
+     Normal phone-WhatsApp sharing stays free/inside the existing plan flow.
+     This dashboard card is only an information/subscription entry point for a
+     future automatic WhatsApp Business Platform/API service. No API messages
+     are sent by this UI and no price is invented here. */
+  function installWhatsAppAddon(){
+    if(window.__sgWhatsAppAddon)return;
+    window.__sgWhatsAppAddon=true;
+    const style=document.createElement('style');
+    style.id='sg-whatsapp-addon-style';
+    style.textContent='.sg-wa-addon{position:relative}.sg-wa-badge{position:absolute;top:7px;right:7px;background:#fff0c9;color:#765500;border-radius:99px;padding:3px 6px;font-size:9px;font-weight:900}.sg-wa-modal{position:fixed;inset:0;background:#0007;z-index:120;display:none;align-items:flex-end;padding:0}.sg-wa-modal.show{display:flex}.sg-wa-sheet{background:#fff;width:100%;max-width:760px;margin:auto;border-radius:24px 24px 0 0;padding:18px;max-height:90vh;overflow:auto}.sg-wa-feature{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #eee}.sg-wa-feature:last-child{border-bottom:0}.sg-wa-icon{font-size:22px;width:30px}.sg-wa-note{background:#fff7df;border:1px solid #efd58b;border-radius:13px;padding:11px;font-size:12px;color:#6b5300;margin-top:12px}.sg-wa-price{background:#f4f1ff;border:1px solid #ddd7ff;border-radius:14px;padding:13px;margin-top:12px}.sg-wa-price b{color:#5144bd}.sg-wa-close{float:right;background:#eee}.sg-wa-subscribe{background:#5b4bdb;color:#fff;width:100%;margin-top:12px}.sg-wa-disabled{background:#eee;color:#777;width:100%;margin-top:8px}';
+    document.head.appendChild(style);
+
+    function addCard(){
+      const containers=Array.from(document.querySelectorAll('.icons'));
+      const grid=containers.find(function(x){return !x.closest('.bottom') && !x.querySelector('.sg-wa-addon')});
+      if(!grid || document.querySelector('.sg-wa-addon'))return;
+      const card=document.createElement('button');
+      card.type='button';card.className='ico sg-wa-addon';card.setAttribute('aria-label','WhatsApp Services');
+      card.innerHTML='<span class="sg-wa-badge">ADD-ON</span><span class="dash-icon"><span style="font-size:38px">💬</span></span><small>WhatsApp<br>Services</small>';
+      card.addEventListener('click',openModal);
+      grid.appendChild(card);
+    }
+    function ensureModal(){
+      if(document.getElementById('sgWaModal'))return document.getElementById('sgWaModal');
+      const m=document.createElement('div');m.id='sgWaModal';m.className='sg-wa-modal';
+      m.innerHTML='<div class="sg-wa-sheet" role="dialog" aria-modal="true" aria-labelledby="sgWaTitle"><button type="button" class="sg-wa-close" id="sgWaClose">✕</button><h2 id="sgWaTitle" style="margin-top:0">💬 WhatsApp Services</h2><p class="muted">Customer ko automatic order aur business messages bhejne ki optional paid facility.</p><div class="sg-wa-feature"><span class="sg-wa-icon">🧾</span><div><b>Order & Bill Message</b><div class="muted">Order confirmation aur bill details.</div></div></div><div class="sg-wa-feature"><span class="sg-wa-icon">📅</span><div><b>Delivery Reminder</b><div class="muted">Customer ko delivery-related reminder.</div></div></div><div class="sg-wa-feature"><span class="sg-wa-icon">💰</span><div><b>Payment / Balance Reminder</b><div class="muted">Advance aur remaining balance ki information.</div></div></div><div class="sg-wa-feature"><span class="sg-wa-icon">✉️</span><div><b>Predefined Messages</b><div class="muted">Tailor apne business ke approved message templates use kar sakega.</div></div></div><div class="sg-wa-price"><b>Optional Paid Add-on</b><div style="font-size:12px;margin-top:5px">Price abhi final nahi kiya gaya hai. Provider/API cost check karke suitable plan price set ki jayegi.</div></div><div class="sg-wa-note">📱 Normal WhatsApp sharing existing app flow me rahegi. Ye add-on automatic WhatsApp Business Platform/API messaging ke liye hai.</div><button type="button" class="sg-wa-subscribe" id="sgWaSubscribe">Coming Soon — Price Later</button><button type="button" class="sg-wa-disabled" id="sgWaClose2">Close</button></div>';
+      document.body.appendChild(m);
+      m.addEventListener('click',function(e){if(e.target===m)m.classList.remove('show')});
+      document.getElementById('sgWaClose').addEventListener('click',function(){m.classList.remove('show')});
+      document.getElementById('sgWaClose2').addEventListener('click',function(){m.classList.remove('show')});
+      document.getElementById('sgWaSubscribe').addEventListener('click',function(){alert('WhatsApp Services ka price aur automatic API activation baad me final kiya jayega.')});
+      return m;
+    }
+    function openModal(){ensureModal().classList.add('show');}
+    function watch(){addCard();setTimeout(addCard,250);setTimeout(addCard,1000);}
+    watch();
+    const ob=new MutationObserver(function(){addCard()});
+    ob.observe(document.body,{childList:true,subtree:true});
+  }
 })();

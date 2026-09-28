@@ -1,0 +1,48 @@
+name: Apply Silai Guru measurement layout
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Attach measurement layout script
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('silai-guru.html')
+          if not p.exists():
+              raise SystemExit('silai-guru.html not found')
+          s = p.read_text(encoding='utf-8')
+          tag = '<script src="silai-guru-layout.js"></script>'
+          if tag not in s:
+              if '</body>' in s:
+                  s = s.replace('</body>', tag + '</body>', 1)
+              else:
+                  s += tag
+              p.write_text(s, encoding='utf-8')
+              print('Measurement layout attached')
+          else:
+              print('Already attached')
+          PY
+
+      - name: Commit change
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add silai-guru.html
+          if git diff --cached --quiet; then
+            echo 'No changes to commit'
+          else
+            git commit -m 'Move measurements into separate New Order section'
+            git push
+          fi

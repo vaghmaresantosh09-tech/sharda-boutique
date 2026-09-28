@@ -63,7 +63,7 @@ const rank={free:0,standard:1,premium:2,pro:3};
 if(rank[plan] < rank[required]){alert('यह feature '+PLAN_INFO[required].name+' plan में available है.\\nअभी Test Paid Plan से activate करें.');openM('plans');return false}
 return true;
 }
-function openM(t){modal.classList.add('modal','show');if(t==='garments'){openGarmentsManager();return}if(t==='designs'){if(!planGate('pro'))return;openGarmentLibrary();return}const title={order:'➕ New Order',customers:'👥 Customers',orders:'📋 Orders',measure:'📏 Measurements',payments:'💰 Payments',delivery:'🚚 Delivery',reports:'📊 Reports',profile:'🏪 Shop Profile',backup:'☁️ Backup',workers:'🧑‍🔧 Workers',garments:'👗 Garments',designs:'🎨 Design Library',settings:'⚙️ Settings',plans:'💎 Plans & Upgrade'}[t]||t;mt.textContent=title;mb.innerHTML=content(t)}
+function openM(t){if(window.__sgRecordView)window.__sgRecordView(t);modal.classList.add('modal','show');if(t==='garments'){openGarmentsManager();return}if(t==='designs'){if(!planGate('pro'))return;openGarmentLibrary();return}const title={order:'➕ New Order',customers:'👥 Customers',orders:'📋 Orders',measure:'📏 Measurements',payments:'💰 Payments',delivery:'🚚 Delivery',reports:'📊 Reports',profile:'🏪 Shop Profile',backup:'☁️ Backup',workers:'🧑‍🔧 Workers',garments:'👗 Garments',designs:'🎨 Design Library',settings:'⚙️ Settings',plans:'💎 Plans & Upgrade'}[t]||t;mt.textContent=title;mb.innerHTML=content(t)}
 function closeM(){modal.classList.remove('show')}
 function loadExtra(){try{return JSON.parse(localStorage.getItem(DK)||'[]')}catch(e){return []}}
 function saveExtra(a){localStorage.setItem(DK,JSON.stringify(a))}
@@ -289,7 +289,7 @@ function getGarmentMaster(){
 }
 function saveGarmentMaster(a){localStorage.setItem(GARMENT_MASTER_KEY,JSON.stringify(a))}
 function garmentMasterRate(type){const x=getGarmentMaster().find(x=>x.name===type);return Number(x?.rate||0)}
-function openGarmentsManager(){
+function openGarmentsManager(){if(window.__sgRecordView)window.__sgRecordView('garments');
   mt.textContent='👗 Garments';
   const a=getGarmentMaster();
   mb.innerHTML='<div class="banner" style="margin-bottom:12px">👗 यहाँ आपकी दुकान के garments, default stitching rate, measurement template और extra services manage होंगी। New Order के design/measurement functions अलग रहेंगे.</div>'+
@@ -324,11 +324,11 @@ function deleteGarmentMaster(i){
   if(!confirm('“'+g.name+'” garment ko Garments list se remove karein?'))return;
   a.splice(i,1);saveGarmentMaster(a);openGarmentsManager();
 }
-function openGarmentMeasurementManager(){
+function openGarmentMeasurementManager(){if(window.__sgRecordView)window.__sgRecordView('garment-measurements');
   mt.textContent='📏 Measurement Templates';
   mb.innerHTML='<div class="banner">Measurement names yahan manage karein. Changes New Order me bhi use honge.</div>'+measurementManager()+'<button class="secondary" style="width:100%;margin-top:10px" onclick="openGarmentsManager()">← Back to Garments</button>';
 }
-function openGarmentMeasurementEditor(i){
+function openGarmentMeasurementEditor(i){if(window.__sgRecordView){const a=getGarmentMaster(),g=a[i];if(g)window.__sgRecordView('garment-measurement-editor:'+g.name);}
   const a=getGarmentMaster(),g=a[i];if(!g)return;
   mt.textContent='📏 '+g.name+' Measurements';
   mb.innerHTML='<div class="gm-editor"><h3>📏 '+esc(g.name)+' Measurement Template</h3><div class="muted">Yahan measurement names add, edit ya remove kar sakte hain.</div><div class="gm-list" id="gmMeasureList">'+measurementNames(g.name).map((n,j)=>'<div class="gm-list-row"><input value="'+esc(n)+'" id="gmm-'+j+'"><button class="remove-g" onclick="removeGarmentMeasure('+j+')">−</button></div>').join('')+'</div><button class="secondary" style="width:100%;margin-top:9px" onclick="addGarmentMeasureRow()">＋ Add Measurement</button><button class="primary" onclick="saveGarmentMeasurements('+i+')">💾 Save Measurements</button></div><button class="secondary" style="width:100%;margin-top:10px" onclick="openGarmentsManager()">← Back to Garments</button>';
@@ -347,7 +347,7 @@ function saveGarmentMeasurements(i){
   if(!names.length){alert('Kam se kam 1 measurement rakhiye.');return}
   const cfg=getMeasureConfig();cfg[g.name]=names;saveMeasureConfig(cfg);openGarmentsManager();
 }
-function openGarmentServiceEditor(i){
+function openGarmentServiceEditor(i){if(window.__sgRecordView){const a=getGarmentMaster(),g=a[i];if(g)window.__sgRecordView('garment-services:'+g.name);}
   const a=getGarmentMaster(),g=a[i];if(!g)return;
   mt.textContent='🧵 '+g.name+' Services';
   mb.innerHTML='<div class="gm-editor"><h3>🧵 Extra Services</h3><div class="muted">Is garment ke saath available extra work/services add karein.</div><div class="gm-list" id="gmServiceList">'+(g.services||[]).map((s,j)=>'<div class="gm-list-row"><input value="'+esc(s)+'" id="gms-'+j+'"><button class="remove-g" onclick="removeGarmentService('+j+')">−</button></div>').join('')+'</div><button class="secondary" style="width:100%;margin-top:9px" onclick="addGarmentServiceRow()">＋ Add Service</button><button class="primary" onclick="saveGarmentServices('+i+')">💾 Save Services</button></div><button class="secondary" style="width:100%;margin-top:10px" onclick="openGarmentsManager()">← Back to Garments</button>';
@@ -364,12 +364,12 @@ function saveGarmentServices(i){
   const a=getGarmentMaster(),g=a[i];if(!g)return;
   g.services=Array.from(document.querySelectorAll('#gmServiceList input')).map(x=>x.value.trim()).filter(Boolean);saveGarmentMaster(a);openGarmentsManager();
 }
-function openGarmentLibrary(){
+function openGarmentLibrary(){if(window.__sgRecordView)window.__sgRecordView('designs');
   mt.textContent='👗 Garments';
   const saved=loadSavedDesigns();
   mb.innerHTML='<div class="card"><h3>🎨 Garment Design Library</h3><p class="muted">Kisi bhi garment ko touch karke uske related designs dekhiye.</p><div class="garment-library">'+GARMENT_LIBRARY.map((g,i)=>'<div class="garment-library-card" onclick="openDesignCatalog('+JSON.stringify(g).replace(/"/g,'&quot;')+')"><div class="libpic">'+garmentVisual(g)+'</div><b>'+g+'</b><small>'+((DESIGN_TYPES[g]||[]).length)+' Designs ›</small></div>').join('')+'</div><div class="folder-box"><div style="display:flex;justify-content:space-between;align-items:center"><div><b>📁 My Garment Folder</b><div class="folder-count">'+saved.length+' saved designs</div></div><button class="primary" onclick="openGarmentFolder()">Open</button></div><div class="library-note">💡 Garment par tap karein aur uske alag-alag designs dekhein.</div></div></div>';
 }
-function openDesignCatalog(type){
+function openDesignCatalog(type){if(window.__sgRecordView)window.__sgRecordView('design-catalog:'+type);
   const designs=garmentDesignsFor(type).concat(loadSavedDesigns().filter(x=>x.type===type).map(x=>({...x,svg:x.svg||designVisual(type,0)})));
   const saved=loadSavedDesigns();
   const chips=['All Designs'].concat(designs.slice(0,5).map(x=>x.name));
@@ -450,7 +450,7 @@ function toggleSavedDesign(id,type,name){
   }
   saveSavedDesigns(a);openDesignCatalog(type);
 }
-function openGarmentFolder(){
+function openGarmentFolder(){if(window.__sgRecordView)window.__sgRecordView('garment-folder');
   const a=loadSavedDesigns();
   mt.textContent='📁 My Garment Folder';
   mb.innerHTML='<div class="design-back"><button class="secondary" onclick="openGarmentLibrary()">← Garments</button><b>'+a.length+' Saved Designs</b></div>'+(a.length?'<div class="design-grid">'+a.map(x=>{const d=garmentDesignsFor(x.type).find(y=>y.id===x.id)||{...x,index:0,svg:designVisual(x.type,0)};return designCardHtml(d,a)}).join('')+'</div>':'<div class="design-empty">Abhi koi design save nahi hai.<br>Garment select karke design par ☆ Save dabaiye.</div>');

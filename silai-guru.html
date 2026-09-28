@@ -637,4 +637,35 @@ function selectDesignForOrder(index,type,name){const all=garmentDesignsFor(type)
 function backToOrderPicker(){const s=orderFormSnapshot;openM('order');setTimeout(()=>restoreOrderForm(s),30)}
 function addO(e){e.preventDefault();const name=document.getElementById('cn').value.trim(),mob=document.getElementById('cm').value.trim(),c=cs.find(x=>x.mobile===mob),garments=collectGarments();if(!name||!mob||!garments.length){alert('Customer name, mobile aur kam se kam ek garment zaroor bhariye.');return false}let customer=c;if(!customer){customer={id:Date.now(),name,mobile:mob,orders:0};cs.push(customer)}customer.orders++;os.push({id:Date.now(),customer:name,mobile:mob,garment:garments[0].type,garments,workDate:document.getElementById('cwd').value,delivery:document.getElementById('cd').value,total:+document.getElementById('ct').value||0,advance:+document.getElementById('ca').value||0,note:document.getElementById('co').value,status:'Pending',created:new Date().toISOString()});save();closeM();render();alert('Customer & Order save ho gaya ✓');return false}
 function statusO(id){let o=os.find(x=>x.id===id);o.status=o.status==='Pending'?'Ready':'Delivered';save();render();openM('delivery')}function saveProfile(){try{const v=id=>String((document.getElementById(id)||{}).value||"").trim();const fields=["pn","pm","ps","pe","pa","pst","pc","pp"];for(const id of fields){if(!v(id)){alert("Kripya sabhi * wali details bhariye.");const e=document.getElementById(id);if(e){e.focus();e.scrollIntoView({behavior:"smooth",block:"center"});}return false;}}const profile={name:v("pn"),mobile:v("pm"),shop:v("ps"),email:v("pe"),address:v("pa"),state:v("pst"),city:v("pc"),pin:v("pp")};localStorage.setItem(K,JSON.stringify(profile));p=profile;try{cs=JSON.parse(localStorage.getItem(CK)||"[]");}catch(_){cs=[];localStorage.setItem(CK,"[]");}try{os=JSON.parse(localStorage.getItem(OK)||"[]");}catch(_){os=[];localStorage.setItem(OK,"[]");}const saved=JSON.parse(localStorage.getItem(K)||"null");if(!saved||saved.mobile!==profile.mobile){alert("Profile save nahi hua. Dobara try karein.");return false;}const ob=document.getElementById("onboard");if(ob){ob.hidden=true;ob.style.display="none";}render();window.scrollTo(0,0);return false;}catch(err){console.error("saveProfile error:",err);alert("Profile save ho gaya hai, lekin app open karte waqt error aaya. Page refresh karke dobara kholiye.");return false;}}try{p=JSON.parse(localStorage.getItem(K)||'null');plan=localStorage.getItem(PK)||'free';applyTheme(localStorage.getItem(TK)||'default')}catch(e){p=null;plan='free'}const o=document.getElementById('onboard');if(p&&p.name&&p.mobile&&p.shop&&p.email&&p.address&&p.state&&p.city&&p.pin){o.hidden=true;o.style.display='none';}else{o.hidden=false;o.style.display='flex';}render();
-</script></body></html>
+</script><script>
+/* SG_GARMENTS_MANAGEMENT_FIX_V1 */
+(function(){
+  function removeDuplicateDesignIcon(){
+    document.querySelectorAll('.ico').forEach(function(el){
+      var txt=(el.textContent||'').trim().toLowerCase();
+      if(txt.indexOf('design library')>=0){el.remove();}
+    });
+  }
+  function garmentManagement(){
+    var modal=document.getElementById('modal'), title=document.getElementById('mt'), body=document.getElementById('mb');
+    if(!modal||!title||!body)return;
+    title.textContent='👗 Garments';
+    var types=['Kurti','Blouse','Salwar Suit','Kameez','Saree Blouse','Lehenga','Gown','Dress','Shirt','Pant','Salwar','Choli','Sherwani','Suit','Blazer','Waistcoat','Pajama','School Uniform','Coat','Other'];
+    body.innerHTML='<div class="card" style="margin:0 0 12px 0"><h3 style="margin:0 0 6px">👗 Garment Management</h3><div class="muted">Yahan sirf garment types manage honge. Customer ko design dikhana aur design select karna <b>New Order</b> ke andar hi rahega.</div></div>'+
+      '<div class="garment-library">'+types.map(function(t){return '<div class="garment-library-card" style="cursor:default"><div style="font-size:32px;text-align:center;padding:14px 0">👗</div><b>'+t+'</b><small>Garment Type</small><button type="button" class="secondary" style="width:100%;margin-top:9px" onclick="alert(\''+t+' garment settings yahan manage ki jayengi.\')">⚙️ Manage</button></div>';}).join('')+'</div>'+ 
+      '<div class="card" style="margin-top:12px"><b>Design selection:</b><div class="muted" style="margin-top:5px">New Order → Customer → Garment → Select Design. Isliye yahan duplicate ready-made design cards nahi honge.</div></div>';
+    modal.classList.add('show');
+  }
+  function patch(){
+    removeDuplicateDesignIcon();
+    if(typeof window.openM==='function' && !window.__sgGarmentsPatched){
+      var old=window.openM;
+      window.openM=function(t){if(t==='garments'){garmentManagement();return;} return old.apply(this,arguments);};
+      window.__sgGarmentsPatched=true;
+    }
+  }
+  patch();
+  new MutationObserver(function(){removeDuplicateDesignIcon();}).observe(document.body,{childList:true,subtree:true});
+})();
+</script>
+</body></html>

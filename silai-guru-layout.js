@@ -31,7 +31,9 @@
       panel=document.createElement('div');
       panel.id=PANEL_ID;
       panel.className='sg-measure-panel';
-      wrap.parentNode.insertBefore(panel,wrap.nextElementSibling);
+      const addButton=wrap.parentNode.querySelector('.add-g');
+      if(addButton) addButton.parentNode.insertBefore(panel,addButton.nextSibling);
+      else wrap.parentNode.insertBefore(panel,wrap.nextSibling);
     }
     const cs=cards();
     if(!cs.length){panel.innerHTML='<div class="sg-measure-empty">Pehle garment add karein.</div>';return;}
@@ -41,7 +43,7 @@
     cs.forEach((c,i)=>{
       c.querySelectorAll('.measure-grid').forEach(g=>g.style.display='none');
     });
-    panel.innerHTML='<div class="sg-measure-title">📏 Measurements</div><div class="sg-measure-sub">Jis garment ki measurement bharni hai, usko select karein.</div><div class="sg-measure-tabs"></div><div class="sg-measure-body"></div>';
+    panel.innerHTML='<div class="sg-measure-title">📏 Measurements</div><div class="sg-measure-sub">Garments section ke baad yahan garment-wise measurements bharein.</div><div class="sg-measure-tabs"></div><div class="sg-measure-body"></div>';
     const tabs=panel.querySelector('.sg-measure-tabs');
     cs.forEach((c,i)=>{
       const b=document.createElement('button');

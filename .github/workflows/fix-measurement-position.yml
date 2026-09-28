@@ -21,13 +21,20 @@ jobs:
           from pathlib import Path
           p = Path('silai-guru-layout.js')
           s = p.read_text(encoding='utf-8')
+
           old = "panel.className='sg-measure-panel';\n      wrap.parentNode.insertBefore(panel,wrap.nextElementSibling);"
           new = "panel.className='sg-measure-panel';\n      const addButton=wrap.parentNode.querySelector('.add-g');\n      if(addButton) addButton.parentNode.insertBefore(panel,addButton.nextSibling);\n      else wrap.parentNode.insertBefore(panel,wrap.nextSibling);"
-          if old not in s:
-              raise SystemExit('Expected measurement insertion code not found')
-          s = s.replace(old, new, 1)
-          s = s.replace("Jis garment ki measurement bharni hai, usko select karein.", "Garments section ke baad yahan garment-wise measurements bharein.", 1)
-          p.write_text(s, encoding='utf-8')
+
+          if old in s:
+              s = s.replace(old, new, 1)
+              s = s.replace("Jis garment ki measurement bharni hai, usko select karein.", "Garments section ke baad yahan garment-wise measurements bharein.", 1)
+              p.write_text(s, encoding='utf-8')
+              print('Measurement panel position updated.')
+          elif "const addButton=wrap.parentNode.querySelector('.add-g');" in s:
+              print('Measurement panel position is already fixed.')
+          else:
+              raise SystemExit('Measurement insertion code not recognized; stopping safely.')
+
           PY
 
       - name: Commit fix
@@ -38,6 +45,6 @@ jobs:
           if git diff --cached --quiet; then
             echo 'No changes to commit'
           else
-            git commit -m 'Place measurements below Add Another Garment'
+            git commit -m 'Fix measurement panel placement'
             git push
           fi

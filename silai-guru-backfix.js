@@ -95,4 +95,87 @@
       if(!state()) history.replaceState({[KEY]:true,view:'dashboard'},'',location.href);
     }catch(e){}
   });
+
+  /* NEW ORDER: make every garment icon open its own design catalog. */
+  (function installGarmentDesignClickFix(){
+    if(window.__sgGarmentDesignClickFix)return;
+    window.__sgGarmentDesignClickFix=true;
+
+    function cleanName(v){
+      return String(v||'').replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu,'').replace(/\s+/g,' ').trim();
+    }
+
+    function ensureDesignSources(type){
+      /* openDesignCatalog already contains Camera, Gallery and Websites.
+         This safety pass restores the three source controls if an older
+         catalog renderer omitted one of them. */
+      const box=document.querySelector('.design-sources');
+      if(!box)return;
+      const hasText=t=>Array.from(box.querySelectorAll('button,label,a')).some(el=>cleanName(el.textContent).toLowerCase().includes(t));
+      const T=JSON.stringify(String(type)).replace(/</g,'\\u003c');
+      if(!hasText('camera')){
+        const label=document.createElement('label');
+        label.className='source-chip';
+        label.innerHTML='📷 Camera<input type="file" accept="image/*" capture="environment" style="position:absolute;opacity:0;width:1px;height:1px">';
+        const input=label.querySelector('input');
+        if(input)input.addEventListener('change',function(){
+          if(typeof window.saveUploadedDesign==='function')window.saveUploadedDesign(type,input);
+        });
+        box.appendChild(label);
+      }
+      if(!hasText('gallery')){
+        const label=document.createElement('label');
+        label.className='source-chip';
+        label.innerHTML='🖼️ Gallery<input type="file" accept="image/*" style="position:absolute;opacity:0;width:1px;height:1px">';
+        const input=label.querySelector('input');
+        if(input)input.addEventListener('change',function(){
+          if(typeof window.saveUploadedDesign==='function')window.saveUploadedDesign(type,input);
+        });
+        box.appendChild(label);
+      }
+      if(!hasText('websites')){
+        const b=document.createElement('button');
+        b.type='button';
+        b.className='source-chip';
+        b.textContent='🌐 Websites';
+        b.addEventListener('click',function(){
+          if(typeof window.openOrderWebsites==='function')return window.openOrderWebsites(type,0);
+          const q=encodeURIComponent(String(type)+' garment designs');
+          window.open('https://www.google.com/search?tbm=isch&q='+q,'_blank','noopener');
+        });
+        box.appendChild(b);
+      }
+    }
+
+    function openForElement(el){
+      if(!el)return false;
+      const b=el.querySelector('b');
+      const name=cleanName(b?b.textContent:el.textContent);
+      if(!name || name==='All Garments' || typeof window.openDesignCatalog!=='function')return false;
+      if(window.__sgRecordView)window.__sgRecordView('design-catalog:'+name);
+      window.openDesignCatalog(name);
+      setTimeout(function(){ensureDesignSources(name);},0);
+      return true;
+    }
+
+    document.addEventListener('click',function(e){
+      const el=e.target&&e.target.closest?e.target.closest('.sg-type-icon'):null;
+      if(!el)return;
+      if(el.dataset.sgDesignHandled==='1')return;
+      el.dataset.sgDesignHandled='1';
+      e.preventDefault();
+      e.stopPropagation();
+      if(e.stopImmediatePropagation)e.stopImmediatePropagation();
+      openForElement(el);
+    },true);
+
+    const observer=new MutationObserver(function(){
+      document.querySelectorAll('.sg-type-icon').forEach(function(el){
+        if(!el.getAttribute('role'))el.setAttribute('role','button');
+        if(!el.getAttribute('tabindex'))el.setAttribute('tabindex','0');
+        el.setAttribute('aria-label','Open '+cleanName(el.textContent)+' designs');
+      });
+    });
+    observer.observe(document.documentElement,{childList:true,subtree:true});
+  })();
 })();

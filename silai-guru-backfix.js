@@ -125,7 +125,7 @@
         window.openGarmentsManager(); return;
       }
       if(view.indexOf('garment-measurement-editor:')===0){
-        const i=findGarmentIndex(view.slice(29));
+        const i=findGarmentIndex(view.slice(27));
         if(i>=0 && typeof window.openGarmentMeasurementEditor==='function') window.openGarmentMeasurementEditor(i);
         return;
       }

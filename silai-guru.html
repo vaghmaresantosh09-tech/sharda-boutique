@@ -562,7 +562,8 @@ function selectOrderGarmentType(i,type){
   const card=document.getElementById('garment-'+i);if(!card)return;
   card.dataset.selectedType=type;
   const btn=card.querySelector('.sg-selected-garment');
-  if(btn)btn.innerHTML='<span class="sg-garment-icon">'+garmentVisual(type)+'</span><span><b>'+esc(type)+'</b><small>Selected • Tap to change</small></span><span>⌄</span>';
+  if(btn)btn.innerHTML='<span><b>'+esc(type)+'</b><small>Selected • Tap to change garment</small></span><span>⌄</span>';
+  refreshGarmentFields(i);
   const grid=document.getElementById('orderGarmentTypes-'+i);
   if(grid)grid.style.display='none';
   openOrderDesignPicker(i);

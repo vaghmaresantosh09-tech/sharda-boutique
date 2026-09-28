@@ -1,0 +1,39 @@
+name: Repair design library
+on:
+  push:
+permissions:
+  contents: write
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch design library
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('silai-guru.html')
+          s=p.read_text()
+          marker='/* SG_REAL_DESIGN_LIBRARY_V2 */'
+          if marker in s:
+              print('already patched')
+              raise SystemExit(0)
+          js=r'''<script>/* SG_REAL_DESIGN_LIBRARY_V2 */
+          (function(){
+          const P=[['#f39ab2','#7a3550','#fff1f5'],['#d8b15a','#76510d','#fff8df'],['#4fa6a2','#174f4c','#e9fbfa'],['#6f82d8','#26356e','#eef1ff'],['#a97bd6','#513276','#f5efff'],['#e98a54','#743512','#fff0e8']];
+          function V(t,i){const q=P[(+i||0)%P.length],c=q[0],d=q[1],l=q[2],x=String(t||'').toLowerCase();let b;if(x.includes('pant')||x.includes('salwar')||x.includes('pajama'))b='<path d="M62 38h76l-12 70h-14l-12-32-12 32H74z" fill="'+c+'" stroke="'+d+'" stroke-width="5"/><path d="M75 57h50" stroke="'+l+'" stroke-width="6"/>';else if(x.includes('blouse')||x.includes('choli'))b='<path d="M65 42l18-12q17 15 34 0l18 12 19 30-20 13-10-20v43H76V65L66 85 47 72z" fill="'+c+'" stroke="'+d+'" stroke-width="5"/><path d="M76 64q24 20 48 0" fill="none" stroke="'+l+'" stroke-width="5"/>';else if(x.includes('lehenga')||x.includes('gown')||x.includes('dress'))b='<path d="M82 32h36l6 24q6 25 31 66H45q25-41 31-66z" fill="'+c+'" stroke="'+d+'" stroke-width="5"/><path d="M62 94h76M54 108h92" stroke="'+l+'" stroke-width="5"/>';else if(x.includes('shirt'))b='<path d="M72 38l15-10 13 15 13-15 15 10 23 25-16 16-10-16v54H75V63L65 79 49 63z" fill="'+c+'" stroke="'+d+'" stroke-width="5"/><path d="M87 28l13 15 13-15M100 43v59" fill="none" stroke="'+d+'" stroke-width="5"/><circle cx="100" cy="60" r="3" fill="'+l+'"/><circle cx="100" cy="75" r="3" fill="'+l+'"/>';else b='<path d="M78 34h44l8 18 21 16-19 20-11-15v51H79V73L68 88 49 68l21-16z" fill="'+c+'" stroke="'+d+'" stroke-width="5"/><path d="M70 51q30 35 60 0" fill="none" stroke="'+l+'" stroke-width="7"/><path d="M100 52v72M84 91h32M84 103h32" stroke="'+l+'" stroke-width="5"/>';return '<svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="8" width="184" height="134" rx="22" fill="#fff"/><defs><linearGradient id="sg'+i+'" x1="0" y1="0" x2="1" y2="1"><stop stop-color="'+c+'"/><stop offset="1" stop-color="'+l+'"/></linearGradient></defs>'+b.replaceAll(c,'url(#sg'+i+')')+'</svg>'}
+          window.designVisual=V;
+          window.designMediaHtml=function(d){if(d.image)return '<img src="'+d.image+'" alt="'+d.name+'" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'"><div class="design-fallback" style="display:none">'+(d.svg||V(d.type,d.index||0))+'</div>';if(d.external||d.url)return '<div style="text-align:center;padding:18px"><div style="font-size:42px">🔗</div><b>External Design</b><small style="display:block;margin-top:6px">Website link saved</small></div>';return d.svg||V(d.type,d.index||0)};
+          document.addEventListener('click',function(e){const z=e.target.closest('.design-card button');if(!z)return;e.preventDefault();e.stopPropagation();const card=z.closest('.design-card'),name=(card.querySelector('.design-name')||{}).textContent||'Design';if(/show|eye/i.test(z.textContent||'')){const sv=card.querySelector('.design-img svg');if(typeof openDesignPreview==='function')openDesignPreview({name:name.trim(),type:window.currentDesignType||'',svg:sv?sv.outerHTML:''});else if(typeof openDesignPreviewModal==='function')openDesignPreviewModal(name.trim(),sv?sv.outerHTML:'');else alert('👁️ '+name.trim());}else if(/select/i.test(z.textContent||'')){const sv=card.querySelector('.design-img svg');const d={id:'builtin-'+Date.now(),name:name.trim(),type:window.currentDesignType||'',index:0,svg:sv?sv.outerHTML:''};if(typeof selectDesign==='function')selectDesign(d);else alert('✓ '+d.name+' design select ho gaya')}} ,true);
+          })();</script>'''
+          if '</body>' not in s: raise SystemExit('body tag not found')
+          p.write_text(s.replace('</body>',js+'</body>'))
+          PY
+      - name: Commit repair and remove one-time workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add silai-guru.html
+          git rm .github/workflows/repair-design-library.yml
+          git commit -m "Fix garment design library visuals and actions"
+          git push

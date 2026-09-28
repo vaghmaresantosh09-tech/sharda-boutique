@@ -11,7 +11,19 @@
 .gm-editor{background:#f8f7ff;border:1px solid #ddd7ff;border-radius:16px;padding:13px;margin-top:12px}
 .gm-editor h3{margin:0 0 10px}.gm-list{display:grid;gap:7px}.gm-list-row{display:flex;gap:7px;align-items:center}.gm-list-row input{flex:1}.gm-list-row button{padding:8px 10px}
 .gm-top-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-</style><style>.free-garment-list{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}.free-g-option{display:flex;align-items:center;justify-content:space-between;padding:14px 13px;font-size:16px;font-weight:500;border-bottom:1px solid #eee;cursor:pointer}.free-g-option:last-child{border-bottom:0}.free-g-option input{width:22px;height:22px;accent-color:#6b6258;margin:0}.free-g-option:has(input:checked){background:#faf8f5}.free-g-option:has(input:checked) span{font-weight:600}</style><style>.photo-garment-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:6px}.photo-g-option{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:142px;padding:10px 6px;background:#fff;border:1px solid var(--line);border-radius:16px;cursor:pointer;text-align:center;font-size:11px;overflow:hidden}.photo-g-option .gpic{width:82px;height:82px;display:flex;align-items:center;justify-content:center}.photo-g-option .gpic svg{width:78px;height:78px;display:block}.photo-g-option input{position:absolute;top:8px;right:8px;width:20px;height:20px;margin:0;accent-color:var(--p);z-index:2}.photo-g-option:has(input:checked){border:2px solid var(--p);background:#f4f1ff;box-shadow:0 3px 10px #5b4bdb22}.photo-g-option:has(input:checked) b{color:var(--p)}.photo-g-option b{font-size:12px;line-height:1.1}@media(max-width:500px){.photo-garment-grid{grid-template-columns:repeat(2,1fr)}.photo-g-option{min-height:136px}.photo-g-option .gpic{width:76px;height:76px}.photo-g-option .gpic svg{width:72px;height:72px}} </style></head><body>
+</style><style>.free-garment-list{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}.free-g-option{display:flex;align-items:center;justify-content:space-between;padding:14px 13px;font-size:16px;font-weight:500;border-bottom:1px solid #eee;cursor:pointer}.free-g-option:last-child{border-bottom:0}.free-g-option input{width:22px;height:22px;accent-color:#6b6258;margin:0}.free-g-option:has(input:checked){background:#faf8f5}.free-g-option:has(input:checked) span{font-weight:600}</style><style>.photo-garment-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:6px}.photo-g-option{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:142px;padding:10px 6px;background:#fff;border:1px solid var(--line);border-radius:16px;cursor:pointer;text-align:center;font-size:11px;overflow:hidden}.photo-g-option .gpic{width:82px;height:82px;display:flex;align-items:center;justify-content:center}.photo-g-option .gpic svg{width:78px;height:78px;display:block}.photo-g-option input{position:absolute;top:8px;right:8px;width:20px;height:20px;margin:0;accent-color:var(--p);z-index:2}.photo-g-option:has(input:checked){border:2px solid var(--p);background:#f4f1ff;box-shadow:0 3px 10px #5b4bdb22}.photo-g-option:has(input:checked) b{color:var(--p)}.photo-g-option b{font-size:12px;line-height:1.1}@media(max-width:500px){.photo-garment-grid{grid-template-columns:repeat(2,1fr)}.photo-g-option{min-height:136px}.photo-g-option .gpic{width:76px;height:76px}.photo-g-option .gpic svg{width:72px;height:72px}} </style><style id="sg-new-order-ui">
+.sg-garment-card .sg-order-measures{margin-top:4px}
+.sg-selected-garment{width:100%;display:flex;align-items:center;gap:12px;padding:10px;border:1px solid #ddd8ff;border-radius:14px;background:#f8f7ff;color:#353946;text-align:left}
+.sg-selected-garment .sg-garment-icon{width:54px;height:54px;display:block;flex:none}
+.sg-selected-garment .sg-garment-icon svg{width:54px;height:54px}
+.sg-selected-garment small{display:block;color:#777;font-size:11px;margin-top:2px}
+.sg-garment-type-grid{grid-template-columns:repeat(4,1fr);gap:7px;margin-top:9px}
+.sg-type-icon{border:1px solid #e1e1eb;border-radius:12px;background:#fff;padding:7px 3px;min-height:86px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+.sg-type-icon span,.sg-type-icon svg{width:44px;height:44px}
+.sg-type-icon b{font-size:10px;line-height:1.1}
+.sg-type-icon.active{border:2px solid #6b5cf0;background:#f4f1ff}
+@media(max-width:430px){.sg-garment-type-grid{grid-template-columns:repeat(3,1fr)}}
+</style></head><body>
 <div id="onboard" class="onboard"><div class="oncard"><h1 style="text-align:center;color:#5b4bdb">✂️ SILAI GURU</h1><p style="text-align:center;color:#73778c">पहली बार app use करने के लिए profile पूरा करें</p><form id="pf" novalidate><div class="form"><div class="field"><label>User Name *</label><input id="pn" required></div><div class="field"><label>Mobile *</label><input id="pm" required inputmode="numeric"></div><div class="field"><label>Shop Name *</label><input id="ps" required></div><div class="field"><label>Email ID *</label><input id="pe" required type="email"></div><div class="field full"><label>Address *</label><textarea id="pa" required></textarea></div><div class="field"><label>State *</label><input id="pst" required></div><div class="field"><label>City *</label><input id="pc" required></div><div class="field"><label>Pincode *</label><input id="pp" required inputmode="numeric"></div></div><button type="button" class="primary" onclick="saveProfile()">Profile Save & Open App</button></form></div></div>
 <div class="app"><header class="hero"><div class="brand">✂️ SILAI GURU</div><div class="shop" id="topshop"></div><div id="topowner" style="font-size:12px;opacity:.85"></div></header><div class="wrap">
 <div class="card"><div class="stats"><div class="stat"><b id="nc">0</b><small>Customers</small></div><div class="stat"><b id="no">0</b><small>Orders</small></div><div class="stat"><b id="nb">₹0</b><small>Pending</small></div></div></div>
@@ -497,24 +509,67 @@ function garmentVisual(type){
   };
   return map[type]||map['Other'];
 }
-function garmentCard(i,type){
-  const fields=garmentFields(type);
-  const garmentTypes=[['Blouse'],['Salwar Suit'],['Kurta'],['Shirt'],['Pant'],['Saree Blouse'],['Kurti'],['Salwar'],['Kameez'],['Lehenga'],['Choli'],['Gown'],['Dress'],['Blazer'],['Waistcoat'],['Sherwani'],['Pajama'],['Suit'],['School Uniform'],['Other']];
-  const proPhoto=plan==='pro';
-  return '<div class="garment-card" id="garment-'+i+'"><div class="garment-head"><div class="garment-title">👗 Garment '+(i+1)+'</div><button type="button" class="remove-g" onclick="removeGarment('+i+')">− Remove Garment</button></div><div class="field"><label>Garment Type</label><div class="'+(proPhoto?'photo-garment-grid':'free-garment-list')+'">'+garmentTypes.map((x,idx)=>'<label class="'+(proPhoto?'photo-g-option':'free-g-option')+'">'+(proPhoto?'<span class="gpic">'+garmentVisual(x[0])+'</span>':'')+'<b>'+x[0]+'</b><input type="radio" name="garmentType'+i+'" value="'+x[0]+'" '+((type===x[0]||(idx===0&&!type))?'checked':'')+' onchange="refreshGarmentFields('+i+')"></label>').join('')+'</div></div><button type="button" class="secondary order-design-btn" onclick="openOrderDesignPicker('+i+')">🎨 Select Design from Garments</button><div id="selected-design-'+i+'"></div><div class="measure-grid g-fields">'+fields.map(n=>'<div class="field"><label>'+n+'</label><input class="g-measure" data-name="'+n+'" placeholder="inches"></div>').join('')+'</div></div>';
+function orderMeasurementNames(type){
+  const base=['Height','Shoulder','Upper Chest','Lower Chest','Waist','Hip','Armhole','Neck Front','Neck Back','Sleeve','Length'];
+  const extra={
+    Blouse:['Cup','Blouse Length'],
+    Kurti:['Kurti Length'],
+    'Salwar Suit':['Bottom','Mori','Dupatta Length'],
+    Pant:['Thigh','Mori','Pant Length'],
+    Salwar:['Thigh','Mori','Salwar Length'],
+    Dress:['Dress Length'],
+    Gown:['Gown Length'],
+    Lehenga:['Lehenga Length'],
+    Choli:['Choli Length'],
+    Shirt:['Shirt Length'],
+    Kurta:['Kurta Length'],
+    Pajama:['Mori','Pajama Length']
+  };
+  return base.concat(extra[type]||[]).filter((v,i,a)=>a.indexOf(v)===i);
 }
-function refreshGarmentFields(i){const card=document.getElementById('garment-'+i);if(!card)return;const radio=card.querySelector('input[name="garmentType'+i+'"]:checked');const type=radio?radio.value:card.querySelector('.g-type')?.value||'Kurti';const old=Object.fromEntries(Array.from(card.querySelectorAll('.g-measure')).map(x=>[x.dataset.name,x.value]));card.querySelector('.g-fields').innerHTML=garmentFields(type).map(n=>'<div class="field"><label>'+n+'</label><input class="g-measure" data-name="'+n+'" placeholder="inches" value="'+esc(old[n]||'')+'"></div>').join('')}
+function garmentCard(i,type){
+  const garmentTypes=['Blouse','Salwar Suit','Kurta','Shirt','Pant','Saree Blouse','Kurti','Salwar','Kameez','Lehenga','Choli','Gown','Dress','Blazer','Waistcoat','Sherwani','Pajama','Suit','School Uniform','Plazo','Other'];
+  const selected=type||'Kurti';
+  const fields=orderMeasurementNames(selected);
+  const icon=garmentVisual(selected);
+  return '<div class="garment-card sg-garment-card" id="garment-'+i+'" data-selected-type="'+esc(selected)+'">'+
+    '<div class="garment-head"><div class="garment-title">📏 Measurements-'+(i+1)+'</div><button type="button" class="remove-g" onclick="removeGarment('+i+')">− Remove</button></div>'+
+    '<div class="measure-grid g-fields sg-order-measures">'+fields.map(n=>'<div class="field"><label>'+n+'</label><input class="g-measure" data-name="'+n+'" placeholder="inches"></div>').join('')+'</div>'+
+    '<div class="sg-type-section"><div class="section-title" style="margin-top:14px">👗 Garment Type</div>'+
+    '<button type="button" class="sg-selected-garment" onclick="toggleOrderGarmentTypes('+i+')"><span class="sg-garment-icon">'+icon+'</span><span><b>'+esc(selected)+'</b><small>Tap to change garment</small></span><span>⌄</span></button>'+
+    '<div id="orderGarmentTypes-'+i+'" class="sg-garment-type-grid" style="display:none">'+garmentTypes.map((name)=>'<button type="button" class="sg-type-icon '+(name===selected?'active':'')+'" onclick="selectOrderGarmentType('+i+','+JSON.stringify(name)+')"><span>'+garmentVisual(name)+'</span><b>'+esc(name)+'</b></button>').join('')+'</div>'+
+    '</div></div>';
+}
+function toggleOrderGarmentTypes(i){
+  const box=document.getElementById('orderGarmentTypes-'+i);if(!box)return;
+  box.style.display=box.style.display==='none'?'grid':'none';
+}
+function selectOrderGarmentType(i,type){
+  const card=document.getElementById('garment-'+i);if(!card)return;
+  card.dataset.selectedType=type;
+  const btn=card.querySelector('.sg-selected-garment');
+  if(btn)btn.innerHTML='<span class="sg-garment-icon">'+garmentVisual(type)+'</span><span><b>'+esc(type)+'</b><small>Selected • Tap to change</small></span><span>⌄</span>';
+  const grid=document.getElementById('orderGarmentTypes-'+i);
+  if(grid)grid.style.display='none';
+  openOrderDesignPicker(i);
+}
+function refreshGarmentFields(i){
+  const card=document.getElementById('garment-'+i);if(!card)return;
+  const type=card.dataset.selectedType||'Kurti';
+  const old=Object.fromEntries(Array.from(card.querySelectorAll('.g-measure')).map(x=>[x.dataset.name,x.value]));
+  card.querySelector('.g-fields').innerHTML=orderMeasurementNames(type).map(n=>'<div class="field"><label>'+n+'</label><input class="g-measure" data-name="'+n+'" placeholder="inches" value="'+esc(old[n]||'')+'"></div>').join('');
+}
 function initGarments(){const w=document.getElementById('garmentsWrap');if(w&&!w.children.length)w.innerHTML=garmentCard(0,'Kurti')}
 function addGarment(){const w=document.getElementById('garmentsWrap');if(!w)return;const i=w.children.length;w.insertAdjacentHTML('beforeend',garmentCard(i,'Kurti'))}
 function removeGarment(i){const w=document.getElementById('garmentsWrap'),card=document.getElementById('garment-'+i);if(w&&card&&w.children.length>1)card.remove()}
-function collectGarments(){return Array.from(document.querySelectorAll('#garmentsWrap .garment-card')).map((card,idx)=>{const radio=card.querySelector('input[name^="garmentType"]:checked');const type=radio?radio.value:card.querySelector('.g-type')?.value||'Kurti';const d=orderDesignTargets[idx]||null;return {type,design:d?{source:d.source,name:d.name,url:d.url||'',image:d.image||''}:null,measurements:Object.fromEntries(Array.from(card.querySelectorAll('.g-measure')).map(x=>[x.dataset.name,x.value.trim()]).filter(x=>x[1]))};})}
-function snapshotOrderForm(){const ids=['cn','cm','cwd','cd','ct','ca','co'];const s={};ids.forEach(id=>{const x=document.getElementById(id);if(x)s[id]=x.value});s.garments=Array.from(document.querySelectorAll('#garmentsWrap .garment-card')).map(card=>({type:card.querySelector('input[name^="garmentType"]:checked')?.value||'Kurti',measurements:Object.fromEntries(Array.from(card.querySelectorAll('.g-measure')).map(x=>[x.dataset.name,x.value]))}));return s}
+function collectGarments(){return Array.from(document.querySelectorAll('#garmentsWrap .garment-card')).map((card,idx)=>{const type=card.dataset.selectedType||'Kurti';const d=orderDesignTargets[idx]||null;return {type,design:d?{source:d.source,name:d.name,url:d.url||'',image:d.image||''}:null,measurements:Object.fromEntries(Array.from(card.querySelectorAll('.g-measure')).map(x=>[x.dataset.name,x.value.trim()]).filter(x=>x[1]))};})}
+function snapshotOrderForm(){const ids=['cn','cm','cwd','cd','ct','ca','co'];const s={};ids.forEach(id=>{const x=document.getElementById(id);if(x)s[id]=x.value});s.garments=Array.from(document.querySelectorAll('#garmentsWrap .garment-card')).map(card=>({type:card.dataset.selectedType||'Kurti',measurements:Object.fromEntries(Array.from(card.querySelectorAll('.g-measure')).map(x=>[x.dataset.name,x.value]))}));return s}
 function restoreOrderForm(s){if(!s)return;Object.entries(s).forEach(([id,v])=>{const x=document.getElementById(id);if(x&&typeof v==='string')x.value=v});const w=document.getElementById('garmentsWrap');if(w&&s.garments?.length){w.innerHTML=s.garments.map((g,i)=>garmentCard(i,g.type)).join('');s.garments.forEach((g,i)=>{const card=document.getElementById('garment-'+i);Object.entries(g.measurements||{}).forEach(([k,v])=>{const x=Array.from(card.querySelectorAll('.g-measure')).find(y=>y.dataset.name===k);if(x)x.value=v})})}renderOrderDesignBadges()}
 function renderOrderDesignBadges(){Object.entries(orderDesignTargets).forEach(([i,d])=>{if(!/^\d+$/.test(i))return;const box=document.getElementById('selected-design-'+i);if(box&&d)box.innerHTML='<div class="selected-design">✓ <b>'+esc(d.name)+'</b><br><small>'+esc(d.source)+'</small></div>'})}
 function openOrderDesignPicker(index){
   orderFormSnapshot=snapshotOrderForm();
   const card=document.getElementById('garment-'+index);
-  const type=card?.querySelector('input[name="garmentType'+index+'"]:checked')?.value||'Kurti';
+  const type=card?.dataset.selectedType||'Kurti';
   openDesignCatalogForOrder(type,index);
 }
 function openDesignCatalogForOrder(type,index){

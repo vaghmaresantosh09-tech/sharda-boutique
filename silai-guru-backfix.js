@@ -35,7 +35,6 @@
 
   function state(){return history.state&&history.state[KEY]?history.state:null;}
 
-  /* This is called by the actual navigation functions in silai-guru.html. */
   window.__sgRecordView=function(view){
     if(restoring || !view)return;
     const v=String(view);
@@ -44,7 +43,6 @@
     history.pushState({[KEY]:true,view:v},'',location.href);
   };
 
-  /* The first page is the real Dashboard entry. */
   try{
     const s=state();
     if(!s) history.replaceState({[KEY]:true,view:'dashboard'},'',location.href);
@@ -106,21 +104,15 @@
     }
 
     function ensureDesignSources(type){
-      /* openDesignCatalog already contains Camera, Gallery and Websites.
-         This safety pass restores the three source controls if an older
-         catalog renderer omitted one of them. */
       const box=document.querySelector('.design-sources');
       if(!box)return;
       const hasText=t=>Array.from(box.querySelectorAll('button,label,a')).some(el=>cleanName(el.textContent).toLowerCase().includes(t));
-      const T=JSON.stringify(String(type)).replace(/</g,'\\u003c');
       if(!hasText('camera')){
         const label=document.createElement('label');
         label.className='source-chip';
         label.innerHTML='📷 Camera<input type="file" accept="image/*" capture="environment" style="position:absolute;opacity:0;width:1px;height:1px">';
         const input=label.querySelector('input');
-        if(input)input.addEventListener('change',function(){
-          if(typeof window.saveUploadedDesign==='function')window.saveUploadedDesign(type,input);
-        });
+        if(input)input.addEventListener('change',function(){if(typeof window.saveUploadedDesign==='function')window.saveUploadedDesign(type,input);});
         box.appendChild(label);
       }
       if(!hasText('gallery')){
@@ -128,9 +120,7 @@
         label.className='source-chip';
         label.innerHTML='🖼️ Gallery<input type="file" accept="image/*" style="position:absolute;opacity:0;width:1px;height:1px">';
         const input=label.querySelector('input');
-        if(input)input.addEventListener('change',function(){
-          if(typeof window.saveUploadedDesign==='function')window.saveUploadedDesign(type,input);
-        });
+        if(input)input.addEventListener('change',function(){if(typeof window.saveUploadedDesign==='function')window.saveUploadedDesign(type,input);});
         box.appendChild(label);
       }
       if(!hasText('websites')){
@@ -177,5 +167,43 @@
       });
     });
     observer.observe(document.documentElement,{childList:true,subtree:true});
+  })();
+
+  /* DESIGN LIBRARY: the main page previously supplied real photo URLs only
+     for Kurti. Other garment types therefore fell back to SVG icons. Give
+     every garment family a real-photo pool and cycle through it for all of
+     its design cards. The existing Kurti photos remain untouched. */
+  (function installAllGarmentPhotoCatalog(){
+    if(window.__sgAllGarmentPhotoCatalog)return;
+    window.__sgAllGarmentPhotoCatalog=true;
+
+    const W=[
+      'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&w=700&q=82',
+      'https://images.unsplash.com/photo-1583391733956-6c78276477e2?auto=format&fit=crop&w=700&q=82',
+      'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=700&q=82',
+      'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=700&q=82',
+      'https://images.unsplash.com/photo-1485968579580-b6d095142e6e?auto=format&fit=crop&w=700&q=82',
+      'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=700&q=82'
+    ];
+    const M=[
+      'https://images.unsplash.com/photo-1516257984-b1b4d707412e?auto=format&fit=crop&w=700&q=82',
+      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=700&q=82',
+      'https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=700&q=82',
+      'https://images.unsplash.com/photo-1610652492500-ded49ceeb378?auto=format&fit=crop&w=700&q=82'
+    ];
+    const WOMEN=['Blouse','Salwar Suit','Kameez','Saree Blouse','Lehenga','Gown','Dress','Salwar','Choli','School Uniform'];
+    const MEN=['Shirt','Pant','Sherwani','Suit','Blazer','Waistcoat','Pajama','Coat','Kurta'];
+
+    const original=window.garmentDesignsFor;
+    if(typeof original!=='function')return;
+
+    window.garmentDesignsFor=function(type){
+      const list=original(type)||[];
+      if(String(type)==='Kurti')return list;
+      const pool=MEN.includes(String(type))?M:(WOMEN.includes(String(type))?W:W);
+      return list.map(function(d,i){
+        return Object.assign({},d,{image:pool[i%pool.length]});
+      });
+    };
   })();
 })();

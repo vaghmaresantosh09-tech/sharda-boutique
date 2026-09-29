@@ -1,0 +1,30 @@
+name: Cleanup added design library updates
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Remove added design library scripts
+        run: |
+          rm -f silai-guru-design-library-v3.js silai-guru-design-photos-v5.js
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('silai-guru.html')
+          s = p.read_text(encoding='utf-8')
+          s = s.replace('<script src="silai-guru-design-library-v3.js"></script>', '')
+          s = s.replace('<script src="silai-guru-design-photos-v5.js"></script>', '')
+          p.write_text(s, encoding='utf-8')
+          PY
+      - name: Commit cleanup and remove this one-time workflow
+        run: |
+          rm -f .github/workflows/cleanup-design-library.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet || git commit -m "Remove added garment design library updates"
+          git push

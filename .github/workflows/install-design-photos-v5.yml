@@ -1,0 +1,56 @@
+name: Install SILAI GURU design photos V5
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'silai-guru-design-photos-v5.js'
+      - '.github/workflows/install-design-photos-v5.yml'
+      - 'silai-guru.html'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: silai-guru-design-photos-v5
+  cancel-in-progress: false
+
+jobs:
+  install:
+    if: ${{ !contains(github.event.head_commit.message, '[skip design photos]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Inject design photo script
+        shell: python
+        run: |
+          from pathlib import Path
+          p=Path('silai-guru.html')
+          s=p.read_text(encoding='utf-8')
+          tag='<script src="silai-guru-design-photos-v5.js"></script>'
+          if tag not in s:
+              if '</body>' not in s:
+                  raise SystemExit('silai-guru.html has no closing body tag')
+              s=s.replace('</body>', tag+'</body>', 1)
+              p.write_text(s,encoding='utf-8')
+              print('Design photo script injected')
+          else:
+              print('Design photo script already installed')
+
+      - name: Commit and push safely
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add silai-guru.html
+          if git diff --cached --quiet; then
+            echo 'No HTML change needed'
+            exit 0
+          fi
+          git commit -m 'Install garment-specific design photos V5 [skip design photos]'
+          git pull --rebase origin main
+          git push origin HEAD:main

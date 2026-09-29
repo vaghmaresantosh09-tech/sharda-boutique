@@ -33,22 +33,18 @@
   function slug(s){return String(s).toLowerCase().replace(/[^a-z0-9]+/g,',').replace(/^,|,$/g,'');}
   function photo(type,name,index){
     const base=terms[type]||'indian,fashion,garment';
-    const style=slug(name).replace(/,/g,',');
-    const q=encodeURIComponent(base+','+style).replace(/%2C/g,',');
+    const q=encodeURIComponent(base+','+slug(name)).replace(/%2C/g,',');
     const lock=(type.length*97 + name.length*31 + index*137 + 41);
     return 'https://loremflickr.com/600/800/'+q+'/all?lock='+lock;
   }
   function install(){
-    if(!window.DESIGN_TYPES || !window.DESIGN_IMAGE_URLS)return;
+    if(typeof DESIGN_TYPES==='undefined' || typeof DESIGN_IMAGE_URLS==='undefined')return;
     Object.keys(sets).forEach(function(type){
-      if(!window.DESIGN_TYPES[type])window.DESIGN_TYPES[type]=[];
-      window.DESIGN_TYPES[type]=sets[type].slice();
-      if(!window.DESIGN_IMAGE_URLS[type])window.DESIGN_IMAGE_URLS[type]={};
-      sets[type].forEach(function(name,i){window.DESIGN_IMAGE_URLS[type][name]=photo(type,name,i);});
+      DESIGN_TYPES[type]=sets[type].slice();
+      if(!DESIGN_IMAGE_URLS[type])DESIGN_IMAGE_URLS[type]={};
+      sets[type].forEach(function(name,i){DESIGN_IMAGE_URLS[type][name]=photo(type,name,i);});
     });
-    /* The original garmentDesignsFor() reads DESIGN_IMAGE_URLS at render time. */
     window.__sgDesignLibraryV3=true;
   }
   install();
-  window.addEventListener('load',install,{once:true});
 })();

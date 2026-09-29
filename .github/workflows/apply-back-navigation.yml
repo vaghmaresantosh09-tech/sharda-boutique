@@ -9,6 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Install expanded garment design library
+        run: python3 scripts/expand_design_library.py
       - name: Inject SILAI GURU helper scripts
         run: |
           python3 - <<'PY'
@@ -26,5 +28,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add silai-guru.html
-          git diff --cached --quiet || git commit -m "Add custom measurement feature"
+          git diff --cached --quiet && echo 'No HTML changes needed' && exit 0
+          git commit -m "Install expanded Silai Guru garment designs [skip design library]"
           git push

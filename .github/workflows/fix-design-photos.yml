@@ -23,7 +23,6 @@ jobs:
         shell: python
         run: |
           from pathlib import Path
-          import re
 
           p = Path('silai-guru.html')
           s = p.read_text(encoding='utf-8')
@@ -59,11 +58,9 @@ jobs:
 
           new_fn = "function garmentDesignsFor(type){const arr=DESIGN_TYPES[type]||DESIGN_TYPES.Other;return arr.map((name,i)=>({id:type.replace(/\\W/g,'_')+'_'+i,type,name,index:i,svg:designVisual(type,i),image:(type==='Kurti'?KURTI_IMAGE_URLS[name]:(DESIGN_IMAGE_URLS[type]?.[name]||''))}));}"
           s = s[:start] + new_fn + s[next_fn:]
-
           insert_at = s.find(new_fn) + len(new_fn)
           s = s[:insert_at] + image_map + s[insert_at:]
 
-          # Make real photos fill the design card without changing the existing layout.
           css = ".design-card .design-img img{width:100%;height:100%;object-fit:cover;display:block}.design-card .design-img img[src]{background:#fff}"
           if css not in s:
               s = s.replace('</style></head>', css + '</style></head>', 1)
@@ -79,3 +76,5 @@ jobs:
           git diff --cached --quiet && echo 'No changes to commit' && exit 0
           git commit -m 'Fix design library photos [skip design photos]'
           git push
+
+# trigger patch run

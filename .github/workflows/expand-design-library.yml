@@ -1,0 +1,109 @@
+name: Expand Silai Guru Design Library
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Expand garment design library
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('silai-guru.html')
+          s = p.read_text(encoding='utf-8')
+          start = '<!-- SG_DESIGN_LIBRARY_EXPANDED_V1 -->'
+          end = '<!-- /SG_DESIGN_LIBRARY_EXPANDED_V1 -->'
+          if start in s and end in s:
+              a = s.index(start)
+              b = s.index(end, a) + len(end)
+              s = s[:a] + s[b:]
+          payload = r'''<style id="sg-expanded-library-style">
+          .sgx-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.sgx-card{background:#fff;border:1px solid #e5e6ef;border-radius:15px;overflow:hidden}.sgx-photo{height:175px;background:#faf9ff}.sgx-photo img{width:100%;height:100%;object-fit:cover;display:block}.sgx-name{padding:8px 9px 2px;font-size:12px;font-weight:800}.sgx-actions{display:flex;gap:6px;padding:7px}.sgx-actions button{flex:1;font-size:11px;padding:7px 4px}.sgx-count{font-size:12px;color:#5b4bdb;font-weight:800;margin:4px 0 8px}.sgx-source{font-size:10px;color:#73778c;padding:0 9px 6px}.sgx-tabs{display:flex;gap:7px;overflow:auto;padding:4px 0 8px}.sgx-tab{white-space:nowrap;border:1px solid #e5e6ef;background:#fff;border-radius:20px;padding:8px 12px;font-weight:800}.sgx-tab.active{background:#5b4bdb;color:#fff;border-color:#5b4bdb}.sgx-note{background:#f8f7ff;border:1px solid #ddd8ff;border-radius:14px;padding:11px;margin:8px 0;font-size:12px;color:#555}.sgx-back{background:#efeeff;color:#5144bd;padding:8px 11px;margin-bottom:6px}.sgx-search{margin:4px 0 8px}.sgx-empty{text-align:center;padding:25px;color:#73778c}@media(max-width:500px){.sgx-photo{height:145px}}
+          </style>
+          <script id="sg-expanded-library-script">
+          (function(){
+            const IMG='https://commons.wikimedia.org/wiki/Special:Redirect/file/';
+            const DATA={
+              'Kurti':[
+                ['Straight Kurti','Kurta_Indian_Dress_for_Woman.jpg'],['A-Line Kurti','Kurta_Indian_Dress_Women_2.jpg'],['Anarkali Kurti','Woman_wearing_a_beautiful_red_kurti.jpg'],['Long Kurti','Ladies_kurta_green.jpg'],['Rayon Kurti','Ladies_kurta_white.jpg'],['Palazzo Kurti','Ladies_kurta_with_leggings.jpg'],['High-Low Kurti','Kurta_Indian_Dress_for_Woman.jpg'],['Cotton Kurti','Kurtas_Indian_Dress_1.jpg'],['Party Wear Kurti','Woman_wearing_a_beautiful_red_kurti.jpg'],['Short Kurti','Ladies_kurta_green.jpg'],['Embroidered Kurti','Kurtas_Indian_Dress_Different_Colors.jpg'],['Flared Kurti','A_flared_lehenga.jpg'],['V-Neck Kurti','Kurta_Indian_Dress_Women_2.jpg'],['Square Neck Kurti','Traditional_Kurta_Indian_Style.jpg'],['Angrakha Kurti','Kurta_Indian_Dress_for_Woman.jpg'],['Asymmetric Kurti','Ladies_kurta_white.jpg'],['Chikankari Kurti','Ladies_kurta_green.jpg'],['Block Print Kurti','Kurtas_Indian_Dress_1.jpg'],['Tiered Kurti','A_flared_lehenga.jpg'],['Designer Kurti','Woman_wearing_a_beautiful_red_kurti.jpg']
+              ],
+              'Blouse':[
+                ['Padded Blouse','Blouse_MET_CI44.111_F.jpg'],['Princess Cut Blouse','Blouse_MET_CI44.111_B.jpg'],['Boat Neck Blouse','Blouse_MET_CI44.111_F.jpg'],['Back Open Blouse','Blouse_MET_CI44.111_B.jpg'],['Patch Work Blouse','Blouse_(kanchali)_and_skirt_(ghaghara),_Banjara_community,_Saurashtra,_Gujarat,_India,_view_1,_mid_20th_century,_cotton,_glass_mirrors_-_Textile_Museum_of_Canada_-_DSC00975.JPG'],['Silk Blouse','Blouse_MET_CI44.111_F.jpg'],['Collar Neck Blouse','Blouse_MET_CI44.111_B.jpg'],['Deep Neck Blouse','Blouse_MET_CI44.111_F.jpg'],['Elbow Sleeve Blouse','Blouse_MET_CI44.111_B.jpg'],['Cold Shoulder Blouse','Blouse_MET_CI44.111_F.jpg'],['High Neck Blouse','Blouse_MET_CI44.111_B.jpg'],['Net Blouse','Blouse_MET_CI44.111_F.jpg'],['Peplum Blouse','Blouse_MET_CI44.111_B.jpg'],['Halter Blouse','Blouse_MET_CI44.111_F.jpg'],['Sweetheart Blouse','Blouse_MET_CI44.111_B.jpg'],['V-Neck Blouse','Blouse_MET_CI44.111_F.jpg'],['Round Neck Blouse','Blouse_MET_CI44.111_B.jpg'],['Keyhole Blouse','Blouse_MET_CI44.111_F.jpg'],['Angrakha Blouse','Blouse_MET_CI44.111_B.jpg'],['Boat Back Blouse','Blouse_MET_CI44.111_F.jpg']
+              ],
+              'Salwar Suit':[
+                ['Straight Suit','Shalwar_kameez_(1710604).jpg'],['Anarkali Suit','Shalwar_kameez_(1710609).jpg'],['Palazzo Suit','Shalwar_kameez_(1710606).jpg'],['Patiala Suit','Shalwar_kameez_(32037464703).jpg'],['Punjabi Suit','Shalwar_kameez.jpg'],['Sharara Suit','Shalwar_kameez_(1710604).jpg'],['Churidar Suit','Shalwar_kameez_(32037464703).jpg'],['Party Suit','Shalwar_kameez_(1710609).jpg'],['Embroidered Suit','Shalwar_kameez.jpg'],['Cotton Suit','Shalwar_kameez_(1710606).jpg'],['Straight Cut Suit','Shalwar_kameez_(1710604).jpg'],['Printed Suit','Shalwar_kameez_(1710609).jpg'],['Designer Suit','Shalwar_kameez.jpg'],['Front Slit Suit','Shalwar_kameez_(32037464703).jpg'],['Long Suit','Shalwar_kameez_(1710606).jpg'],['Short Suit','Shalwar_kameez_(1710604).jpg'],['Layered Suit','Shalwar_kameez_(1710609).jpg'],['Georgette Suit','Shalwar_kameez.jpg'],['Festive Suit','Shalwar_kameez_(32037464703).jpg'],['Wedding Suit','Shalwar_kameez_(1710606).jpg']
+              ],
+              'Lehenga':[
+                ['Bridal Lehenga','Lehenga_-_Kanchan_Fashion.jpg'],['Flared Lehenga','A_flared_lehenga.jpg'],['Party Lehenga','Cultural_costume.jpg'],['Designer Lehenga','Lehenga_-_Kanchan_Fashion.jpg'],['A-Line Lehenga','A_flared_lehenga.jpg'],['Panel Lehenga','Lehenga_-_Kanchan_Fashion.jpg'],['Net Lehenga','Cultural_costume.jpg'],['Silk Lehenga','Lehenga_-_Kanchan_Fashion.jpg'],['Mirror Work Lehenga','Cultural_costume.jpg'],['Embroidered Lehenga','Lehenga_-_Kanchan_Fashion.jpg'],['Reception Lehenga','A_flared_lehenga.jpg'],['Engagement Lehenga','Lehenga_-_Kanchan_Fashion.jpg'],['Sharara Lehenga','Cultural_costume.jpg'],['Printed Lehenga','A_flared_lehenga.jpg'],['Pastel Lehenga','Lehenga_-_Kanchan_Fashion.jpg']
+              ],
+              'Sherwani':[
+                ['Classic Sherwani','Sherwani.jpg'],['Wedding Sherwani','Sherwani.jpg'],['Bandhgala Sherwani','Sherwani.jpg'],['Embroidered Sherwani','Sherwani.jpg'],['Jodhpuri Sherwani','Sherwani.jpg'],['Indo-Western Sherwani','Sherwani.jpg'],['Royal Sherwani','Sherwani.jpg'],['Long Sherwani','Sherwani.jpg'],['Short Sherwani','Sherwani.jpg'],['Designer Sherwani','Sherwani.jpg']
+              ],
+              'Gown':[['Anarkali Gown','A_flared_lehenga.jpg'],['Party Gown','Woman_wearing_a_beautiful_red_kurti.jpg'],['Floor Length Gown','A_flared_lehenga.jpg'],['Embroidered Gown','Cultural_costume.jpg'],['Designer Gown','A_flared_lehenga.jpg'],['Wedding Gown','Cultural_costume.jpg'],['Flared Gown','A_flared_lehenga.jpg'],['Cape Gown','Cultural_costume.jpg'],['Layered Gown','A_flared_lehenga.jpg'],['Straight Gown','Woman_wearing_a_beautiful_red_kurti.jpg']],
+              'Dress':[['A-Line Dress','Woman_wearing_a_beautiful_red_kurti.jpg'],['Maxi Dress','A_flared_lehenga.jpg'],['Midi Dress','Ladies_kurta_green.jpg'],['Party Dress','Woman_wearing_a_beautiful_red_kurti.jpg'],['Flared Dress','A_flared_lehenga.jpg'],['Layered Dress','Cultural_costume.jpg'],['Printed Dress','Ladies_kurta_white.jpg'],['Embroidered Dress','Woman_wearing_a_beautiful_red_kurti.jpg'],['Long Dress','A_flared_lehenga.jpg'],['Designer Dress','Cultural_costume.jpg']],
+              'Kameez':[['Straight Kameez','Shalwar_kameez_(1710604).jpg'],['Long Kameez','Shalwar_kameez_(1710609).jpg'],['Embroidered Kameez','Shalwar_kameez.jpg'],['Printed Kameez','Shalwar_kameez_(1710606).jpg'],['Party Kameez','Shalwar_kameez_(32037464703).jpg'],['Designer Kameez','Shalwar_kameez.jpg'],['A-Line Kameez','Shalwar_kameez_(1710604).jpg'],['Front Slit Kameez','Shalwar_kameez_(1710609).jpg'],['Cotton Kameez','Shalwar_kameez_(1710606).jpg'],['Festive Kameez','Shalwar_kameez_(32037464703).jpg']],
+              'Saree Blouse':[['Classic Saree Blouse','Blouse_MET_CI44.111_F.jpg'],['Designer Saree Blouse','Blouse_MET_CI44.111_B.jpg'],['Back Open Saree Blouse','Blouse_MET_CI44.111_F.jpg'],['Boat Neck Saree Blouse','Blouse_MET_CI44.111_B.jpg'],['Padded Saree Blouse','Blouse_MET_CI44.111_F.jpg'],['Princess Cut Saree Blouse','Blouse_MET_CI44.111_B.jpg'],['Sleeveless Saree Blouse','Blouse_MET_CI44.111_F.jpg'],['Elbow Sleeve Saree Blouse','Blouse_MET_CI44.111_B.jpg'],['High Neck Saree Blouse','Blouse_MET_CI44.111_F.jpg'],['Deep Neck Saree Blouse','Blouse_MET_CI44.111_F.jpg']],
+              'Choli':[['Classic Choli','Cultural_costume.jpg'],['Bridal Choli','Lehenga_-_Kanchan_Fashion.jpg'],['Designer Choli','Cultural_costume.jpg'],['Mirror Work Choli','Cultural_costume.jpg'],['Embroidered Choli','Lehenga_-_Kanchan_Fashion.jpg'],['Back Open Choli','Blouse_MET_CI44.111_B.jpg'],['Boat Neck Choli','Blouse_MET_CI44.111_F.jpg'],['Sleeveless Choli','Blouse_MET_CI44.111_B.jpg'],['Long Choli','Lehenga_-_Kanchan_Fashion.jpg'],['Festive Choli','Cultural_costume.jpg']],
+              'Shirt':[['Formal Shirt','Kurta_-_Mens.jpg'],['Casual Shirt','Kurta_-_Mens.jpg'],['Mandarin Collar Shirt','Kurta_-_Mens.jpg'],['Band Collar Shirt','Kurta_-_Mens.jpg'],['Designer Shirt','Kurta_-_Mens.jpg'],['Long Shirt','Kurta_-_Mens.jpg'],['Short Shirt','Kurta_-_Mens.jpg'],['Party Shirt','Kurta_-_Mens.jpg'],['Printed Shirt','Kurta_-_Mens.jpg'],['Wedding Shirt','Kurta_-_Mens.jpg']],
+              'Pant':[['Straight Pant','Shalwar_kameez_(1710604).jpg'],['Palazzo Pant','Shalwar_kameez_(1710609).jpg'],['Cigarette Pant','Shalwar_kameez_(1710606).jpg'],['Ankle Pant','Shalwar_kameez_(32037464703).jpg'],['Wide Leg Pant','Shalwar_kameez_(1710604).jpg'],['Flared Pant','Shalwar_kameez_(1710609).jpg'],['Sharara Pant','Shalwar_kameez_(1710606).jpg'],['Patiala Pant','Shalwar_kameez_(32037464703).jpg'],['Designer Pant','Shalwar_kameez_(1710604).jpg'],['Comfort Pant','Shalwar_kameez_(1710609).jpg']],
+              'Salwar':[['Patiala Salwar','Shalwar_kameez_(1710604).jpg'],['Straight Salwar','Shalwar_kameez_(1710609).jpg'],['Churidar Salwar','Shalwar_kameez_(1710606).jpg'],['Afghani Salwar','Shalwar_kameez.jpg'],['Dhoti Salwar','Shalwar_kameez_(32037464703).jpg'],['Designer Salwar','Shalwar_kameez_(1710604).jpg'],['Parallel Salwar','Shalwar_kameez_(1710609).jpg'],['Gathered Salwar','Shalwar_kameez_(1710606).jpg']],
+              'Suit':[['Classic Suit','Kurta_-_Mens.jpg'],['Formal Suit','Kurta_-_Mens.jpg'],['Party Suit','Kurta_-_Mens.jpg'],['Wedding Suit','Kurta_-_Mens.jpg'],['Bandhgala Suit','Sherwani.jpg'],['Designer Suit','Sherwani.jpg'],['Jodhpuri Suit','Sherwani.jpg'],['Indo-Western Suit','Sherwani.jpg']],
+              'Blazer':[['Classic Blazer','Kurta_-_Mens.jpg'],['Party Blazer','Sherwani.jpg'],['Wedding Blazer','Sherwani.jpg'],['Bandhgala Blazer','Sherwani.jpg'],['Designer Blazer','Kurta_-_Mens.jpg'],['Slim Blazer','Kurta_-_Mens.jpg'],['Long Blazer','Sherwani.jpg'],['Printed Blazer','Kurta_-_Mens.jpg']],
+              'Waistcoat':[['Classic Waistcoat','Kurta_-_Mens.jpg'],['Nehru Waistcoat','Kurta_-_Mens.jpg'],['Wedding Waistcoat','Sherwani.jpg'],['Designer Waistcoat','Sherwani.jpg'],['Printed Waistcoat','Kurta_-_Mens.jpg'],['Embroidered Waistcoat','Sherwani.jpg']],
+              'Pajama':[['Classic Pajama','Kurta_-_Mens.jpg'],['Churidar Pajama','Kurta_-_Mens.jpg'],['Pathani Pajama','Kurta_-_Mens.jpg'],['Straight Pajama','Kurta_-_Mens.jpg'],['Designer Pajama','Kurta_-_Mens.jpg'],['Wedding Pajama','Sherwani.jpg']],
+              'School Uniform':[['School Shirt','Kurta_-_Mens.jpg'],['School Trousers','Kurta_-_Mens.jpg'],['School Blazer','Sherwani.jpg'],['School Dress','Woman_wearing_a_beautiful_red_kurti.jpg'],['School Kurta','Kurta_-_Mens.jpg']],
+              'Coat':[['Classic Coat','Kurta_-_Mens.jpg'],['Long Coat','Sherwani.jpg'],['Party Coat','Sherwani.jpg'],['Wedding Coat','Sherwani.jpg'],['Designer Coat','Kurta_-_Mens.jpg']],
+              'Other':[['Traditional Indian Wear','Cultural_costume.jpg'],['Ethnic Wear','Cultural_costume.jpg'],['Festive Wear','Cultural_costume.jpg'],['Designer Wear','Lehenga_-_Kanchan_Fashion.jpg'],['Custom Design','Kurta_Indian_Dress_for_Woman.jpg']]
+            };
+            function esc(x){return String(x).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+            function url(name){return IMG+encodeURIComponent(name).replace(/%2F/g,'/');}
+            function openExpandedLibrary(){
+              const box=document.getElementById('mb'); if(!box)return;
+              let current=null;
+              const garments=Object.keys(DATA);
+              function renderList(){
+                box.innerHTML='<button class="close" onclick="closeM()">✕</button><h2>🎨 SILAI GURU Design Library</h2><div class="sgx-note"><b>Actual garment photos</b><br>Har garment ke liye alag design folder. Built-in library photos user ke personal backup quota me save nahi hongi.</div><input class="design-search" id="sgxSearch" placeholder="🔎 Search garment design..."><div class="garment-library">'+garments.map(g=>'<button class="garment-library-card" data-g="'+esc(g)+'"><div class="libpic"><span style="font-size:44px">👗</span></div><b>'+esc(g)+'</b><small>'+DATA[g].length+' designs</small></button>').join('')+'</div>';
+                box.querySelectorAll('[data-g]').forEach(b=>b.addEventListener('click',()=>renderFolder(b.dataset.g)));
+                const q=box.querySelector('#sgxSearch'); q.addEventListener('input',()=>{const v=q.value.toLowerCase();box.querySelectorAll('[data-g]').forEach(b=>b.style.display=b.dataset.g.toLowerCase().includes(v)?'':'none')});
+              }
+              function renderFolder(g){
+                current=g; const items=DATA[g]||[];
+                box.innerHTML='<button class="sgx-back" id="sgxBack">← Garments</button><h2>👗 '+esc(g)+' · '+items.length+' Designs</h2><div class="sgx-note">'+esc(g)+' ke actual photo references. Design card par <b>Show</b> dabakar bada photo dekhein.</div><input class="design-search" id="sgxDS" placeholder="🔎 Search '+esc(g)+' design..."><div class="sgx-count">'+items.length+' designs available</div><div class="sgx-grid">'+items.map((d,i)=>'<div class="sgx-card"><div class="sgx-photo"><img loading="lazy" src="'+url(d[1])+'" alt="'+esc(d[0])+'" onerror="this.style.display=\'none\';this.parentElement.innerHTML=\'<div style=\'padding:20px;text-align:center;color:#777\'>Photo unavailable</div>\'"></div><div class="sgx-name">'+esc(d[0])+'</div><div class="sgx-source">Built-in reference</div><div class="sgx-actions"><button class="secondary" data-save="'+i+'">☆ Save</button><button class="primary" data-show="'+i+'">👁 Show</button></div></div>').join('')+'</div>';
+                box.querySelector('#sgxBack').addEventListener('click',renderList);
+                box.querySelector('#sgxDS').addEventListener('input',function(){const v=this.value.toLowerCase();box.querySelectorAll('.sgx-card').forEach(c=>c.style.display=c.querySelector('.sgx-name').textContent.toLowerCase().includes(v)?'':'none')});
+                box.querySelectorAll('[data-show]').forEach(b=>b.addEventListener('click',()=>{const d=items[+b.dataset.show];box.innerHTML='<button class="sgx-back" id="sgxPreviewBack">← '+esc(g)+'</button><h2>'+esc(d[0])+'</h2><div class="preview-large" style="height:520px;max-width:420px"><img src="'+url(d[1])+'" alt="'+esc(d[0])+'" style="width:100%;height:100%;object-fit:contain;border-radius:18px"></div><button class="primary" id="sgxUse">✓ Use this design in order</button>';box.querySelector('#sgxPreviewBack').addEventListener('click',()=>renderFolder(g));box.querySelector('#sgxUse').addEventListener('click',()=>{try{localStorage.setItem('sgSelectedDesign',JSON.stringify({garment:g,name:d[0],image:url(d[1])}))}catch(e){} alert(d[0]+' selected. Ab New Order me ise use kar sakte hain.');});}));
+              }
+              renderList();
+            }
+            window.openGarmentLibrary=openExpandedLibrary;
+          })();
+          </script>
+          <!-- SG_DESIGN_LIBRARY_EXPANDED_V1 -->
+          <!-- /SG_DESIGN_LIBRARY_EXPANDED_V1 -->'''
+          s = s.replace('</body>', payload + '\n</body>')
+          p.write_text(s, encoding='utf-8')
+          PY
+
+      - name: Commit updated library
+        shell: bash
+        run: |
+          git config user.name "silai-guru-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add silai-guru.html
+          if git diff --cached --quiet; then
+            echo "No changes needed"
+          else
+            git commit -m "Expand all garment design libraries with real photo references"
+            git push
+          fi

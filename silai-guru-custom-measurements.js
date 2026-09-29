@@ -48,26 +48,27 @@ new MutationObserver(function(){setTimeout(attach,100)}).observe(document.body,{
 })();
 
 /* Android-safe Garments screen scrolling/closing fix.
-   The Garments library is a fixed modal. Keep the modal itself non-scrolling,
-   but make the sheet the single touch-scroll surface so Android Chrome cannot
-   lock the page after opening the folder. Also make the close button work on
-   pointer/touch events even if another document-level handler is listening. */
+   The Garments library is a fixed modal. The modal keeps vertical gesture
+   handling enabled, while the sheet remains the single touch-scroll surface.
+   This avoids Android Chrome touch-lock while keeping the overlay contained. */
 (function installGarmentScreenTouchFix(){
   if(window.__sgGarmentScreenTouchFix)return;
   window.__sgGarmentScreenTouchFix=true;
   function apply(){
     var modal=document.getElementById('modal');
     if(!modal)return;
-    modal.style.touchAction='none';
+    modal.style.touchAction='pan-y';
     modal.style.overscrollBehavior='contain';
     var sheet=modal.querySelector('.sheet');
     if(sheet){
       sheet.style.maxHeight='92vh';
+      sheet.style.minHeight='0';
       sheet.style.overflowY='auto';
       sheet.style.overflowX='hidden';
       sheet.style.webkitOverflowScrolling='touch';
       sheet.style.touchAction='pan-y';
       sheet.style.overscrollBehavior='contain';
+      sheet.style.pointerEvents='auto';
     }
     var mb=document.getElementById('mb');
     if(mb){mb.style.pointerEvents='auto';mb.style.touchAction='pan-y';}

@@ -1,0 +1,44 @@
+name: Install Silai Guru Design Library V3
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/install-design-library-v3.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install V3 script in Silai Guru HTML
+        shell: python
+        run: |
+          from pathlib import Path
+          p=Path('silai-guru.html')
+          s=p.read_text(encoding='utf-8')
+          tag='<script src="silai-guru-design-library-v3.js"></script>'
+          if tag not in s:
+              marker='</body>'
+              if marker not in s:
+                  raise SystemExit('silai-guru.html closing body tag not found')
+              s=s.replace(marker, tag+marker, 1)
+              p.write_text(s,encoding='utf-8')
+              print('V3 script tag installed.')
+          else:
+              print('V3 script tag already installed.')
+
+      - name: Commit HTML loader
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add silai-guru.html
+          git diff --cached --quiet && echo 'No HTML change needed.' && exit 0
+          git commit -m 'Install Design Library V3 [skip design library]'
+          git push

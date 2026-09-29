@@ -23,7 +23,7 @@
 .sg-type-icon b{font-size:10px;line-height:1.1}
 .sg-type-icon.active{border:2px solid #6b5cf0;background:#f4f1ff}
 @media(max-width:430px){.sg-garment-type-grid{grid-template-columns:repeat(3,1fr)}}
-.sg-all-garments{justify-content:space-between}.sg-all-garments span:first-child{display:block;text-align:left}.sg-garment-type-grid .sg-type-icon{min-height:54px}.sg-garment-type-grid .sg-type-icon b{font-size:12px}.sg-garment-type-grid .sg-type-icon span{display:none}</style><style id="sg-measure-restore">.sg-restore-measure{background:#eefbf4;color:#16704a;padding:8px 10px;font-size:12px}.sg-restore-box{margin-top:9px;padding:10px;border:1px dashed #b9ead1;background:#f4fff9;border-radius:12px}.sg-restore-title{font-size:12px;font-weight:800;color:#16704a;margin-bottom:7px}.sg-restore-list{display:flex;flex-wrap:wrap;gap:6px}.sg-restore-btn{background:#fff;border:1px solid #b9ead1;color:#16704a;padding:7px 9px;border-radius:10px;font-size:11px}</style></head><body>
+.sg-all-garments{justify-content:space-between}.sg-all-garments span:first-child{display:block;text-align:left}.sg-garment-type-grid .sg-type-icon{min-height:54px}.sg-garment-type-grid .sg-type-icon b{font-size:12px}.sg-garment-type-grid .sg-type-icon span{display:none}</style><style id="sg-measure-restore">.sg-restore-measure{background:#eefbf4;color:#16704a;padding:8px 10px;font-size:12px}.sg-restore-box{margin-top:9px;padding:10px;border:1px dashed #b9ead1;background:#f4fff9;border-radius:12px}.sg-restore-title{font-size:12px;font-weight:800;color:#16704a;margin-bottom:7px}.sg-restore-list{display:flex;flex-wrap:wrap;gap:6px}.sg-restore-btn{background:#fff;border:1px solid #b9ead1;color:#16704a;padding:7px 9px;border-radius:10px;font-size:11px}.design-card .design-img img{width:100%;height:100%;object-fit:cover;display:block}.design-card .design-img img[src]{background:#fff}</style></head><body>
 <div id="onboard" class="onboard"><div class="oncard"><h1 style="text-align:center;color:#5b4bdb">✂️ SILAI GURU</h1><p style="text-align:center;color:#73778c">पहली बार app use करने के लिए profile पूरा करें</p><form id="pf" novalidate><div class="form"><div class="field"><label>User Name *</label><input id="pn" required></div><div class="field"><label>Mobile *</label><input id="pm" required inputmode="numeric"></div><div class="field"><label>Shop Name *</label><input id="ps" required></div><div class="field"><label>Email ID *</label><input id="pe" required type="email"></div><div class="field full"><label>Address *</label><textarea id="pa" required></textarea></div><div class="field"><label>State *</label><input id="pst" required></div><div class="field"><label>City *</label><input id="pc" required></div><div class="field"><label>Pincode *</label><input id="pp" required inputmode="numeric"></div></div><button type="button" id="profileSaveBtn" class="primary">Profile Save & Open App</button></form></div></div>
 <div class="app"><header class="hero"><div class="brand">✂️ SILAI GURU</div><div class="shop" id="topshop"></div><div id="topowner" style="font-size:12px;opacity:.85"></div></header><div class="wrap">
 <div class="card"><div class="stats"><div class="stat"><b id="nc">0</b><small>Customers</small></div><div class="stat"><b id="no">0</b><small>Orders</small></div><div class="stat"><b id="nb">₹0</b><small>Pending</small></div></div></div>
@@ -280,24 +280,22 @@ function designVisual(type,index){
   return svg;
 }
 const KURTI_IMAGE_URLS={'Straight Kurti':'https://www.jiomart.com/images/product/original/rvjw4eedzz/jtb-present-women-s-rayon-regular-fit-3-4-sleeves-red-straight-kurti-for-ladies-girls-product-images-rvjw4eedzz-0-202307250552.jpg?im=Resize%3D%28500%2C630%29','A-Line Kurti':'https://greatoutfits.in/cdn/shop/files/KathaFabricLeafandFlowerPrintKurtiforWomen.KU74707A.1165.F3.Green.6_2048x.jpg?v=1702111635','Anarkali Kurti':'https://www.jiomart.com/images/product/original/rvo2hyw4rq/clickedia-womens-fully-stitched-rayon-floral-kurti-with-piping-details-buttons-and-tassels-anarkali-cut-kurta-kurti-product-images-rvo2hyw4rq-0-202210061629.png?im=Resize%3D%28500%2C630%29','Long Kurti':'https://webmerx.sgp1.cdn.digitaloceanspaces.com/yoyo/product_images/1595853750.sky-blue-long-cotton-kurti-with-plazo-krt280.jpg','Rayon Kurti':'https://jisboutique.com/cdn/shop/files/173_b22b68ff-6247-4237-8bc9-5ffaa56d0d50.jpg?v=1758369876','Palazzo Kurti':'https://webmerx.sgp1.cdn.digitaloceanspaces.com/yoyo/product_images/1595853750.sky-blue-long-cotton-kurti-with-plazo-krt280.jpg','High-Low Kurti':'https://img0.junaroad.com/uiproducts/20213124/zoom_0-1692844870.jpg','Cotton Kurti':'https://ambraee.com/cdn/shop/files/Untitled-2_528f4704-ff0b-4628-8cc4-f63a103f9b4c.webp?v=1726049680&width=1024','Party Wear Kurti':'https://cdn.sareeka.com/image/cache/data2023/sequins-faux-georgette-party-wear-kurti-270517-1000x1375.jpg','Short Kurti':'https://assets.myntassets.com/h_1440%2Cq_75%2Cw_1080/v1/assets/images/2025/AUGUST/30/lINjF48W_0492f38fca824158a886c0003c9df95d.jpg','Embroidered Kurti':'https://lucknowbestchikankari.com/cdn/shop/files/RangoliBlackFloralEmbroideredKurti.png?v=1758866821','Flared Kurti':'https://bavisclothing.com/cdn/shop/files/PinkFloralPrintFullFlaredKurti438B_1200x.webp?v=1722835254'};
-function garmentDesignsFor(type){
-  const arr=DESIGN_TYPES[type]||DESIGN_TYPES.Other;
-  return arr.map((name,i)=>({id:type.replace(/\W/g,'_')+'_'+i,type,name,index:i,svg:designVisual(type,i),image:(type==='Kurti'?KURTI_IMAGE_URLS[name]:'')}));
-}
-const GARMENT_MASTER_KEY='sg_garment_master';
-const DEFAULT_GARMENT_MASTER=[
-  {name:'Blouse',rate:0,services:['Lining','Padding','Lace','Embroidery']},
-  {name:'Kurti',rate:0,services:['Lining','Pocket','Lace','Embroidery']},
-  {name:'Salwar Suit',rate:0,services:['Lining','Dupatta','Lace','Embroidery']},
-  {name:'Shirt',rate:0,services:['Pocket','Lining','Button']},
-  {name:'Pant',rate:0,services:['Pocket','Lining','Alteration']},
-  {name:'Dress',rate:0,services:['Lining','Lace','Embroidery']},
-  {name:'Lehenga',rate:0,services:['Lining','Can-Can','Lace','Embroidery']},
-  {name:'Gown',rate:0,services:['Lining','Can-Can','Lace','Embroidery']},
-  {name:'Kameez',rate:0,services:['Lining','Pocket','Lace','Embroidery']},
-  {name:'Choli',rate:0,services:['Padding','Lining','Lace','Embroidery']}
-];
-function getGarmentMaster(){
+function garmentDesignsFor(type){const arr=DESIGN_TYPES[type]||DESIGN_TYPES.Other;return arr.map((name,i)=>({id:type.replace(/\W/g,'_')+'_'+i,type,name,index:i,svg:designVisual(type,i),image:(type==='Kurti'?KURTI_IMAGE_URLS[name]:(DESIGN_IMAGE_URLS[type]?.[name]||''))}));}const DESIGN_IMAGE_URLS={
+  Blouse:{
+    'Padded Blouse':'https://deepscreation.in/cdn/shop/files/01_6d112d9d-79c8-490f-908a-8e25c386c1b4.jpg?v=1750660850',
+    'Princess Cut Blouse':'https://i.etsystatic.com/37885802/r/il/e3f663/4297513430/il_fullxfull.4297513430_683s.jpg',
+    'Boat Neck Blouse':'https://i.pinimg.com/736x/ad/5d/7a/ad5d7a78f819d2cebc89b3fb23310c7c.jpg',
+    'Back Open Blouse':'https://i.pinimg.com/564x/8b/5b/cf/8b5bcfa374f9f1ff826a250baa032f6e.jpg',
+    'Patch Work Blouse':'https://images.herzindagi.info/image/2024/Jun/Multi-Coloured-Printed-Blouse-Design.jpg',
+    'Silk Blouse':'https://cdn.shopify.com/s/files/1/0412/0002/5751/files/Silk_Saree_Blouse_Designs_43_600x600.jpg?v=1696321771',
+    'Collar Neck Blouse':'https://i.pinimg.com/474x/c8/11/49/c81149a509b886a7d230b78895246b46.jpg',
+    'Deep Neck Blouse':'https://cdn.shopify.com/s/files/1/0654/5152/4353/files/Binks_Saree-Blouse_NafeezaBottle-Green_1.jpg?v=1757933635',
+    'Elbow Sleeve Blouse':'https://cdn.shopify.com/s/files/1/0654/5152/4353/files/Binks_Saree-Blouse_JigyasaBlack_1_large.jpg?v=1773670348',
+    'Cold Shoulder Blouse':'https://i.pinimg.com/736x/6f/78/4d/6f784dd05df2a7ad8c454348a0a2cdf0.jpg',
+    'High Neck Blouse':'https://i.pinimg.com/736x/00/07/07/000707c7dc8a44775e467c1d6e86acd0.jpg',
+    'Net Blouse':'https://images.meesho.com/images/products/677500959/0aq7d_512.webp?width=512'
+  }
+};function getGarmentMaster(){
   try{const a=JSON.parse(localStorage.getItem(GARMENT_MASTER_KEY)||'null');if(Array.isArray(a)&&a.length)return a}catch(e){}
   const a=JSON.parse(JSON.stringify(DEFAULT_GARMENT_MASTER));localStorage.setItem(GARMENT_MASTER_KEY,JSON.stringify(a));return a;
 }

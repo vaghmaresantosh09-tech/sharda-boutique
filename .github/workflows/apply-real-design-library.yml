@@ -1,0 +1,96 @@
+name: Apply SILAI GURU real garment design library
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/apply-real-design-library.yml'
+      - 'silai-guru.html'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: ${{ !contains(github.event.head_commit.message, '[skip real design library]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Replace generic design icons with garment-specific fashion visuals
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          p = Path('silai-guru.html')
+          s = p.read_text(encoding='utf-8')
+
+          start = s.find('function designVisual(type,index){')
+          if start < 0:
+              raise SystemExit('designVisual function not found')
+          nxt = s.find('function ', start + 10)
+          if nxt < 0:
+              raise SystemExit('next function boundary not found')
+
+          visual = r"""function designVisual(type,index){
+            const palette=['#e99ab2','#7b9ee8','#d8aa58','#70b9a8','#9b83dc','#e98b63','#6686a8','#d8799b','#82a865','#bd8a68','#7289d0','#bd75a3'];
+            const c=palette[index%palette.length], ink='#3b3552', light='#fffaf4', gold='#d5a13d';
+            const n=index%6;
+            const necks=[
+              '<path d="M170 78 Q200 112 230 78" fill="none" stroke="'+light+'" stroke-width="7"/>',
+              '<path d="M170 78 L200 112 L230 78" fill="none" stroke="'+light+'" stroke-width="7"/>',
+              '<path d="M170 82 Q200 60 230 82" fill="none" stroke="'+light+'" stroke-width="7"/>',
+              '<path d="M174 78 L200 101 L226 78" fill="none" stroke="'+gold+'" stroke-width="6"/>',
+              '<path d="M174 84 Q200 108 226 84" fill="none" stroke="'+gold+'" stroke-width="6"/>',
+              '<circle cx="200" cy="90" r="22" fill="none" stroke="'+light+'" stroke-width="6"/>'
+            ][n];
+            const motif=n===0?'<path d="M164 178 Q200 150 236 178 Q200 207 164 178Z" fill="none" stroke="'+gold+'" stroke-width="4"/>':n===1?'<path d="M160 235 Q200 255 240 235 M168 250 Q200 268 232 250" fill="none" stroke="'+light+'" stroke-width="4"/>':n===2?'<circle cx="178" cy="205" r="5" fill="'+gold+'"/><circle cx="200" cy="215" r="5" fill="'+gold+'"/><circle cx="222" cy="205" r="5" fill="'+gold+'"/>':n===3?'<path d="M155 150 L245 150 M160 160 L240 160" stroke="'+gold+'" stroke-width="4"/>':n===4?'<path d="M170 205 Q200 185 230 205 M170 220 Q200 200 230 220" fill="none" stroke="'+light+'" stroke-width="4"/>':'<path d="M150 270 Q200 300 250 270" fill="none" stroke="'+gold+'" stroke-width="5"/>';
+            const lower=['Pant','Salwar','Pajama'].includes(type);
+            const wide=['Lehenga','Gown','Dress'].includes(type);
+            const short=['Blouse','Saree Blouse','Choli'].includes(type);
+            const formal=['Blazer','Suit','Waistcoat','Sherwani','Coat'].includes(type);
+            const indian=['Kurti','Kameez','Salwar Suit'].includes(type);
+            let art='';
+            if(lower){
+              const split=n%2===0?'M148 110 L193 110 L184 325 L132 325 Z M207 110 L252 110 L268 325 L216 325 Z':'M150 110 L194 110 L176 325 L126 325 Z M206 110 L250 110 L274 325 L224 325 Z';
+              art='<path d="M145 76 Q200 103 255 76 L267 118 Q200 145 133 118Z" fill="'+c+'" stroke="'+ink+'" stroke-width="5"/><path d="'+split+'" fill="'+c+'" stroke="'+ink+'" stroke-width="5"/><path d="M150 125 Q200 145 250 125" fill="none" stroke="'+light+'" stroke-width="6"/>';
+            }else if(wide){
+              const flare=n%3===0?'M140 160 Q200 188 260 160 L340 335 H60 Z':n%3===1?'M145 150 Q200 185 255 150 L305 335 H95 Z':'M150 155 Q200 185 250 155 L285 335 H115 Z';
+              art='<path d="M164 72 Q200 102 236 72 L260 160 '+flare.slice(flare.indexOf('Q200'))+'" fill="'+c+'" stroke="'+ink+'" stroke-width="5"/>'+necks+'<path d="M200 120 V325" stroke="'+light+'" stroke-width="4"/>'+motif;
+            }else if(formal){
+              art='<path d="M150 68 L250 68 L278 325 H122 Z" fill="'+c+'" stroke="'+ink+'" stroke-width="5"/><path d="M174 68 L200 116 L226 68" fill="none" stroke="'+light+'" stroke-width="7"/><path d="M200 116 V320" stroke="'+ink+'" stroke-width="4"/><circle cx="200" cy="178" r="6" fill="'+gold+'"/><circle cx="200" cy="210" r="6" fill="'+gold+'"/>'+motif;
+            }else if(indian){
+              art='<path d="M154 70 L246 70 L274 162 L252 318 H148 L126 162 Z" fill="'+c+'" stroke="'+ink+'" stroke-width="5"/><path d="M140 104 L82 152 L108 186 L164 140 M260 104 L318 152 L292 186 L236 140" fill="'+c+'" stroke="'+ink+'" stroke-width="5"/>'+necks+'<path d="M200 118 V305" stroke="'+light+'" stroke-width="4"/>'+motif;
+            }else if(short){
+              const sleeves=n%3===0?'M145 105 L82 150 L108 184 L164 140 M255 105 L318 150 L292 184 L236 140':n%3===1?'M148 105 L102 132 L118 198 L168 145 M252 105 L298 132 L282 198 L232 145':'M150 105 L122 150 L142 212 L170 145 M250 105 L278 150 L258 212 L230 145';
+              art='<path d="'+sleeves+'" fill="'+c+'" stroke="'+ink+'" stroke-width="5"/><path d="M154 74 L246 74 L270 160 L252 260 H148 L130 160 Z" fill="'+c+'" stroke="'+ink+'" stroke-width="5"/>'+necks+motif;
+            }else{
+              art='<path d="M154 72 L246 72 L272 160 L252 318 H148 L128 160 Z" fill="'+c+'" stroke="'+ink+'" stroke-width="5"/><path d="M140 105 L86 152 L110 186 L164 140 M260 105 L314 152 L290 186 L236 140" fill="'+c+'" stroke="'+ink+'" stroke-width="5"/>'+necks+motif;
+            }
+            const label=String(type).replace(/&/g,'&amp;');
+            return '<svg viewBox="0 0 400 370" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+label+' fashion design"><rect x="10" y="10" width="380" height="350" rx="28" fill="#fbf9ff"/><path d="M55 328 Q200 348 345 328" fill="none" stroke="#ddd7ff" stroke-width="3"/><g>'+art+'</g><text x="200" y="42" text-anchor="middle" font-family="Arial" font-size="17" font-weight="800" fill="'+ink+'">'+label+'</text><text x="200" y="350" text-anchor="middle" font-family="Arial" font-size="11" fill="#777">Design '+(index+1)+'</text></svg>';
+          }
+          """
+
+          s = s[:start] + visual + s[nxt:]
+          s = s.replace('SG_DESIGN_LIBRARY_V2', 'SG_DESIGN_LIBRARY_V3')
+          if 'SG_DESIGN_LIBRARY_V3' not in s:
+              s = s.replace('</head>', '<!-- SG_DESIGN_LIBRARY_V3 -->\n</head>', 1)
+          p.write_text(s, encoding='utf-8')
+          print('Applied safe category-specific garment design visuals.')
+
+      - name: Commit patch
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add silai-guru.html
+          if git diff --cached --quiet; then
+            echo 'No changes needed.'
+            exit 0
+          fi
+          git commit -m 'Apply category-specific garment design visuals [skip real design library]'
+          git push

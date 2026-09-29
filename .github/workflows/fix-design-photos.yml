@@ -1,0 +1,81 @@
+name: Fix Silai Guru design photos
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'silai-guru.html'
+      - '.github/workflows/fix-design-photos.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: ${{ !contains(github.event.head_commit.message, '[skip design photos]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Patch design library images
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          p = Path('silai-guru.html')
+          s = p.read_text(encoding='utf-8')
+
+          marker = "const DESIGN_IMAGE_URLS={"
+          if marker in s:
+              print('Design image map already present; nothing to do.')
+              raise SystemExit(0)
+
+          image_map = r'''const DESIGN_IMAGE_URLS={
+            Blouse:{
+              'Padded Blouse':'https://deepscreation.in/cdn/shop/files/01_6d112d9d-79c8-490f-908a-8e25c386c1b4.jpg?v=1750660850',
+              'Princess Cut Blouse':'https://i.etsystatic.com/37885802/r/il/e3f663/4297513430/il_fullxfull.4297513430_683s.jpg',
+              'Boat Neck Blouse':'https://i.pinimg.com/736x/ad/5d/7a/ad5d7a78f819d2cebc89b3fb23310c7c.jpg',
+              'Back Open Blouse':'https://i.pinimg.com/564x/8b/5b/cf/8b5bcfa374f9f1ff826a250baa032f6e.jpg',
+              'Patch Work Blouse':'https://images.herzindagi.info/image/2024/Jun/Multi-Coloured-Printed-Blouse-Design.jpg',
+              'Silk Blouse':'https://cdn.shopify.com/s/files/1/0412/0002/5751/files/Silk_Saree_Blouse_Designs_43_600x600.jpg?v=1696321771',
+              'Collar Neck Blouse':'https://i.pinimg.com/474x/c8/11/49/c81149a509b886a7d230b78895246b46.jpg',
+              'Deep Neck Blouse':'https://cdn.shopify.com/s/files/1/0654/5152/4353/files/Binks_Saree-Blouse_NafeezaBottle-Green_1.jpg?v=1757933635',
+              'Elbow Sleeve Blouse':'https://cdn.shopify.com/s/files/1/0654/5152/4353/files/Binks_Saree-Blouse_JigyasaBlack_1_large.jpg?v=1773670348',
+              'Cold Shoulder Blouse':'https://i.pinimg.com/736x/6f/78/4d/6f784dd05df2a7ad8c454348a0a2cdf0.jpg',
+              'High Neck Blouse':'https://i.pinimg.com/736x/00/07/07/000707c7dc8a44775e467c1d6e86acd0.jpg',
+              'Net Blouse':'https://images.meesho.com/images/products/677500959/0aq7d_512.webp?width=512'
+            }
+          };'''
+
+          start = s.find('function garmentDesignsFor(type){')
+          if start < 0:
+              raise SystemExit('garmentDesignsFor function not found')
+          next_fn = s.find('function ', start + len('function '))
+          if next_fn < 0:
+              raise SystemExit('next function boundary not found')
+
+          new_fn = "function garmentDesignsFor(type){const arr=DESIGN_TYPES[type]||DESIGN_TYPES.Other;return arr.map((name,i)=>({id:type.replace(/\\W/g,'_')+'_'+i,type,name,index:i,svg:designVisual(type,i),image:(type==='Kurti'?KURTI_IMAGE_URLS[name]:(DESIGN_IMAGE_URLS[type]?.[name]||''))}));}"
+          s = s[:start] + new_fn + s[next_fn:]
+
+          insert_at = s.find(new_fn) + len(new_fn)
+          s = s[:insert_at] + image_map + s[insert_at:]
+
+          # Make real photos fill the design card without changing the existing layout.
+          css = ".design-card .design-img img{width:100%;height:100%;object-fit:cover;display:block}.design-card .design-img img[src]{background:#fff}"
+          if css not in s:
+              s = s.replace('</style></head>', css + '</style></head>', 1)
+
+          p.write_text(s, encoding='utf-8')
+          print('Patched Silai Guru design library with real blouse design photos.')
+
+      - name: Commit patch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add silai-guru.html
+          git diff --cached --quiet && echo 'No changes to commit' && exit 0
+          git commit -m 'Fix design library photos [skip design photos]'
+          git push

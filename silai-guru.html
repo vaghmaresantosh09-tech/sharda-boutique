@@ -247,20 +247,20 @@ function designVisual(type,index){
   const dupatta = (type==='Salwar Suit'||type==='Lehenga'||type==='Kameez') ? `<path d="M285 82 Q350 140 332 330" fill="none" stroke="${gold}" stroke-width="12" opacity=".85"/><path d="M290 84 Q350 142 334 330" fill="none" stroke="${pale}" stroke-width="3"/>` : '';
   return `<svg viewBox="0 0 400 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${type} fashion design"><rect x="8" y="8" width="384" height="364" rx="28" fill="#faf9ff"/><text x="200" y="38" text-anchor="middle" font-size="16" font-weight="800" fill="${dark}">${type} • Design ${index+1}</text>${upper?'':sleevePaths}${garment}${embellish}${dupatta}<path d="M105 350 H295" stroke="${c}" stroke-width="8" stroke-linecap="round"/><circle cx="120" cy="350" r="5" fill="${dark}"/><circle cx="280" cy="350" r="5" fill="${dark}"/></svg>`;
 }
-function garmentDesignsFor(type){const arr=DESIGN_TYPES[type]||DESIGN_TYPES.Other;return arr.map((name,i)=>({id:type.replace(/\W/g,'_')+'_'+i,type,name,index:i,svg:designVisual(type,i),image:''}));}const DESIGN_IMAGE_URLS={
+function garmentDesignsFor(type){const arr=DESIGN_TYPES[type]||DESIGN_TYPES.Other;return arr.map((name,i)=>({id:type.replace(/\W/g,'_')+'_'+i,type,name,index:i,svg:designVisual(type,i),image:(DESIGN_IMAGE_URLS[type]&&DESIGN_IMAGE_URLS[type][name])||''}));}const DESIGN_IMAGE_URLS={
   Blouse:{
-    'Padded Blouse':'https://deepscreation.in/cdn/shop/files/01_6d112d9d-79c8-490f-908a-8e25c386c1b4.jpg?v=1750660850',
-    'Princess Cut Blouse':'https://i.etsystatic.com/37885802/r/il/e3f663/4297513430/il_fullxfull.4297513430_683s.jpg',
-    'Boat Neck Blouse':'https://i.pinimg.com/736x/ad/5d/7a/ad5d7a78f819d2cebc89b3fb23310c7c.jpg',
-    'Back Open Blouse':'https://i.pinimg.com/564x/8b/5b/cf/8b5bcfa374f9f1ff826a250baa032f6e.jpg',
-    'Patch Work Blouse':'https://images.herzindagi.info/image/2024/Jun/Multi-Coloured-Printed-Blouse-Design.jpg',
-    'Silk Blouse':'https://cdn.shopify.com/s/files/1/0412/0002/5751/files/Silk_Saree_Blouse_Designs_43_600x600.jpg?v=1696321771',
-    'Collar Neck Blouse':'https://i.pinimg.com/474x/c8/11/49/c81149a509b886a7d230b78895246b46.jpg',
-    'Deep Neck Blouse':'https://cdn.shopify.com/s/files/1/0654/5152/4353/files/Binks_Saree-Blouse_NafeezaBottle-Green_1.jpg?v=1757933635',
-    'Elbow Sleeve Blouse':'https://cdn.shopify.com/s/files/1/0654/5152/4353/files/Binks_Saree-Blouse_JigyasaBlack_1_large.jpg?v=1773670348',
-    'Cold Shoulder Blouse':'https://i.pinimg.com/736x/6f/78/4d/6f784dd05df2a7ad8c454348a0a2cdf0.jpg',
-    'High Neck Blouse':'https://i.pinimg.com/736x/00/07/07/000707c7dc8a44775e467c1d6e86acd0.jpg',
-    'Net Blouse':'https://images.meesho.com/images/products/677500959/0aq7d_512.webp?width=512'
+    'Padded Blouse':'designs/blouse/padded-blouse.svg',
+    'Princess Cut Blouse':'designs/blouse/princess-cut-blouse.svg',
+    'Boat Neck Blouse':'designs/blouse/boat-neck-blouse.svg',
+    'Back Open Blouse':'designs/blouse/back-open-blouse.svg',
+    'Patch Work Blouse':'designs/blouse/patch-work-blouse.svg',
+    'Silk Blouse':'designs/blouse/silk-blouse.svg',
+    'Collar Neck Blouse':'designs/blouse/collar-neck-blouse.svg',
+    'Deep Neck Blouse':'designs/blouse/deep-neck-blouse.svg',
+    'Elbow Sleeve Blouse':'designs/blouse/elbow-sleeve-blouse.svg',
+    'Cold Shoulder Blouse':'designs/blouse/cold-shoulder-blouse.svg',
+    'High Neck Blouse':'designs/blouse/high-neck-blouse.svg',
+    'Net Blouse':'designs/blouse/net-blouse.svg'
   }
 };function getGarmentMaster(){
   try{const a=JSON.parse(localStorage.getItem(GARMENT_MASTER_KEY)||'null');if(Array.isArray(a)&&a.length)return a}catch(e){}

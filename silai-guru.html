@@ -191,7 +191,7 @@ function garmentFields(type){const builtIn={Blouse:['Height','Shoulder','Armhole
 const GARMENT_LIBRARY=['Kurti','Blouse','Salwar Suit','Kameez','Saree Blouse','Lehenga','Gown','Dress','Shirt','Pant','Salwar','Choli','Sherwani','Suit','Blazer','Waistcoat','Pajama','School Uniform','Coat','Other'];
 const DESIGN_TYPES={
   Kurti:['Straight Kurti','A-Line Kurti','Anarkali Kurti','Long Kurti','Rayon Kurti','Palazzo Kurti','High-Low Kurti','Cotton Kurti','Party Wear Kurti','Short Kurti','Embroidered Kurti','Flared Kurti','V-Neck Kurti','Square Neck Kurti','Angrakha Kurti','Asymmetric Kurti','Chikankari Kurti','Block Print Kurti','Tiered Kurti','Designer Kurti'],
-  Blouse:['Padded Blouse','Princess Cut Blouse','Boat Neck Blouse','Back Open Blouse','Patch Work Blouse','Silk Blouse','Collar Neck Blouse','Deep Neck Blouse','Elbow Sleeve Blouse','Cold Shoulder Blouse','High Neck Blouse','Net Blouse'],
+  Blouse:['Round Neck','V Neck','Boat Neck','Deep V Neck','U Neck','Deep U Neck','Square Neck','Sweetheart Neck','Keyhole Neck','Halter Neck','High Neck','Collar Neck'],
   'Salwar Suit':['Straight Suit','Anarkali Suit','Palazzo Suit','Patiala Suit','Punjabi Suit','Sharara Suit','Churidar Suit','Cotton Suit','Party Wear Suit','Embroidered Suit','Printed Suit','Rayon Suit'],
   Kurta:['Straight Kurta','Pathani Kurta','Short Kurta','Long Kurta','A-Line Kurta','Angrakha Kurta','Embroidered Kurta','Printed Kurta','Cotton Kurta','Silk Kurta','Party Wear Kurta','Designer Kurta'],
   Plazo:['Straight Palazzo','Flared Palazzo','Wide Leg Palazzo','Pleated Palazzo','Printed Palazzo','Cotton Palazzo','Rayon Palazzo','Party Wear Palazzo','Embroidered Palazzo','High Waist Palazzo','Palazzo Pants','Designer Palazzo'],
@@ -355,7 +355,7 @@ function openDesignCatalog(type){if(window.__sgRecordView)window.__sgRecordView(
   const T=esc(JSON.stringify(type));
   const q=encodeURIComponent(type+' garment designs');
   const fileLabel=(mode)=>'<label class="source-chip">'+(mode==='camera'?'📷 Camera':'🖼️ Gallery')+'<input type="file" accept="image/*" '+(mode==='camera'?'capture="environment"':'')+' onchange="saveUploadedDesign('+T+',this)" style="position:absolute;opacity:0;width:1px;height:1px"></label>';
-  mt.textContent='👗 '+type+' Designs';
+  mt.textContent=type==='Blouse'?'👗 Blouse Neck Designs':'👗 '+type+' Designs';
   mb.innerHTML=`<div class="design-back"><button type="button" class="secondary" onclick="openGarmentLibrary()">← Garments</button><b>${esc(type)} · ${designs.length} Designs</b></div>
   <div class="design-sources">
     <button type="button" class="source-chip active" onclick="showGarmentSource('library',${T})">🎨 SILAI GURU</button>

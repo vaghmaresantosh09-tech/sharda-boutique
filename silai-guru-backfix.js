@@ -1,30 +1,53 @@
-/* SILAI GURU — reliable in-app navigation history */
+/* SILAI GURU — in-app navigation history v3
+   Primary navigation is browser history; an internal stack is kept as a safe fallback.
+*/
 (function(){
   'use strict';
   var KEY='__silaiGuruCleanView';
   var restoring=false;
-  var timer=null;
-  function state(){return history.state&&history.state[KEY]?history.state:null;}
-  function current(){var s=state();return s?s.view:null;}
-  function push(view){
-    view=String(view||'dashboard');
-    if(restoring)return;
-    if(current()===view){syncBackButton();return;}
-    try{history.pushState({[KEY]:true,view:view},'',location.href)}catch(e){}
-    syncBackButton();
+  var stack=[];
+  try{stack=JSON.parse(sessionStorage.getItem('__sgNavStack')||'[]');if(!Array.isArray(stack))stack=[];}catch(e){stack=[];}
+
+  function getState(){
+    var s=history.state;
+    return s&&s[KEY]?s:null;
+  }
+  function current(){
+    var s=getState();
+    return s&&s.view?s.view:(stack.length?stack[stack.length-1]:null);
+  }
+  function persist(){
+    try{sessionStorage.setItem('__sgNavStack',JSON.stringify(stack));}catch(e){}
   }
   function syncBackButton(){
     var b=document.getElementById('modalBack'),m=document.getElementById('modal');
     if(!b)return;
-    var s=state();
-    b.classList.toggle('show',!!(m&&m.classList.contains('show')&&s&&s.view&&s.view!=='dashboard'));
+    var v=current();
+    b.classList.toggle('show',!!(m&&m.classList.contains('show')&&v&&v!=='dashboard'));
+  }
+  function push(view){
+    view=String(view||'dashboard');
+    if(restoring)return;
+    var cur=current();
+    if(cur===view){syncBackButton();return;}
+    if(!stack.length||stack[stack.length-1]!==view)stack.push(view);
+    persist();
+    try{
+      history.pushState({[KEY]:true,view:view},'',location.href);
+    }catch(e){
+      try{history.replaceState({[KEY]:true,view:view},'',location.href)}catch(_){}
+    }
+    syncBackButton();
   }
   function hideModal(){
-    var m=document.getElementById('modal');if(m)m.classList.remove('show');syncBackButton();
+    var m=document.getElementById('modal');
+    if(m)m.classList.remove('show');
+    syncBackButton();
   }
   function restore(view){
     restoring=true;
     try{
+      view=String(view||'dashboard');
       if(view==='dashboard'){hideModal();return;}
       if(view==='designs'&&typeof window.openGarmentLibrary==='function'){window.openGarmentLibrary();return;}
       if(view==='garment-folder'&&typeof window.openGarmentFolder==='function'){window.openGarmentFolder();return;}
@@ -49,18 +72,60 @@
       }
       var simple=['order','customers','orders','measure','payments','delivery','reports','profile','backup','workers','garments','settings','plans'];
       if(simple.indexOf(view)>=0&&typeof window.openM==='function'){window.openM(view);return;}
-    }finally{restoring=false;setTimeout(syncBackButton,0);}
+    }finally{
+      restoring=false;
+      setTimeout(syncBackButton,0);
+    }
   }
   window.__sgRecordView=push;
-  window.__sgGoBack=function(){try{history.back()}catch(e){}};
-  try{if(!state())history.replaceState({[KEY]:true,view:'dashboard'},'',location.href)}catch(e){}
+
+  window.__sgGoBack=function(){
+    var s=getState(),v=s&&s.view;
+    if(v&&v!=='dashboard'){
+      try{history.back();return;}catch(e){}
+    }
+    if(stack.length>1){
+      stack.pop();
+      var prev=stack[stack.length-1]||'dashboard';
+      persist();
+      restore(prev);
+    }else{
+      hideModal();
+    }
+  };
+
+  try{
+    var s=getState();
+    if(!s){
+      history.replaceState({[KEY]:true,view:'dashboard'},'',location.href);
+      stack=['dashboard'];
+      persist();
+    }else if(!stack.length){
+      stack=[s.view||'dashboard'];
+      persist();
+    }
+  }catch(e){if(!stack.length)stack=['dashboard'];}
+
   window.addEventListener('popstate',function(e){
-    var s=e&&e.state;if(!s||!s[KEY]){hideModal();return;}restore(s.view||'dashboard');
+    var s=e&&e.state;
+    if(s&&s[KEY]){
+      var target=s.view||'dashboard';
+      while(stack.length&&stack[stack.length-1]!==target)stack.pop();
+      if(!stack.length)stack=['dashboard'];
+      persist();
+      restore(target);
+    }else{
+      stack=['dashboard'];
+      persist();
+      hideModal();
+    }
   });
+
   document.addEventListener('click',function(e){
     var b=e.target&&e.target.closest?e.target.closest('#modalBack'):null;
     if(b){e.preventDefault();e.stopPropagation();}
   },true);
+
   function observe(){
     syncBackButton();
     var m=document.getElementById('modal');
@@ -71,6 +136,4 @@
   }
   observe();
   new MutationObserver(observe).observe(document.documentElement,{childList:true,subtree:true});
-  timer=setInterval(observe,500);
-  setTimeout(function(){clearInterval(timer)},15000);
 })();

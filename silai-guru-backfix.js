@@ -1,77 +1,76 @@
-/* SILAI GURU — clean navigation + empty Design Library folders
-   New Order garment selection stays inside New Order.
-   Design Library initially contains ONLY garment folders/icons.
-   Designs will be added later, one garment at a time. */
+/* SILAI GURU — reliable in-app navigation history */
 (function(){
   'use strict';
   var KEY='__silaiGuruCleanView';
   var restoring=false;
-  function getState(){return history.state&&history.state[KEY]?history.state:null;}
+  var timer=null;
+  function state(){return history.state&&history.state[KEY]?history.state:null;}
+  function current(){var s=state();return s?s.view:null;}
   function push(view){
+    view=String(view||'dashboard');
     if(restoring)return;
-    var s=getState();
-    if(s&&s.view===view)return;
+    if(current()===view){syncBackButton();return;}
     try{history.pushState({[KEY]:true,view:view},'',location.href)}catch(e){}
+    syncBackButton();
   }
-  function cleanLibrary(){
-    var modal=document.getElementById('modal'),title=document.getElementById('mt'),body=document.getElementById('mb');
-    if(!modal||!title||!body)return;
-    title.textContent='🎨 SILAI GURU Design Library';
-    var types=['Kurti','Blouse','Salwar Suit','Kameez','Saree Blouse','Lehenga','Gown','Dress','Shirt','Pant','Salwar','Choli','Sherwani','Suit','Blazer','Waistcoat','Pajama','School Uniform','Coat','Other'];
-    body.innerHTML='<div class="card"><div class="library-note">📁 Har garment ka alag design folder hai. Abhi folders khali hain. Designs hum ek-ek garment ke andar baad mein add karenge.</div><div class="garment-library">'+types.map(function(t,i){return '<button type="button" class="garment-library-card sg-empty-folder" data-garment="'+t.replace(/&/g,'&amp;').replace(/"/g,'&quot;')+'"><div class="libpic">'+(typeof window.garmentVisual==='function'?window.garmentVisual(t):'<div style="font-size:52px">👗</div>')+'</div><b>'+t+'</b><small>📁 Empty Folder</small></button>';}).join('')+'</div></div>';
-    body.querySelectorAll('.sg-empty-folder').forEach(function(btn){
-      btn.addEventListener('click',function(){openEmptyFolder(btn.getAttribute('data-garment'));});
-    });
-    modal.classList.add('modal','show');
+  function syncBackButton(){
+    var b=document.getElementById('modalBack'),m=document.getElementById('modal');
+    if(!b)return;
+    var s=state();
+    b.classList.toggle('show',!!(m&&m.classList.contains('show')&&s&&s.view&&s.view!=='dashboard'));
   }
-  function openEmptyFolder(type){
-    push('empty-design-folder:'+type);
-    var title=document.getElementById('mt'),body=document.getElementById('mb');
-    if(!title||!body)return;
-    title.textContent='📁 '+type+' Designs';
-    body.innerHTML='<div class="design-back"><button type="button" class="secondary" id="sgFolderBack">← Garments</button><b>'+type+'</b></div><div class="card" style="text-align:center;padding:35px 18px"><div style="font-size:70px">📁</div><h3>Design Folder Empty</h3><p class="muted">Is '+type+' folder mein abhi koi design nahi hai.</p><p class="muted">Pehle Design Library ko clear rakhte hain. Baad mein hum isi folder ke andar ek-ek actual design add karenge.</p></div>';
-    var b=document.getElementById('sgFolderBack');if(b)b.onclick=function(){cleanLibrary();};
+  function hideModal(){
+    var m=document.getElementById('modal');if(m)m.classList.remove('show');syncBackButton();
   }
-  function wrapDesignCatalog(){
-    if(window.__sgCleanDesignWrapped || typeof window.openDesignCatalog!=='function')return;
-    window.__sgCleanDesignWrapped=true;
-    var original=window.openDesignCatalog;
-    window.openDesignCatalog=function(type){
-      var name=String(type||'').trim();
-      if(name)push('design-catalog:'+name);
-      return original.apply(this,arguments);
-    };
+  function restore(view){
+    restoring=true;
+    try{
+      if(view==='dashboard'){hideModal();return;}
+      if(view==='designs'&&typeof window.openGarmentLibrary==='function'){window.openGarmentLibrary();return;}
+      if(view==='garment-folder'&&typeof window.openGarmentFolder==='function'){window.openGarmentFolder();return;}
+      if(view.indexOf('design-catalog:')===0&&typeof window.openDesignCatalog==='function'){window.openDesignCatalog(view.slice(15));return;}
+      if(view.indexOf('design-preview:')===0&&typeof window.showDesignToCustomer==='function'){
+        var p=view.slice(15).split(':');window.showDesignToCustomer(p.shift(),p.join(':'),undefined);return;
+      }
+      if(view.indexOf('order-design:')===0&&typeof window.openDesignCatalogForOrder==='function'){
+        var p2=view.slice(13).split(':');window.openDesignCatalogForOrder(p2[1],Number(p2[0]));return;
+      }
+      if(view.indexOf('order-preview:')===0&&typeof window.showDesignToCustomer==='function'){
+        var p3=view.slice(14).split(':');window.showDesignToCustomer(p3[1],p3.slice(2).join(':'),Number(p3[0]));return;
+      }
+      if(view==='garment-measurements'&&typeof window.openGarmentMeasurementManager==='function'){window.openGarmentMeasurementManager();return;}
+      if(view.indexOf('garment-measurement-editor:')===0&&typeof window.openGarmentMeasurementEditor==='function'){
+        var name=view.slice(27),a=typeof window.getGarmentMaster==='function'?window.getGarmentMaster():[];
+        var i=a.findIndex(function(g){return g.name===name});if(i>=0)window.openGarmentMeasurementEditor(i);return;
+      }
+      if(view.indexOf('garment-services:')===0&&typeof window.openGarmentServiceEditor==='function'){
+        var n=view.slice(17),a2=typeof window.getGarmentMaster==='function'?window.getGarmentMaster():[];
+        var j=a2.findIndex(function(g){return g.name===n});if(j>=0)window.openGarmentServiceEditor(j);return;
+      }
+      var simple=['order','customers','orders','measure','payments','delivery','reports','profile','backup','workers','garments','settings','plans'];
+      if(simple.indexOf(view)>=0&&typeof window.openM==='function'){window.openM(view);return;}
+    }finally{restoring=false;setTimeout(syncBackButton,0);}
   }
-  function installEmptyLibrary(){
-    if(typeof window.openGarmentLibrary!=='function')return;
-    if(window.__sgEmptyLibraryInstalled && window.__sgEmptyLibraryTarget===window.openGarmentLibrary)return;
-    window.__sgEmptyLibraryInstalled=true;
-    window.__sgEmptyLibraryTarget=window.openGarmentLibrary;
-    window.openGarmentLibrary=function(){push('design-library');cleanLibrary();};
-  }
-  function init(){
-    try{if(!getState())history.replaceState({[KEY]:true,view:'dashboard'},'',location.href)}catch(e){}
-    wrapDesignCatalog();
-    installEmptyLibrary();
-    setTimeout(wrapDesignCatalog,100);
-    setTimeout(installEmptyLibrary,100);
-    setTimeout(wrapDesignCatalog,500);
-    setTimeout(installEmptyLibrary,500);
-  }
-  window.addEventListener('load',init);
-  var timer=setInterval(function(){wrapDesignCatalog();installEmptyLibrary();},250);
-  setTimeout(function(){clearInterval(timer);},10000);
+  window.__sgRecordView=push;
+  window.__sgGoBack=function(){try{history.back()}catch(e){}};
+  try{if(!state())history.replaceState({[KEY]:true,view:'dashboard'},'',location.href)}catch(e){}
   window.addEventListener('popstate',function(e){
-    var s=e&&e.state;
-    if(!s||!s[KEY])return;
-    if(s.view==='design-library'){
-      restoring=true;try{cleanLibrary();}finally{restoring=false;}
-    }else if(s.view&&s.view.indexOf('empty-design-folder:')===0){
-      restoring=true;try{openEmptyFolder(s.view.slice(21));}finally{restoring=false;}
-    }else if(s.view&&s.view.indexOf('design-catalog:')===0 && typeof window.openDesignCatalog==='function'){
-      restoring=true;try{window.openDesignCatalog(s.view.slice(15));}finally{restoring=false;}
-    }else if(s.view==='dashboard'){
-      var m=document.getElementById('modal');if(m)m.classList.remove('show');
-    }
+    var s=e&&e.state;if(!s||!s[KEY]){hideModal();return;}restore(s.view||'dashboard');
   });
+  document.addEventListener('click',function(e){
+    var b=e.target&&e.target.closest?e.target.closest('#modalBack'):null;
+    if(b){e.preventDefault();e.stopPropagation();}
+  },true);
+  function observe(){
+    syncBackButton();
+    var m=document.getElementById('modal');
+    if(m&&!m.__sgNavObserver){
+      m.__sgNavObserver=true;
+      new MutationObserver(function(){syncBackButton()}).observe(m,{attributes:true,attributeFilter:['class']});
+    }
+  }
+  observe();
+  new MutationObserver(observe).observe(document.documentElement,{childList:true,subtree:true});
+  timer=setInterval(observe,500);
+  setTimeout(function(){clearInterval(timer)},15000);
 })();

@@ -224,7 +224,7 @@ function designVisual(type,index){
   const dupatta = (type==='Salwar Suit'||type==='Lehenga'||type==='Kameez') ? `<path d="M285 82 Q350 140 332 330" fill="none" stroke="${gold}" stroke-width="12" opacity=".85"/><path d="M290 84 Q350 142 334 330" fill="none" stroke="${pale}" stroke-width="3"/>` : '';
   return `<svg viewBox="0 0 400 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${type} fashion design"><rect x="8" y="8" width="384" height="364" rx="28" fill="#faf9ff"/><text x="200" y="38" text-anchor="middle" font-size="16" font-weight="800" fill="${dark}">${type} • Design ${index+1}</text>${upper?'':sleevePaths}${garment}${embellish}${dupatta}<path d="M105 350 H295" stroke="${c}" stroke-width="8" stroke-linecap="round"/><circle cx="120" cy="350" r="5" fill="${dark}"/><circle cx="280" cy="350" r="5" fill="${dark}"/></svg>`;
 }
-function garmentDesignsFor(type){return [];}const DESIGN_IMAGE_URLS={};function getGarmentMaster(){
+function garmentDesignsFor(type){return [];}function getGarmentMaster(){
   try{const a=JSON.parse(localStorage.getItem(GARMENT_MASTER_KEY)||'null');if(Array.isArray(a)&&a.length)return a}catch(e){}
   const a=JSON.parse(JSON.stringify(DEFAULT_GARMENT_MASTER));localStorage.setItem(GARMENT_MASTER_KEY,JSON.stringify(a));return a;
 }

@@ -1,20 +1,22 @@
 /* SILAI GURU — clean runtime service worker
-   Old duplicate garment/design patch blocks are stripped before the HTML reaches the browser.
+   Old duplicate garment/design implementations are stripped before HTML reaches the browser.
    Authoritative New Order runtime: silai-guru-order-ui.js
 */
-const CACHE='sharda-boutique-v22';
+const CACHE='sharda-boutique-v23';
 const ASSETS=['./','./index.html','./manifest.json','./profile-validation-v2.js','./silai-guru-order-ui.js'];
 const PROFILE_SCRIPT='<script src="./profile-validation-v2.js?v=20261001-8"></script>';
-const ORDER_SCRIPT='<script src="./silai-guru-order-ui.js?v=20261001-5"></script>';
+const ORDER_SCRIPT='<script src="./silai-guru-order-ui.js?v=20261001-6"></script>';
 function cleanHtml(text){
   const blocks=[
     /<script>\s*\/\* SG_GARMENTS_MANAGEMENT_FIX_V1 \*\/[\s\S]*?<\/script>/gi,
     /<script>\s*\/\* SG_REAL_DESIGN_LIBRARY_V2 \*\/[\s\S]*?<\/script>/gi,
     /<style id="sg-expanded-library-style">[\s\S]*?<\/style>/gi,
     /<script id="sg-expanded-library-script">[\s\S]*?<\/script>/gi,
-    /<!-- SG_DESIGN_LIBRARY_EXPANDED_V1 -->[\s\S]*?<!-- \/SG_DESIGN_LIBRARY_EXPANDED_V1 -->/gi
+    /<!-- SG_DESIGN_LIBRARY_EXPANDED_V1 -->[\s\S]*?<!-- \/SG_DESIGN_LIBRARY_EXPANDED_V1 -->/gi,
+    /function garmentCard\([\s\S]*?function addO\(/gi,
+    /setTimeout\(initGarments,0\);/gi
   ];
-  for(const re of blocks) text=text.replace(re,'');
+  for(const re of blocks) text=text.replace(re,m=>m.startsWith('function garmentCard')?'function addO(':m.startsWith('setTimeout')?'':'');
   if(!text.includes('profile-validation-v2.js')) text=text.includes('</body>')?text.replace('</body>',PROFILE_SCRIPT+'</body>'):text+PROFILE_SCRIPT;
   if(!text.includes('silai-guru-order-ui.js')) text=text.includes('</body>')?text.replace('</body>',ORDER_SCRIPT+'</body>'):text+ORDER_SCRIPT;
   return text;

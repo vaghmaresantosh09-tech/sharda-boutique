@@ -1,7 +1,8 @@
 /* SILAI GURU service worker — clean authoritative runtime */
-const CACHE='sharda-boutique-v17';
-const ASSETS=['./','./index.html','./manifest.json','./profile-validation-v2.js'];
-const PROFILE_SCRIPT='<script src="./profile-validation-v2.js?v=20261001-5"></script>';
+const CACHE='sharda-boutique-v18';
+const ASSETS=['./','./index.html','./manifest.json','./profile-validation-v2.js','./silai-guru-order-ui.js'];
+const PROFILE_SCRIPT='<script src="./profile-validation-v2.js?v=20261001-6"></script>';
+const ORDER_SCRIPT='<script src="./silai-guru-order-ui.js?v=20261001-1"></script>';
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',event=>{
@@ -11,6 +12,7 @@ self.addEventListener('fetch',event=>{
    if(url.pathname.endsWith('/silai-guru.html')){
     let text=await response.clone().text();
     if(!text.includes('profile-validation-v2.js'))text=text.includes('</body>')?text.replace('</body>',PROFILE_SCRIPT+'</body>'):text+PROFILE_SCRIPT;
+    if(!text.includes('silai-guru-order-ui.js'))text=text.includes('</body>')?text.replace('</body>',ORDER_SCRIPT+'</body>'):text+ORDER_SCRIPT;
     response=new Response(text,{status:response.status,statusText:response.statusText,headers:response.headers});
    }
    const copy=response.clone();caches.open(CACHE).then(cache=>cache.put(req,copy));return response;

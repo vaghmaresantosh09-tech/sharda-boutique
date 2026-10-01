@@ -17,8 +17,8 @@ window.sgFinalSelect=function(i,type){const c=document.getElementById('garment-'
 window.sgFinalDesign=function(i,type){if(typeof window.openDesignCatalogForOrder==='function')window.openDesignCatalogForOrder(type,i)};
 window.sgFinalRechoose=function(i){const c=document.getElementById('garment-'+i);if(c)c.outerHTML=picker(i)};
 window.garmentCard=function(i,type){return type?selected(i,type):picker(i)};
-window.initGarments=function(){css();moveTop();const w=document.getElementById('garmentsWrap');if(w&&!w.children.length)w.innerHTML=picker(0)};
+window.initGarments=function(){css();moveTop();const w=document.getElementById('garmentsWrap');if(w){w.innerHTML='';w.insertAdjacentHTML('afterbegin',picker(0))}};
 window.addGarment=function(){const w=document.getElementById('garmentsWrap');if(!w)return;const i=w.children.length;w.insertAdjacentHTML('beforeend',picker(i))};
-function boot(){css();moveTop();if(typeof window.initGarments==='function')window.initGarments()}
+function boot(){css();moveTop();window.initGarments()}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();

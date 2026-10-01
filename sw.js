@@ -1,7 +1,7 @@
-/* SILAI GURU service worker — one clean profile gate loader, no stacked validation patches */
-const CACHE='sharda-boutique-v13';
+/* SILAI GURU service worker — one profile gate loader, cache reset */
+const CACHE='sharda-boutique-v14';
 const ASSETS=['./','./index.html','./manifest.json','./profile-validation-v2.js'];
-const PROFILE_SCRIPT='<script src="./profile-validation-v2.js?v=20261001-1"></script>';
+const PROFILE_SCRIPT='<script src="./profile-validation-v2.js?v=20261001-2"></script>';
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',event=>{

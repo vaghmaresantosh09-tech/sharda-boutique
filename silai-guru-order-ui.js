@@ -1,7 +1,5 @@
-/* SILAI GURU — FINAL New Order garment-first UI.
-   One authoritative runtime for garment selection: Ladies/Gents icons -> design -> measurements. */
-(function(){
-'use strict';
+/* SILAI GURU — FINAL New Order garment-first UI. One authoritative runtime. */
+(function(){'use strict';
 const LADIES=[['👗','Kurti'],['🥻','Blouse'],['🥻','Saree'],['👚','Salwar Suit'],['✨','Gown'],['💃','Lehenga'],['👗','Frock'],['🌸','Choli'],['🎀','Dress'],['🩳','Plazo'],['🧥','Jacket'],['👘','Kameez']];
 const GENTS=[['👔','Shirt'],['👖','Pant'],['🧥','Kurta'],['🤵','Sherwani'],['🦺','Waistcoat'],['🧥','Blazer'],['🧥','Coat'],['👕','T-Shirt'],['🩳','Shorts'],['🥋','Pajama'],['🎽','Suit'],['🌙','Night Wear']];
 const esc=v=>typeof window.esc==='function'?window.esc(v):String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
@@ -11,14 +9,24 @@ function names(type){return typeof window.orderMeasurementNames==='function'?win
 function buttons(i,list){return list.map(x=>`<button type="button" class="sg-final-icon" onclick="sgFinalSelect(${i},'${String(x[1]).replace(/'/g,"\\'")}')"><span>${x[0]}</span><b>${esc(x[1])}</b></button>`).join('')}
 function picker(i,tab='ladies'){return `<div class="sg-final-order" id="garment-${i}" data-selected-type=""><div class="sg-final-title">👗 Select Garment</div><div class="sg-final-sub">Pehle garment select karein → phir design → phir measurements.</div><div class="sg-final-tabs"><button type="button" class="sg-final-tab ${tab==='ladies'?'active':''}" onclick="sgFinalTab(${i},'ladies')">👩 Ladies Garments</button><button type="button" class="sg-final-tab ${tab==='gents'?'active':''}" onclick="sgFinalTab(${i},'gents')">👨 Gents Garments</button></div><div class="sg-final-icons">${buttons(i,tab==='gents'?GENTS:LADIES)}</div></div>`}
 function selected(i,type){const ms=names(type);const fields=ms.map(n=>`<div class="field"><label>${esc(n)}</label><input class="g-measure" data-name="${esc(n)}" placeholder="inches"></div>`).join('');return `<div class="sg-final-selected" id="garment-${i}" data-selected-type="${esc(type)}"><div class="sg-final-selected-head"><div class="sg-final-selected-name">${icon(type)} ${esc(type)}</div><div class="sg-final-actions"><button type="button" class="sg-final-change" onclick="sgFinalRechoose(${i})">Change</button>${i>0?`<button type="button" class="sg-final-remove" onclick="removeGarment(${i})">Remove</button>`:''}</div></div><button type="button" class="sg-final-design" onclick="sgFinalDesign(${i},'${String(type).replace(/'/g,"\\'")}')">🎨 Select Design</button><div class="sg-final-measure-title">📏 Measurements</div><div class="sg-final-measure-grid">${fields}</div></div>`}
-function moveTop(){const w=document.getElementById('garmentsWrap'),form=document.getElementById('orderForm');if(!w||!form)return;let block=w.closest('.field')||w.parentElement;const all=[...form.querySelectorAll('.section-title')];const measureTitle=all.find(x=>/Measurements\s*-?\s*1/i.test(x.textContent))||all.find(x=>/^Measurements$/i.test(x.textContent));const measureBlock=measureTitle?.closest('.field')||measureTitle?.parentElement;const orderTitle=all.find(x=>/Garments\s*&\s*Measurements/i.test(x.textContent));if(measureBlock&&measureBlock.parentElement===form){form.insertBefore(block,measureBlock);if(orderTitle&&orderTitle.parentElement===form&&orderTitle!==block)form.insertBefore(orderTitle,block)}else if(orderTitle&&orderTitle.parentElement===form){form.insertBefore(orderTitle,form.firstElementChild);if(block!==orderTitle&&block.parentElement===form)form.insertBefore(block,orderTitle.nextSibling)}}
+function moveTop(){
+ const w=document.getElementById('garmentsWrap'),form=document.getElementById('orderForm');if(!w||!form)return false;
+ const block=w.closest('.field')||w.parentElement;
+ const titles=[...form.querySelectorAll('.section-title')];
+ const measureTitle=titles.find(x=>/Measurements\s*-?\s*1/i.test(x.textContent))||titles.find(x=>/^Measurements$/i.test(x.textContent));
+ if(!measureTitle||!measureTitle.parentNode)return false;
+ const orderTitle=titles.find(x=>/Garments\s*&\s*Measurements/i.test(x.textContent));
+ measureTitle.parentNode.insertBefore(block,measureTitle);
+ if(orderTitle&&orderTitle!==block&&orderTitle.parentNode===measureTitle.parentNode)measureTitle.parentNode.insertBefore(orderTitle,block);
+ return true;
+}
 window.sgFinalTab=function(i,tab){const c=document.getElementById('garment-'+i);if(c)c.outerHTML=picker(i,tab)};
 window.sgFinalSelect=function(i,type){const c=document.getElementById('garment-'+i);if(c)c.outerHTML=selected(i,type);if(typeof window.openDesignCatalogForOrder==='function')setTimeout(()=>window.openDesignCatalogForOrder(type,i),30)};
 window.sgFinalDesign=function(i,type){if(typeof window.openDesignCatalogForOrder==='function')window.openDesignCatalogForOrder(type,i)};
 window.sgFinalRechoose=function(i){const c=document.getElementById('garment-'+i);if(c)c.outerHTML=picker(i)};
 window.garmentCard=function(i,type){return type?selected(i,type):picker(i)};
-window.initGarments=function(){css();moveTop();const w=document.getElementById('garmentsWrap');if(w){w.innerHTML='';w.insertAdjacentHTML('afterbegin',picker(0))}};
-window.addGarment=function(){const w=document.getElementById('garmentsWrap');if(!w)return;const i=w.children.length;w.insertAdjacentHTML('beforeend',picker(i))};
-function boot(){css();moveTop();window.initGarments()}
+window.initGarments=function(){css();const w=document.getElementById('garmentsWrap');if(w){w.innerHTML='';w.insertAdjacentHTML('afterbegin',picker(0))}moveTop()};
+window.addGarment=function(){const w=document.getElementById('garmentsWrap');if(!w)return;const i=w.children.length;w.insertAdjacentHTML('beforeend',picker(i));moveTop()};
+function boot(){css();window.initGarments();[50,250,750,1500].forEach(t=>setTimeout(moveTop,t))}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();

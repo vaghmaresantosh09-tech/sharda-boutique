@@ -1,7 +1,7 @@
-const CACHE='sharda-boutique-v11';
+const CACHE='sharda-boutique-v12';
 const ASSETS=['./','./index.html','./manifest.json'];
 
-const PROFILE_FIX=`<script id="sg-profile-validation-v11">
+const PROFILE_FIX=`<script id="sg-profile-validation-v12">
 (function(){
   'use strict';
   const byId=id=>document.getElementById(id);
@@ -86,7 +86,7 @@ self.addEventListener('fetch',e=>{
     e.respondWith(fetch(e.request,{cache:'no-store'}).then(async res=>{
       if(u.pathname.endsWith('/silai-guru.html')){
         const text=await res.clone().text();
-        if(text.indexOf('id="sg-profile-validation-v11"')===-1&&text.includes('</body>')){
+        if(text.indexOf('id="sg-profile-validation-v12"')===-1&&text.includes('</body>')){
           const body=text.replace('</body>',PROFILE_FIX+'</body>');
           res=new Response(body,{status:res.status,statusText:res.statusText,headers:res.headers});
         }

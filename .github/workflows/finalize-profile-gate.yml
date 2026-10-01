@@ -1,0 +1,37 @@
+name: Finalize profile gate
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  finalize:
+    if: github.event.head_commit.message != 'Finalize single profile gate'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Make profile gate authoritative
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('silai-guru.html')
+          s=p.read_text(encoding='utf-8')
+          # Remove the old inline profile save handler and old startup gate.
+          start=s.find('function saveProfile(){')
+          if start != -1:
+              end=s.find('render();\n</script><script>', start)
+              if end != -1:
+                  s=s[:start] + s[end+len('render();'):]
+          tag='<script src="./profile-validation-v2.js?v=20261001-4"></script>'
+          if 'profile-validation-v2.js' not in s:
+              s=s.replace('</body>', tag+'\n</body>')
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Remove temporary workflow and commit
+        run: |
+          rm -f .github/workflows/finalize-profile-gate.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add silai-guru.html .github/workflows/finalize-profile-gate.yml
+          git commit -m 'Finalize single profile gate' || exit 0
+          git push

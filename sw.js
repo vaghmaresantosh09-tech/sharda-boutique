@@ -2,10 +2,10 @@
    Old duplicate garment/design patch blocks are stripped before the HTML reaches the browser.
    Authoritative New Order runtime: silai-guru-order-ui.js
 */
-const CACHE='sharda-boutique-v21';
+const CACHE='sharda-boutique-v22';
 const ASSETS=['./','./index.html','./manifest.json','./profile-validation-v2.js','./silai-guru-order-ui.js'];
 const PROFILE_SCRIPT='<script src="./profile-validation-v2.js?v=20261001-8"></script>';
-const ORDER_SCRIPT='<script src="./silai-guru-order-ui.js?v=20261001-4"></script>';
+const ORDER_SCRIPT='<script src="./silai-guru-order-ui.js?v=20261001-5"></script>';
 function cleanHtml(text){
   const blocks=[
     /<script>\s*\/\* SG_GARMENTS_MANAGEMENT_FIX_V1 \*\/[\s\S]*?<\/script>/gi,

@@ -1,8 +1,8 @@
-/* SILAI GURU service worker — clean authoritative runtime */
-const CACHE='sharda-boutique-v18';
+/* SILAI GURU service worker — cache reset */
+const CACHE='sharda-boutique-v19';
 const ASSETS=['./','./index.html','./manifest.json','./profile-validation-v2.js','./silai-guru-order-ui.js'];
-const PROFILE_SCRIPT='<script src="./profile-validation-v2.js?v=20261001-6"></script>';
-const ORDER_SCRIPT='<script src="./silai-guru-order-ui.js?v=20261001-1"></script>';
+const PROFILE_SCRIPT='<script src="./profile-validation-v2.js?v=20261001-7"></script>';
+const ORDER_SCRIPT='<script src="./silai-guru-order-ui.js?v=20261001-2"></script>';
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',event=>{

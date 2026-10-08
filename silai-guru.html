@@ -1,0 +1,820 @@
+<!doctype html><html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#5b4bdb"><title>SILAI GURU</title><style>
+:root{--p:#5b4bdb;--p2:#8267f5;--bg:#f6f7fb;--card:#fff;--text:#202238;--muted:#73778c;--line:#e5e6ef}*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}button,input,select,textarea{font:inherit}button{border:0;border-radius:12px;padding:11px 14px;font-weight:700}.app{max-width:760px;margin:auto;padding-bottom:80px}.hero{background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;padding:20px 16px 24px;border-radius:0 0 25px 25px}.brand{font-size:26px;font-weight:900}.shop{margin-top:5px;font-size:14px}.wrap{padding:14px}.card{background:#fff;border-radius:18px;padding:15px;margin:12px 0;box-shadow:0 5px 18px #2022380c}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.stat{background:#f0efff;border-radius:14px;padding:12px;text-align:center}.stat b{display:block;font-size:21px}.stat small{color:var(--muted)}.icons{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.ico{background:#fff;border:1px solid var(--line);padding:11px 4px;min-height:90px;box-shadow:0 4px 12px #2221}.ico i{display:block;font-style:normal;font-size:28px;margin-bottom:6px}.ico .dash-icon{height:52px;display:flex;align-items:center;justify-content:center}.ico .dash-icon svg{width:52px;height:52px;display:block}.ico small{font-weight:700;font-size:11px}.banner{background:#fff1cf;color:#765500;padding:13px;text-align:center;border-radius:13px;font-size:12px;font-weight:700}.row{display:flex;justify-content:space-between;gap:8px;padding:11px 0;border-bottom:1px solid var(--line)}.muted{color:var(--muted);font-size:12px}.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);z-index:20}.bottomin{max-width:760px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr)}.nav{background:none;color:var(--muted);text-align:center;padding:8px}.nav b{display:block;font-size:21px;color:var(--p)}.modal,.onboard{position:fixed;inset:0;background:#0007;z-index:50;display:none;align-items:flex-end}.onboard{display:flex;background:linear-gradient(135deg,#5b4bdb,#8267f5);align-items:center;padding:14px}.sheet,.oncard{background:#fff;width:100%;max-width:760px;margin:auto;border-radius:24px 24px 0 0;padding:18px;max-height:92vh;overflow:auto}.oncard{border-radius:25px;max-width:620px}.onboard[hidden]{display:none!important}.modal.show{display:flex}.form{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{display:flex;flex-direction:column;gap:5px}.garment-card{background:#f8f7ff;border:1px solid #ddd8ff;border-radius:16px;padding:14px;margin:12px 0}.garment-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}.garment-title{font-weight:800;color:#5144bd}.measure-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.remove-g{background:#ffe9e9;color:#b42318;padding:8px 10px;font-size:12px}.add-g{background:#efeeff;color:#5144bd;width:100%;margin:8px 0}.section-title{font-weight:800;margin:14px 0 6px}@media(max-width:500px){.measure-grid{grid-template-columns:1fr}}.full{grid-column:1/-1}label{font-size:12px;font-weight:700}input,select,textarea{padding:11px;border:1px solid var(--line);border-radius:11px;width:100%;background:#fff}.primary{background:var(--p);color:#fff;width:100%;margin-top:10px}.secondary{background:#efeeff;color:#4f43b5}.close{float:right;background:#eee}.modal-back{float:left;background:#efeeff;color:#5144bd;margin-right:7px;padding:10px 13px;display:none}.modal-back.show{display:inline-block}.pill{display:inline-block;padding:4px 8px;background:#eeeefe;color:#5044b5;border-radius:99px;font-size:11px;font-weight:700}.empty{text-align:center;color:var(--muted);padding:20px}@media(max-width:500px){.form{grid-template-columns:1fr}.full{grid-column:auto}.icons{gap:7px}.ico{min-height:84px}}</style><style>
+.garment-library{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.garment-library-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:10px;cursor:pointer;position:relative;transition:.15s}.garment-library-card:hover{border-color:var(--p);transform:translateY(-1px)}.garment-library-card .libpic{height:105px;display:flex;align-items:center;justify-content:center;background:#faf9ff;border-radius:12px}.garment-library-card .libpic svg{width:92px;height:92px}.garment-library-card b{display:block;margin-top:8px;font-size:13px}.garment-library-card small{color:var(--p);font-weight:700}.design-toolbar{display:flex;gap:7px;overflow:auto;margin:10px 0;padding-bottom:3px}.design-chip{white-space:nowrap;border:1px solid var(--line);background:#fff;border-radius:20px;padding:8px 12px;color:var(--text);cursor:pointer}.design-chip.active{background:var(--p);color:#fff;border-color:var(--p)}.design-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.design-card{background:#fff;border:1px solid var(--line);border-radius:15px;overflow:hidden;position:relative}.design-card .design-img{height:150px;background:#faf9ff;display:flex;align-items:center;justify-content:center}.design-card .design-img .design-fallback{width:100%;height:100%;align-items:center;justify-content:center}.design-card .design-img svg{width:130px;height:145px}.design-card .design-img img{width:100%;height:100%;object-fit:contain}.preview-large img{width:100%;height:100%;object-fit:contain;border-radius:18px}.design-card .design-name{padding:8px 9px 2px;font-size:12px;font-weight:800}.design-card .design-actions{padding:7px;display:flex;gap:6px}.design-card button{flex:1;font-size:11px;padding:7px 5px}.preview-large{max-width:340px;height:360px;margin:12px auto;background:#faf9ff;border:1px solid var(--line);border-radius:20px;display:flex;align-items:center;justify-content:center}.preview-large svg{width:300px;height:340px}.folder-box{background:linear-gradient(135deg,#faf9ff,#f0edff);border:1px solid #ddd7ff;border-radius:16px;padding:13px;margin-top:12px}.folder-count{font-size:12px;color:var(--p);font-weight:700}.design-back{display:flex;align-items:center;gap:8px;margin-bottom:6px}.design-sources{display:flex;gap:8px;overflow:auto;padding:4px 0 10px}.source-chip{border:1px solid var(--line);background:#fff;border-radius:12px;padding:9px 11px;font-weight:800;white-space:nowrap}.source-chip.active{background:var(--p);color:#fff}.design-source-box{background:#f8f7ff;border:1px solid #ddd7ff;border-radius:16px;padding:12px;margin:10px 0}.design-source-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.source-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px}\n.source-card{display:block;text-decoration:none;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}.source-card span{display:block;color:var(--p);font-weight:800;margin-top:6px}.source-card b{display:block;margin-bottom:4px}.source-card small{display:block;color:#6f7080;line-height:1.4;margin-bottom:8px}.source-card button{width:100%;padding:8px}.selected-design{margin-top:9px;padding:9px;border-radius:12px;background:#f1fff8;border:1px solid #b9ead1;font-size:12px}.design-link-box{display:flex;gap:7px;margin-top:8px}.design-link-box input{flex:1}.order-design-btn{margin-top:8px;width:100%;padding:9px}.design-back button{padding:7px 10px}.library-note{font-size:12px;color:#6f7080;text-align:center;padding:10px}.design-search{width:100%;box-sizing:border-box;margin:5px 0 8px}.design-empty{text-align:center;padding:25px 10px;color:#777}.premium-lock{background:#fff7df;border:1px solid #f0d58b;border-radius:14px;padding:12px;text-align:center}
+@media(max-width:500px){.garment-library{grid-template-columns:repeat(2,1fr)}.design-grid{grid-template-columns:repeat(2,1fr)}.design-card .design-img{height:135px}.design-card .design-img svg{width:115px;height:130px}}
+</style><style>
+.gm-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;margin:10px 0}
+.gm-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.gm-title{font-size:16px;font-weight:900}.gm-rate{color:var(--p);font-weight:800}
+.gm-tags{display:flex;flex-wrap:wrap;gap:6px;margin:9px 0}.gm-tag{background:#f1efff;color:#5144bd;border-radius:99px;padding:5px 8px;font-size:11px;font-weight:700}
+.gm-actions{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-top:10px}.gm-actions button{font-size:11px;padding:8px 5px}
+.gm-editor{background:#f8f7ff;border:1px solid #ddd7ff;border-radius:16px;padding:13px;margin-top:12px}
+.gm-editor h3{margin:0 0 10px}.gm-list{display:grid;gap:7px}.gm-list-row{display:flex;gap:7px;align-items:center}.gm-list-row input{flex:1}.gm-list-row button{padding:8px 10px}
+.gm-top-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+</style><style>.free-garment-list{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}.free-g-option{display:flex;align-items:center;justify-content:space-between;padding:14px 13px;font-size:16px;font-weight:500;border-bottom:1px solid #eee;cursor:pointer}.free-g-option:last-child{border-bottom:0}.free-g-option input{width:22px;height:22px;accent-color:#6b6258;margin:0}.free-g-option:has(input:checked){background:#faf8f5}.free-g-option:has(input:checked) span{font-weight:600}</style><style>.photo-garment-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:6px}.photo-g-option{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:142px;padding:10px 6px;background:#fff;border:1px solid var(--line);border-radius:16px;cursor:pointer;text-align:center;font-size:11px;overflow:hidden}.photo-g-option .gpic{width:82px;height:82px;display:flex;align-items:center;justify-content:center}.photo-g-option .gpic svg{width:78px;height:78px;display:block}.photo-g-option input{position:absolute;top:8px;right:8px;width:20px;height:20px;margin:0;accent-color:var(--p);z-index:2}.photo-g-option:has(input:checked){border:2px solid var(--p);background:#f4f1ff;box-shadow:0 3px 10px #5b4bdb22}.photo-g-option:has(input:checked) b{color:var(--p)}.photo-g-option b{font-size:12px;line-height:1.1}@media(max-width:500px){.photo-garment-grid{grid-template-columns:repeat(2,1fr)}.photo-g-option{min-height:136px}.photo-g-option .gpic{width:76px;height:76px}.photo-g-option .gpic svg{width:72px;height:72px}} </style><style id="sg-new-order-ui">
+.sg-garment-card .sg-order-measures{margin-top:4px}
+.sg-selected-garment{width:100%;display:flex;align-items:center;gap:12px;padding:10px;border:1px solid #ddd8ff;border-radius:14px;background:#f8f7ff;color:#353946;text-align:left}
+.sg-selected-garment .sg-garment-icon{width:54px;height:54px;display:block;flex:none}
+.sg-selected-garment .sg-garment-icon svg{width:54px;height:54px}
+.sg-selected-garment small{display:block;color:#777;font-size:11px;margin-top:2px}
+.sg-garment-type-grid{grid-template-columns:repeat(4,1fr);gap:7px;margin-top:9px}
+.sg-type-icon{border:1px solid #e1e1eb;border-radius:12px;background:#fff;padding:7px 3px;min-height:86px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+.sg-type-icon span,.sg-type-icon svg{width:44px;height:44px}
+.sg-type-icon b{font-size:10px;line-height:1.1}
+.sg-type-icon.active{border:2px solid #6b5cf0;background:#f4f1ff}
+@media(max-width:430px){.sg-garment-type-grid{grid-template-columns:repeat(3,1fr)}}
+.sg-all-garments{justify-content:space-between}.sg-all-garments span:first-child{display:block;text-align:left}.sg-garment-type-grid .sg-type-icon{min-height:54px}.sg-garment-type-grid .sg-type-icon b{font-size:12px}.sg-garment-type-grid .sg-type-icon span{display:none}</style><style id="sg-measure-restore">.sg-restore-measure{background:#eefbf4;color:#16704a;padding:8px 10px;font-size:12px}.sg-restore-box{margin-top:9px;padding:10px;border:1px dashed #b9ead1;background:#f4fff9;border-radius:12px}.sg-restore-title{font-size:12px;font-weight:800;color:#16704a;margin-bottom:7px}.sg-restore-list{display:flex;flex-wrap:wrap;gap:6px}.sg-restore-btn{background:#fff;border:1px solid #b9ead1;color:#16704a;padding:7px 9px;border-radius:10px;font-size:11px}.design-card .design-img img{width:100%;height:100%;object-fit:cover;display:block}.design-card .design-img img[src]{background:#fff}</style><!-- SG_DESIGN_LIBRARY_V3 -->
+<!-- SG_DESIGN_LIBRARY_V4 -->
+</head><body>
+<div id="onboard" class="onboard"><div class="oncard"><h1 style="text-align:center;color:#5b4bdb">✂️ SILAI GURU</h1><p style="text-align:center;color:#73778c">पहली बार app use करने के लिए profile पूरा करें</p><form id="pf" novalidate><div class="form"><div class="field"><label>User Name *</label><input id="pn" required></div><div class="field"><label>Mobile *</label><input id="pm" required inputmode="numeric"></div><div class="field"><label>Shop Name *</label><input id="ps" required></div><div class="field"><label>Email ID *</label><input id="pe" required type="email"></div><div class="field full"><label>Address *</label><textarea id="pa" required></textarea></div><div class="field"><label>State *</label><input id="pst" required></div><div class="field"><label>City *</label><input id="pc" required></div><div class="field"><label>Pincode *</label><input id="pp" required inputmode="numeric"></div></div><button type="button" id="profileSaveBtn" class="primary">Profile Save & Open App</button></form></div></div>
+<div class="app"><header class="hero"><div class="brand">✂️ SILAI GURU</div><div class="shop" id="topshop"></div><div id="topowner" style="font-size:12px;opacity:.85"></div></header><div class="wrap">
+<div class="card"><div class="stats"><div class="stat"><b id="nc">0</b><small>Customers</small></div><div class="stat"><b id="no">0</b><small>Orders</small></div><div class="stat"><b id="nb">₹0</b><small>Pending</small></div></div></div>
+<div id="ad" class="banner"></div>
+<div class="card"><h2>Dashboard</h2><div class="icons" id="icons"></div></div>
+<div class="card"><h2>Quick Summary</h2><div class="row"><span>Today's Delivery</span><b id="td">0</b></div><div class="row"><span>Pending Payment</span><b id="ppay">₹0</b></div><div class="row"><span>This Month Orders</span><b id="mo">0</b></div></div>
+<div class="card"><h2>Recent Orders</h2><div id="recent"></div></div><div class="card premium-dashboard-box" style="background:linear-gradient(135deg,#fffaf0,#fff2d8);border:2px solid #f0d58b"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div><div style="font-size:20px;font-weight:900;color:#7a4b00">💎 PREMIUM PLAN</div><div style="font-size:12px;color:#7b6a50;margin-top:4px">Plans & Upgrade ab alag dashboard icon nahi rahega.</div></div><div style="font-size:34px">👑</div></div><div class="row" style="margin-top:8px"><span>Current Plan</span><b id="dashPlan"></b></div><div class="row"><span>Price</span><b id="dashPlanPrice"></b></div><button class="primary" style="background:#8a5a00" onclick="openM('plans')">💎 View Premium Plans & Upgrade</button></div>
+</div></div>
+<div class="bottom"><div class="bottomin"><button class="nav" onclick="closeM()">⌂<br>Home</button><button class="nav" onclick="openM('customers')">👥<br>Customers</button><button class="nav" onclick="openM('order')">＋<br>New Order</button><button class="nav" onclick="openM('orders')">📋<br>Orders</button></div></div>
+<div id="modal" class="modal"><div class="sheet"><button id="modalBack" class="modal-back" type="button" onclick="window.__sgGoBack&&window.__sgGoBack()">←</button><button class="close" onclick="closeM()">✕</button><h2 id="mt"></h2><div id="mb"></div></div></div>
+<script>
+const K='sg_profile',CK='sg_customers',OK='sg_orders',PK='sg_plan',TK='sg_theme',DK='sg_profile_extra';let p=JSON.parse(localStorage.getItem(K)||'null'),cs=JSON.parse(localStorage.getItem(CK)||'[]'),os=JSON.parse(localStorage.getItem(OK)||'[]'),plan=localStorage.getItem(PK)||'free';let orderDesignTargets={};let orderFormSnapshot=null;
+const mods=[['New Order','order'],['Customers','customers'],['Orders','orders'],['Measurements','measure'],['Payments','payments'],['Delivery','delivery'],['Reports','reports'],['Shop Profile','profile'],['Backup','backup'],['Workers','workers'],['Garments','garments'],['Design Library','designs'],['Settings','settings']];
+function dashboardIcon(t){
+ const s='stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"';
+ const F=b=>'<svg viewBox="0 0 64 64" aria-hidden="true">'+b+'</svg>';
+ const shapes={
+  'New Order':`<rect x="14" y="9" width="36" height="46" rx="6" fill="#eef0ff" ${s}/><path d="M23 20h18M23 29h18M23 38h9" ${s}/><path d="M40 37l7 7-12 7-3-9z" fill="#6b5ce7" ${s}/>`,
+  'Customers':`<circle cx="25" cy="23" r="9" fill="#dceeff" ${s}/><circle cx="43" cy="25" r="7" fill="#eee9ff" ${s}/><path d="M10 51c1-10 7-15 15-15s14 5 15 15M36 39c7-4 16 1 18 12" fill="#e8f4ff" ${s}/>`,
+  'Orders':`<rect x="14" y="8" width="36" height="48" rx="6" fill="#fff4d6" ${s}/><path d="M24 8v7h16V8M22 25h20M22 34h15M22 43h11" ${s}/><circle cx="46" cy="45" r="7" fill="#6b5ce7" ${s}/><path d="m43 45 2 2 4-5" stroke="#fff" ${s}/>`,
+  'Measurements':`<path d="M18 52 51 19 45 13 12 46z" fill="#e6f5ff" ${s}/><path d="m22 48 4 4M28 42l4 4M34 36l4 4M40 30l4 4M17 17h12M17 24h8M17 31h12" ${s}/>`,
+  'Payments':`<circle cx="32" cy="32" r="22" fill="#fff2cf" ${s}/><path d="M21 25h22v15H21z" fill="#ffe39a" ${s}/><path d="M27 33h10M32 29v8M35 30c-1-2-6-2-6 1 0 3 7 1 7 5 0 3-5 4-7 1" ${s}/>`,
+  'Delivery':`<path d="M8 18h31v25H8z" fill="#e8f4ff" ${s}/><path d="M39 27h10l7 8v8H39z" fill="#eee9ff" ${s}/><circle cx="20" cy="47" r="6" fill="#fff" ${s}/><circle cx="48" cy="47" r="6" fill="#fff" ${s}/><path d="M45 27v8h10" ${s}/>`,
+  'Reports':`<path d="M12 52V12M12 52h43" ${s}/><rect x="20" y="34" width="7" height="18" rx="2" fill="#bfe4ff"/><rect x="31" y="25" width="7" height="27" rx="2" fill="#d9d1ff"/><rect x="42" y="17" width="7" height="35" rx="2" fill="#ffd98e"/><path d="m20 29 9-8 8 4 10-12" fill="none" ${s}/>`,
+  'Shop Profile':`<path d="M10 25 15 12h34l5 13" fill="#eee9ff" ${s}/><path d="M12 25h40v29H12z" fill="#f8f7ff" ${s}/><path d="M19 54V38h12v16M39 35h7M39 42h7" ${s}/><path d="M12 25c0 5 9 6 12 0 2 6 12 6 14 0 3 6 12 5 14 0" fill="#dceeff" ${s}/>`,
+  'Backup':`<path d="M19 46h28c7 0 10-5 8-10-1-4-5-7-9-7-2-8-14-12-21-5-7-1-13 4-13 11 0 6 3 11 7 11z" fill="#eaf4ff" ${s}/><path d="M32 25v20M25 38l7 7 7-7" ${s}/>`,
+  'Workers':`<circle cx="32" cy="19" r="8" fill="#dceeff" ${s}/><path d="M17 51c1-12 7-18 15-18s14 6 15 18" fill="#eee9ff" ${s}/><path d="M42 42h12M48 36v12" ${s}/>`,
+  'Garments':`<path d="M25 12h14l4 9 10 7-7 10-7-5v21H25V33l-7 5-7-10 10-7z" fill="#e8f4ff" ${s}/><path d="M28 12c0 5 8 8 8 0M25 31h14" fill="none" ${s}/>`,
+  'Design Library':`<path d="M12 17h40v34H12z" fill="#eee9ff" ${s}/><path d="M17 17V11h30v6M21 27h22M21 35h16" ${s}/><path d="m44 41 5 5-8 8-5-5z" fill="#ffd98e" ${s}/><path d="m40 45 4 4" ${s}/>`,
+  'Settings':`<circle cx="32" cy="32" r="10" fill="#eee9ff" ${s}/><path d="M32 8v7M32 49v7M8 32h7M49 32h7M15 15l5 5M44 44l5 5M49 15l-5 5M20 44l-5 5" ${s}/><circle cx="32" cy="32" r="4" fill="#6b5ce7"/>`,
+  'Plans & Upgrade':`<path d="m32 7 18 10-5 30-13 10-13-10-5-30z" fill="#e8f4ff" ${s}/><path d="m32 7 8 13-8 11-8-11z" fill="#d8d0ff" ${s}/><path d="m24 20 8 11 8-11" fill="#ffe19a" ${s}/><path d="M18 48h28" ${s}/>`
+ };
+ return F(shapes[t]||`<circle cx="32" cy="32" r="20" fill="#eee9ff" ${s}/>`);
+}
+function esc(x){return String(x||'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}function money(x){return'₹'+Number(x||0).toLocaleString('en-IN')}function save(){localStorage.setItem(CK,JSON.stringify(cs));localStorage.setItem(OK,JSON.stringify(os))}
+function el(id){return document.getElementById(id)}function designLabel(o){const g=(o.garments||[]).find(x=>x.design);return g&&g.design?(' • 🎨 '+g.design.name):''}
+function render(){if(!p)return;el('topshop').textContent=(p.shop||'My Shop')+' • '+(p.city||'')+', '+(p.state||'');el('topowner').textContent='Owner: '+(p.name||'')+' • Plan: '+PLAN_INFO[plan].name;const dp=el('dashPlan'),dpp=el('dashPlanPrice');if(dp)dp.textContent=PLAN_INFO[plan].name;if(dpp)dpp.textContent=PLAN_INFO[plan].price;el('nc').textContent=cs.length;el('no').textContent=os.length;const balance=os.reduce((s,o)=>s+Math.max(0,Number(o.total||0)-Number(o.advance||0)),0);el('nb').textContent=money(balance);const t=new Date().toISOString().slice(0,10),m=t.slice(0,7);el('td').textContent=os.filter(o=>o.delivery===t).length;el('ppay').textContent=money(balance);el('mo').textContent=os.filter(o=>(o.created||'').slice(0,7)===m).length;el('ad').textContent=plan==='free'?'ADVERTISEMENT · FREE PLAN':plan==='standard'?'ADVERTISEMENT · ADVANCE (1×/DAY)':'✓ '+PLAN_INFO[plan].name+' · AD-FREE';el('recent').innerHTML=os.slice(-5).reverse().map(o=>'<div class="row"><span><b>'+esc(o.customer)+'</b><br><small>'+esc(o.garment)+' • '+esc(o.delivery)+'</small></span><b>'+money(o.total)+'</b></div>').join('')||'<div class="empty">अभी कोई order नहीं है।</div>'}
+icons.innerHTML=mods.map(x=>'<button class="ico" onclick="openM(\''+x[1]+'\')"><i class="dash-icon">'+dashboardIcon(x[0])+'</i><small>'+x[0]+'</small></button>').join('');
+const PLAN_INFO={
+free:{name:'FREE',price:'₹0',storage:'1 GB',devices:1,photos:'OFF',wa:'OFF',ads:'Banner + App-open'},
+standard:{name:'ADVANCE',price:'₹149/month',storage:'5 GB',devices:2,photos:'Up to 10',wa:'Normal WhatsApp Bill',ads:'App-open once/day'},
+premium:{name:'PREMIUM',price:'₹249/month',storage:'10 GB',devices:5,photos:'Up to 50',wa:'Bill + Shop Name + Address',ads:'Ad-free'},
+pro:{name:'PREMIUM PRO',price:'₹449/month',storage:'25 GB',devices:10,photos:'Unlimited',wa:'Bill + Delivery + Shop/Owner Details',ads:'Ad-free'}
+};
+function setPlan(x){if(!PLAN_INFO[x])return;plan=x;localStorage.setItem(PK,x);closeM();render();alert('Test Plan ON: '+PLAN_INFO[x].name+' ✓\\nPayment नहीं लगेगा.');}
+function resetPlan(){setPlan('free');}
+function planGate(required){
+const rank={free:0,standard:1,premium:2,pro:3};
+if(rank[plan] < rank[required]){alert('यह feature '+PLAN_INFO[required].name+' plan में available है.\\nअभी Test Paid Plan से activate करें.');openM('plans');return false}
+return true;
+}
+function openM(t){if(window.__sgRecordView)window.__sgRecordView(t);modal.classList.add('modal','show');if(t==='garments'){openGarmentsManager();return}if(t==='designs'){if(!planGate('pro'))return;openGarmentLibrary();return}const title={order:'➕ New Order',customers:'👥 Customers',orders:'📋 Orders',measure:'📏 Measurements',payments:'💰 Payments',delivery:'🚚 Delivery',reports:'📊 Reports',profile:'🏪 Shop Profile',backup:'☁️ Backup',workers:'🧑‍🔧 Workers',garments:'👗 Garments',designs:'🎨 Design Library',settings:'⚙️ Settings',plans:'💎 Plans & Upgrade'}[t]||t;mt.textContent=title;mb.innerHTML=content(t)}
+function closeM(){modal.classList.remove('show')}
+function loadExtra(){try{return JSON.parse(localStorage.getItem(DK)||'[]')}catch(e){return []}}
+function saveExtra(a){localStorage.setItem(DK,JSON.stringify(a))}
+function applyTheme(name){
+  const themes={
+    default:{bg:'#f6f7fb',card:'#fff',p:'#5b4bdb',p2:'#8267f5',text:'#202238'},
+    blue:{bg:'#eef6ff',card:'#fff',p:'#1976d2',p2:'#42a5f5',text:'#172033'},
+    green:{bg:'#effaf3',card:'#fff',p:'#198754',p2:'#42b883',text:'#183027'},
+    rose:{bg:'#fff3f6',card:'#fff',p:'#c13c70',p2:'#e8799e',text:'#30202a'},
+    dark:{bg:'#171923',card:'#222534',p:'#6f63e8',p2:'#9b8cff',text:'#f4f4f7'}
+  };
+  const t=themes[name]||themes.default,root=document.documentElement;
+  root.style.setProperty('--bg',t.bg);root.style.setProperty('--card',t.card);root.style.setProperty('--p',t.p);root.style.setProperty('--p2',t.p2);root.style.setProperty('--text',t.text);
+  localStorage.setItem(TK,name||'default');
+}
+function saveProfileSettings(){
+  const v=id=>String(document.getElementById(id)?.value||'').trim();
+  const next={name:v('spn'),mobile:v('spm'),shop:v('sps'),email:v('spe'),address:v('spa'),state:v('spst'),city:v('spc'),pin:v('spp')};
+  if(!next.name||!next.mobile||!next.shop||!next.email){alert('Name, Mobile, Shop Name aur Email zaroor bhariye.');return}
+  p=next;localStorage.setItem(K,JSON.stringify(p));render();alert('User details save ho gayi ✓');openM('settings');
+}
+function addExtraDetail(){
+  const label=prompt('Nayi detail ka naam (jaise GST No., Tailor Name, Note):');
+  if(!label||!label.trim())return;
+  const val=prompt(label.trim()+' ki value:')||'';
+  const a=loadExtra();a.push({id:Date.now(),label:label.trim(),value:val.trim()});saveExtra(a);openM('settings');
+}
+function removeExtraDetail(id){
+  const a=loadExtra().filter(x=>x.id!==id);saveExtra(a);openM('settings');
+}
+function editExtraDetail(id){
+  const a=loadExtra(),x=a.find(y=>y.id===id);if(!x)return;
+  const label=prompt('Detail ka naam:',x.label),value=prompt('Detail ki value:',x.value);
+  if(label&&label.trim()){x.label=label.trim();x.value=(value||'').trim();saveExtra(a);openM('settings')}
+}
+function changeTheme(name){applyTheme(name);openM('settings')}
+function helpSupport(){
+  const email=p?.email||'';
+  const website='https://vaghmaresantosh09-tech.github.io/sharda-boutique/';
+  const h='<div class="card"><h3>🌐 Support Website</h3><p class="muted">Help, app information और support resources के लिए website खोलें.</p><button class="primary" onclick="location.href=\''+website+'\'">🌐 Open Website</button></div><div class="card"><h3>📧 Email Support</h3><p class="muted">Support के लिए email करें. यहाँ mobile number share नहीं होगा.</p><p><b>'+esc(email||'Email not set')+'</b></p><button class="secondary" style="width:100%" onclick="location.href=\'mailto:'+encodeURIComponent(email)+'?subject=SILAI%20GURU%20Help%20%26%20Support\'">📧 Send Email</button></div><div class="card"><h3>❓ Quick Help</h3><div class="row"><span>Profile</span><span>Edit from Settings</span></div><div class="row"><span>Measurements</span><span>Measurements menu</span></div><div class="row"><span>Backup</span><span>Backup menu</span></div><div class="row"><span>Plans</span><span>Plans & Upgrade</span></div></div>';
+  mt.textContent='🆘 Help & Support';mb.innerHTML=h;
+}
+function editProfileSettings(){openM('settings')}
+function content(t){
+if(t==='order'){setTimeout(initGarments,0);return '<form id="orderForm" onsubmit="addO(event)"><div class="form"><div class="field"><label>Customer Name *</label><input id="cn" required></div><div class="field"><label>Mobile *</label><input id="cm" required inputmode="numeric"></div></div><div class="section-title">Garments & Measurements</div><div class="banner" style="margin-bottom:10px">✏️ Measurement names can be changed from Measurements menu.</div><div id="garmentsWrap"></div><div class="form"><div class="field"><label>Work Taken Date</label><input id="cwd" type="date"></div><div class="field"><label>Delivery Date *</label><input id="cd" type="date" required></div><div class="field"><label>Total Amount ₹</label><input id="ct" type="number" min="0"></div><div class="field"><label>Advance ₹</label><input id="ca" type="number" min="0" value="0"></div><div class="field full"><label>Notes</label><textarea id="co" placeholder="Extra work / special instruction"></textarea></div></div><button type="submit" class="primary">💾 Save Customer & Order</button></form>'}if(t==='customers')return '<input id="search" placeholder="🔎 Search name/mobile" oninput="filterC()"><div id="cl">'+crow(cs)+'</div>';
+if(t==='orders')return os.length?os.slice().reverse().map(o=>'<div class="row"><span><b>'+esc(o.customer)+'</b><br><small>'+esc(o.garment)+' • Delivery '+esc(o.delivery)+'</small></span><span><b>'+money(o.total)+'</b><br><small>Balance '+money(o.total-o.advance)+'</small></span></div>').join(''):'<div class="empty">No orders</div>';
+if(t==='measure')return measurementManager()+'<div class="banner" style="margin-bottom:12px">📏 Saved Customer Measurements</div>'+ (cs.length?cs.map(c=>{const list=os.filter(o=>o.mobile===c.mobile);return '<div class="card"><div class="row"><span><b>👤 '+esc(c.name)+'</b><br><small>📞 '+esc(c.mobile)+'</small></span><button class="secondary" onclick="newOrderForCustomer(\''+esc(c.mobile)+'\')">＋ Add Garment</button></div>'+(list.length?list.map(o=>'<div class="garment-card"><div class="garment-head"><div class="garment-title">👗 '+esc(o.garment)+' · '+esc(o.delivery||'')+'</div><button class="remove-g" onclick="removeGarmentFromOrder('+o.id+')">− Remove Garment</button></div>'+(o.garments||[]).map(g=>'<div class="row"><span><b>'+esc(g.type)+'</b><br><small>'+Object.entries(g.measurements||{}).map(([k,v])=>esc(k)+': '+esc(v)).join(' • ')+'</small></span></div>').join('')+'</div>').join(''):'<div class="empty">इस customer की कोई measurement/order नहीं है।</div>')+'</div>'}).join(''):'<div class="empty">पहले New Order से customer save करें।</div>')+'';
+if(t==='payments')return '<div class="row"><span>Total</span><b>'+money(os.reduce((s,o)=>s+o.total,0))+'</b></div><div class="row"><span>Advance</span><b>'+money(os.reduce((s,o)=>s+o.advance,0))+'</b></div><div class="row"><span>Pending</span><b>'+nb.textContent+'</b></div>';
+if(t==='delivery')return os.length?os.map(o=>'<div class="row"><span><b>'+esc(o.customer)+'</b><br><small>'+esc(o.garment)+' • '+esc(o.delivery)+'</small></span><button class="secondary" onclick="statusO('+o.id+')">'+esc(o.status||'Pending')+'</button></div>').join(''):'<div class="empty">No delivery</div>';
+if(t==='reports')return '<div class="row"><span>Customers</span><b>'+cs.length+'</b></div><div class="row"><span>Orders</span><b>'+os.length+'</b></div><div class="row"><span>Pending</span><b>'+os.filter(o=>o.status!=='Delivered').length+'</b></div><div class="row"><span>Sales</span><b>'+money(os.reduce((s,o)=>s+o.total,0))+'</b></div>';
+if(t==='profile')return '<div class="row"><span>Shop</span><b>'+esc(p.shop)+'</b></div><div class="row"><span>Owner</span><b>'+esc(p.name)+'</b></div><div class="row"><span>Mobile</span><b>'+esc(p.mobile)+'</b></div><div class="row"><span>Address</span><b>'+esc(p.address)+'</b></div><div class="row"><span>Plan</span><b>FREE</b></div>';
+if(t==='backup')return '<div class="card"><h3>☁️ SILAI GURU Cloud Backup</h3><div class="row"><span>Current Plan</span><b>'+PLAN_INFO[plan].name+'</b></div><div class="row"><span>Plan Storage Limit</span><b>'+PLAN_INFO[plan].storage+'</b></div><div class="row"><span>Cloud Connection</span><b style="color:#b45309">Not connected yet</b></div><div class="banner" style="margin:10px 0">📱 Abhi data isi browser/device ke demo storage me hai. Ye cloud backup nahi hai.</div><p class="muted">Real cloud backup ke liye secure backend, user authentication, database, photo storage, per-account quota checks aur restore testing connect karna hoga. Plan limit abhi design hai, live cloud capacity nahi.</p><button class="primary" onclick="openM(\'plans\')">⬆️ Plan & Storage Options</button></div><div class="card"><h3>Cloud setup ke next steps</h3><p>1. Secure login/OTP</p><p>2. Customer, order aur design data ka private cloud database</p><p>3. Photos ke liye storage bucket</p><p>4. 1/5/10/25 GB per-account quota aur limit par upgrade prompt</p><p>5. Same number se secure restore aur backup testing</p></div>';
+if(t==='workers'){if(!planGate('standard'))return '<div class="empty">Paid feature</div>';return '<p>Worker profiles, assignment और commission management.</p><button class="primary" onclick="alert(\'Worker module ready for next data screen\')">＋ Add Worker</button>'};
+if(t==='garments'){if(!planGate('premium'))return '';openGarmentLibrary();return '<div class="empty">Loading garment library…</div>'}
+if(t==='plans')return '<div class="banner" style="margin-bottom:12px">🧪 TEST PAID PLAN — बिना payment</div><p class="muted">नीचे कोई भी plan चुनें. यह सिर्फ testing के लिए है; असली subscription/payment अभी connect नहीं है.</p><div class="card" style="border:2px solid #ddd7ff"><h3>🟢 FREE · ₹0</h3><div class="row"><span>Storage</span><b>1 GB</b></div><div class="row"><span>Devices</span><b>1</b></div><div class="row"><span>Photos / WhatsApp</span><b>OFF / OFF</b></div><button class="secondary" onclick="setPlan(\'free\')">✓ Use FREE Test</button></div><div class="card" style="border:2px solid #dbeafe"><h3>🔵 ADVANCE · ₹149/month</h3><div class="row"><span>Storage / Devices</span><b>5 GB / 2</b></div><div class="row"><span>Photos</span><b>Up to 10</b></div><div class="row"><span>WhatsApp</span><b>Normal Bill</b></div><button class="primary" onclick="setPlan(\'standard\')">🧪 Test ADVANCE</button></div><div class="card" style="border:2px solid #eadcff"><h3>🟣 PREMIUM · ₹249/month</h3><div class="row"><span>Storage / Devices</span><b>10 GB / 5</b></div><div class="row"><span>Photos</span><b>Up to 50</b></div><div class="row"><span>Billing</span><b>Colour PDF / Print</b></div><button class="primary" onclick="setPlan(\'premium\')">🧪 Test PREMIUM</button></div><div class="card" style="border:2px solid #ffe1a8"><h3>👑 PREMIUM PRO · ₹449/month</h3><div class="row"><span>Storage / Devices</span><b>25 GB / 10</b></div><div class="row"><span>Photos</span><b>Unlimited</b></div><div class="row"><span>Google Drive</span><b>Automatic</b></div><div class="row"><span>WhatsApp</span><b>Professional Bill</b></div><button class="primary" onclick="setPlan(\'pro\')">🧪 Test PREMIUM PRO</button></div><button class="secondary" style="width:100%;margin-top:4px" onclick="resetPlan()">↩ Reset to FREE</button>';if(t==='settings')return '<div class="card"><h3>👤 User / Shop Details</h3><div class="form"><div class="field"><label>User Name *</label><input id="spn" value="'+esc(p?.name||'')+'"></div><div class="field"><label>Mobile *</label><input id="spm" value="'+esc(p?.mobile||'')+'"></div><div class="field"><label>Shop Name *</label><input id="sps" value="'+esc(p?.shop||'')+'"></div><div class="field"><label>Email *</label><input id="spe" value="'+esc(p?.email||'')+'"></div><div class="field full"><label>Address</label><textarea id="spa">'+esc(p?.address||'')+'</textarea></div><div class="field"><label>State</label><input id="spst" value="'+esc(p?.state||'')+'"></div><div class="field"><label>City</label><input id="spc" value="'+esc(p?.city||'')+'"></div><div class="field"><label>Pincode</label><input id="spp" value="'+esc(p?.pin||'')+'"></div></div><button class="primary" onclick="saveProfileSettings()">💾 Save User Details</button></div><div class="card"><h3>➕ Add / Remove Extra Details</h3><p class="muted">GST No., shop timing, tailor name, note जैसी extra details रख सकते हैं.</p>'+(loadExtra().map(x=>'<div class="row"><span><b>'+esc(x.label)+'</b><br><small>'+esc(x.value)+'</small></span><span><button class="secondary" onclick="editExtraDetail('+x.id+')">✏️</button> <button class="remove-g" onclick="removeExtraDetail('+x.id+')">🗑️</button></span></div>').join('')||'<div class="empty">कोई extra detail नहीं है।</div>')+'<button class="secondary" style="width:100%;margin-top:8px" onclick="addExtraDetail()">＋ Add Detail</button></div><div class="card"><h3>🎨 App Background / Theme</h3><div class="row"><span>Default Purple</span><button class="secondary" onclick="changeTheme(\'default\')">Select</button></div><div class="row"><span>Blue</span><button class="secondary" onclick="changeTheme(\'blue\')">Select</button></div><div class="row"><span>Green</span><button class="secondary" onclick="changeTheme(\'green\')">Select</button></div><div class="row"><span>Rose</span><button class="secondary" onclick="changeTheme(\'rose\')">Select</button></div><div class="row"><span>Dark</span><button class="secondary" onclick="changeTheme(\'dark\')">Select</button></div></div><div class="card"><h3>🆘 Help & Support</h3><p class="muted">Profile, measurements, backup और plans की मदद.</p><button class="primary" onclick="helpSupport()">💬 Help & Support</button></div><div class="card"><h3>💎 Plan & App</h3><div class="row"><span>Current Plan</span><b>'+PLAN_INFO[plan].name+'</b></div><div class="row"><span>Price</span><b>'+PLAN_INFO[plan].price+'</b></div><div class="row"><span>Devices</span><b>'+PLAN_INFO[plan].devices+'</b></div><div class="row"><span>Cloud Storage</span><b>'+PLAN_INFO[plan].storage+'</b></div><div class="row"><span>Photos</span><b>'+PLAN_INFO[plan].photos+'</b></div><div class="row"><span>WhatsApp</span><b>'+PLAN_INFO[plan].wa+'</b></div><div class="row"><span>Ads</span><b>'+PLAN_INFO[plan].ads+'</b></div><button class="primary" onclick="openM(\'plans\')">💎 Change / Test Plan</button></div><div class="card"><h3>🧹 Data Safety</h3><p class="muted">Demo data reset करने से customers और orders हट सकते हैं.</p><button class="secondary" style="width:100%" onclick="if(confirm(\'सभी demo data reset करना है?\')){localStorage.removeItem(CK);localStorage.removeItem(OK);location.reload()}">Reset Customers & Orders</button></div>';}function crow(a){return a.length?a.map(c=>'<div class="row"><span><b>'+esc(c.name)+'</b><br><small>📞 '+esc(c.mobile)+' • '+c.orders+' order(s)</small></span><button class="secondary" onclick="customerHistory(\''+esc(c.mobile)+'\')">History</button></div>').join(''):'<div class="empty">No customers</div>'}function newOrderForCustomer(m){openM('order');setTimeout(()=>{const c=cs.find(x=>x.mobile===m);if(document.getElementById('cn'))document.getElementById('cn').value=c?.name||'';if(document.getElementById('cm'))document.getElementById('cm').value=m||''},80)}function removeGarmentFromOrder(id){const o=os.find(x=>x.id===id);if(!o)return;const count=(o.garments||[]).length;if(count>1){o.garments.splice(o.garments.findIndex(g=>g.type===o.garment),1);o.garment=o.garments[0]?.type||''}else{os=os.filter(x=>x.id!==id);const c=cs.find(x=>x.mobile===o.mobile);if(c)c.orders=Math.max(0,(c.orders||1)-1)}save();render();openM('measure')}function customerHistory(m){const c=cs.find(x=>x.mobile===m),list=os.filter(x=>x.mobile===m);mt.textContent='👤 '+(c?.name||'Customer History');mb.innerHTML='<div class="card"><b>Customer Details</b><br>👤 '+esc(c?.name||'')+'<br>📞 '+esc(c?.mobile||m)+'</div><div class="row"><span><b>Saved Orders & Designs</b></span><button class="secondary" onclick="newOrderForCustomer(\''+esc(m)+'\')">＋ Add Garment</button></div>'+(list.length?list.map(o=>'<div class="garment-card"><div class="garment-head"><div class="garment-title">👗 '+esc(o.garment)+' · Delivery '+esc(o.delivery)+'</div><button class="remove-g" onclick="removeGarmentFromOrder('+o.id+')">− Remove Garment</button></div><div class="row"><span>🗓 Work: '+esc(o.workDate||'—')+'<br>🚚 Delivery: '+esc(o.delivery||'—')+'<br>💰 Total: '+money(o.total)+' • Advance: '+money(o.advance)+' • Balance: '+money(Number(o.total||0)-Number(o.advance||0))+'</span></div>'+((o.garments||[]).map(g=>'<div style="padding:10px 0;border-top:1px solid var(--line)"><b>👗 '+esc(g.type)+'</b>'+(g.design?.image?'<div style="display:flex;gap:10px;align-items:center;margin-top:8px"><img src="'+g.design.image+'" style="width:85px;height:110px;object-fit:contain;border-radius:12px;background:#faf9ff;border:1px solid var(--line)" alt="'+esc(g.design.name||'Design')+'"><span><b>🎨 '+esc(g.design.name||'Selected Design')+'</b><br><small>Saved with this order</small></span></div>':(g.design?.name?'<div class="selected-design">🎨 <b>'+esc(g.design.name)+'</b></div>':''))+'<br><small>'+Object.entries(g.measurements||{}).map(([k,v])=>esc(k)+': '+esc(v)).join(' • ')+'</small></div>').join(''))+'</div>').join(''):'<div class="empty">No orders yet</div>')}function filterC(){cl.innerHTML=crow(cs.filter(c=>(c.name+' '+c.mobile).toLowerCase().includes(search.value.toLowerCase())))}const MEASURE_KEY='sg_measure_fields';
+const DEFAULT_MEASURES={
+  Kurti:['Height','Shoulder','Armhole','Chest','Waist','Hip','Neck','Sleeve','V-Neck Kurti','Square Neck Kurti','Angrakha Kurti','Asymmetric Kurti','Chikankari Kurti','Block Print Kurti','Tiered Kurti','Designer Kurti','Cowl Neck Kurti','Collar Kurti','High Slit Kurti','Flared Kurti','Layered Kurti'],
+  Blouse:['Height','Shoulder','Armhole','Chest','Waist','Neck','Sleeve','V-Neck Blouse','Round Neck Blouse','Square Neck Blouse','Sweetheart Blouse','Halter Neck Blouse','Peplum Blouse','Angrakha Blouse','Boat Back Blouse','Keyhole Blouse'],
+  Pant:['Height','Hip','Thigh','Mori','Straight Pant','Slim Pant','Wide Leg Pant','Flared Pant','Cigarette Pant','Cargo Pant','Ankle Pant','Palazzo Pant'],
+  Dress:['Height','Shoulder','Armhole','Chest','Waist','Hip','Neck','Sleeve','A-Line Dress','Fit and Flare Dress','Maxi Dress','Midi Dress','Shirt Dress','Wrap Dress','Tiered Dress','Princess Dress'],
+  Shirt:['Height','Shoulder','Armhole','Chest','Waist','Hip','Neck','Sleeve','Mandarin Collar Shirt','Peter Pan Collar Shirt','Peplum Shirt','Tunic Shirt','Longline Shirt','Ruffle Shirt','Oversized Shirt','Embroidered Shirt'],
+  Other:['Height','Shoulder','Armhole','Chest','Waist','Hip','Neck','Sleeve','Designer Set','Fusion Wear','Festive Wear','Casual Wear','Party Wear','Wedding Wear','Custom Style','Latest Style'],SalwarSuit:['Height','Shoulder','Armhole','Chest','Waist','Hip','Neck','Sleeve','Bottom','Mori','Straight Suit','A-Line Suit','Jacket Suit','Bandhgala Suit','Three Piece Suit','Designer Suit','Wedding Suit','Formal Suit']
+};
+function getMeasureConfig(){
+  try{
+    const saved=JSON.parse(localStorage.getItem(MEASURE_KEY)||'null');
+    if(saved&&typeof saved==='object') return saved;
+  }catch(e){}
+  localStorage.setItem(MEASURE_KEY,JSON.stringify(DEFAULT_MEASURES));
+  return JSON.parse(JSON.stringify(DEFAULT_MEASURES));
+}
+function saveMeasureConfig(cfg){localStorage.setItem(MEASURE_KEY,JSON.stringify(cfg))}
+function measurementNames(type){const cfg=getMeasureConfig();return (cfg[type]&&cfg[type].length?cfg[type]:DEFAULT_MEASURES[type]||DEFAULT_MEASURES.Other).slice()}
+function measurementManager(){
+  const cfg=getMeasureConfig();
+  const types=['Blouse','Kurti','Salwar Suit','Pant','Shirt','Dress','Other','Saree Blouse','Kurta','Pajama','Suit','Blazer','Waistcoat','Sherwani','Lehenga','Choli','Kameez','Gown','School Uniform'];
+  return '<div class="banner" style="margin-bottom:12px">📏 यहाँ measurement का नाम बदलें, हटाएँ या नया measurement जोड़ें। यह New Order में भी दिखाई देगा.</div>'+
+    types.map(type=>'<div class="garment-card"><div class="garment-head"><div class="garment-title">👗 '+type+'</div><button class="add-g" style="width:auto;margin:0" onclick="addMeasurement(\''+type+'\')">＋ Add Measurement</button></div>'+
+    '<div id="ml-'+type+'" class="measure-list">'+measurementNames(type).map((n,i)=>'<div class="row measure-edit-row"><input value="'+esc(n)+'" data-type="'+type+'" data-index="'+i+'" class="m-edit-input"><button class="secondary" onclick="renameMeasurement(\''+type+'\','+i+')">✏️ Edit</button><button class="remove-g" onclick="removeMeasurement(\''+type+'\','+i+')">🗑️ Remove</button></div>').join('')+'</div></div>').join('')+
+    '<button class="primary" onclick="saveAllMeasurementNames()">💾 Save Measurement Changes</button>';
+}
+function saveAllMeasurementNames(){
+  const cfg=getMeasureConfig();
+  document.querySelectorAll('.m-edit-input').forEach(x=>{
+    const t=x.dataset.type,i=Number(x.dataset.index),v=x.value.trim();
+    if(v) cfg[t][i]=v;
+  });
+  Object.keys(cfg).forEach(t=>{cfg[t]=cfg[t].filter(Boolean).filter((v,i,a)=>a.indexOf(v)===i)});
+  saveMeasureConfig(cfg); closeM(); alert('Measurement settings save ho gayi ✓'); openM('measure');
+}
+function renameMeasurement(type,index){
+  const cfg=getMeasureConfig(), old=cfg[type][index]||'';
+  const n=prompt('Measurement ka naya naam:',old);
+  if(n&&n.trim()){cfg[type][index]=n.trim();saveMeasureConfig(cfg);openM('measure');}
+}
+function addMeasurement(type){
+  const n=prompt(type+' ke liye naya measurement naam:');
+  if(!n||!n.trim())return;
+  const cfg=getMeasureConfig(); cfg[type]=cfg[type]||[];
+  if(cfg[type].some(x=>x.toLowerCase()===n.trim().toLowerCase())){alert('Ye measurement pehle se hai.');return}
+  cfg[type].push(n.trim()); saveMeasureConfig(cfg); openM('measure');
+}
+function removeMeasurement(type,index){
+  const cfg=getMeasureConfig();
+  if((cfg[type]||[]).length<=1){alert('कम से कम 1 measurement रखना जरूरी है.');return}
+  const name=cfg[type][index];
+  if(confirm('“'+name+'” measurement हटाना है?')){cfg[type].splice(index,1);saveMeasureConfig(cfg);openM('measure');}
+}
+function garmentFields(type){const builtIn={Blouse:['Height','Shoulder','Armhole','Chest','Waist','Neck','Sleeve','V-Neck Blouse','Round Neck Blouse','Square Neck Blouse','Sweetheart Blouse','Halter Neck Blouse','Peplum Blouse','Angrakha Blouse','Boat Back Blouse'],Kurti:['Height','Shoulder','Armhole','Chest','Waist','Hip','Neck','Sleeve','V-Neck Kurti','Square Neck Kurti','Angrakha Kurti','Asymmetric Kurti','Chikankari Kurti','Block Print Kurti','Tiered Kurti','Designer Kurti'],'Salwar Suit':['Height','Shoulder','Armhole','Chest','Waist','Hip','Neck','Sleeve','Bottom','Mori','A-Line Suit','Angrakha Suit','C-Cut Suit','Layered Suit','Cape Suit','Jacket Suit','Gharara Suit','Sharara Suit'],Pant:['Height','Hip','Thigh','Mori','Straight Pant','Slim Pant','Wide Leg Pant','Flared Pant','Cigarette Pant','Cargo Pant','Ankle Pant','Palazzo Pant'],Shirt:['Height','Shoulder','Armhole','Chest','Waist','Hip','Neck','Sleeve','Mandarin Collar Shirt','Peter Pan Collar Shirt','Peplum Shirt','Tunic Shirt','Longline Shirt','Ruffle Shirt','Oversized Shirt','Embroidered Shirt'],Dress:['Height','Shoulder','Armhole','Chest','Waist','Hip','Neck','Sleeve','A-Line Dress','Fit and Flare Dress','Maxi Dress','Midi Dress','Shirt Dress','Wrap Dress','Tiered Dress','Princess Dress'],Other:['Height','Shoulder','Armhole','Chest','Waist','Hip','Neck','Sleeve','Designer Set','Fusion Wear','Festive Wear','Casual Wear','Party Wear','Wedding Wear','Custom Style','Latest Style'], 'Saree Blouse':['Height','Shoulder','Armhole','Chest','Waist','Neck','Sleeve','Blouse Length','U-Neck Saree Blouse','V-Neck Saree Blouse','Square Neck Saree Blouse','Sweetheart Saree Blouse','Keyhole Saree Blouse','High Neck Saree Blouse','Peplum Saree Blouse','Back Tie Saree Blouse'],Kurta:['Height','Shoulder','Armhole','Chest','Waist','Hip','Neck','Sleeve','Length'],Pajama:['Waist','Hip','Length','Thigh','Mori','Straight Pajama','Churidar Pajama','Pathani Pajama','Cotton Pajama','Silk Pajama','Loose Pajama','Slim Pajama','Embroidered Pajama'],Suit:['Chest','Waist','Hip','Shoulder','Sleeve','Length','Straight Suit','A-Line Suit','Jacket Suit','Bandhgala Suit','Three Piece Suit','Designer Suit','Wedding Suit','Formal Suit'],Blazer:['Chest','Waist','Hip','Shoulder','Sleeve','Length','Single Button Blazer','Double Button Blazer','Cropped Blazer','Longline Blazer','Peplum Blazer','Tuxedo Blazer','Collarless Blazer','Printed Blazer'],Waistcoat:['Chest','Waist','Hip','Shoulder','Length','Classic Waistcoat','Long Waistcoat','Cropped Waistcoat','Embroidered Waistcoat','Nehru Waistcoat','Buttoned Waistcoat','Printed Waistcoat','Layered Waistcoat'],Sherwani:['Chest','Waist','Hip','Shoulder','Sleeve','Length','Neck','Classic Sherwani','Achkan Sherwani','Jodhpuri Sherwani','Indo-Western Sherwani','Embroidered Sherwani','Bandhgala Sherwani','Long Sherwani','Wedding Sherwani'],Lehenga:['Waist','Hip','Length','Flare','A-Line Lehenga','Flared Lehenga','Panelled Lehenga','Ruffle Lehenga','Circular Lehenga','Layered Lehenga','Bridal Lehenga','Indo-Western Lehenga'],Choli:['Chest','Waist','Shoulder','Sleeve','Length','Short Choli','Long Choli','Peplum Choli','Sleeveless Choli','Off Shoulder Choli','High Neck Choli','Backless Choli','Embroidered Choli'],Kameez:['Chest','Waist','Hip','Shoulder','Sleeve','Length','Neck','Straight Kameez','A-Line Kameez','Anarkali Kameez','Angrakha Kameez','Front Slit Kameez','Side Slit Kameez','Embroidered Kameez','Printed Kameez'],Gown:['Chest','Waist','Hip','Shoulder','Sleeve','Length','A-Line Gown','Ball Gown','Mermaid Gown','Empire Gown','Cape Gown','Tiered Gown','Anarkali Gown','Off Shoulder Gown'], 'School Uniform':['Chest','Waist','Hip','Shoulder','Sleeve','Length','Summer Uniform','Winter Uniform','House Uniform','Sports Uniform','Prefect Uniform','Girls Uniform','Boys Uniform','Formal Uniform']};if(!getMeasureConfig()[type]&&builtIn[type]){const cfg=getMeasureConfig();cfg[type]=builtIn[type];saveMeasureConfig(cfg)}return measurementNames(type)}
+
+const GARMENT_LIBRARY=['Kurti','Blouse','Salwar Suit','Kameez','Saree Blouse','Lehenga','Gown','Dress','Shirt','Pant','Salwar','Choli','Sherwani','Suit','Blazer','Waistcoat','Pajama','School Uniform','Coat','Other'];
+const DESIGN_TYPES={
+  Kurti:['Straight Kurti','A-Line Kurti','Anarkali Kurti','Long Kurti','Rayon Kurti','Palazzo Kurti','High-Low Kurti','Cotton Kurti','Party Wear Kurti','Short Kurti','Embroidered Kurti','Flared Kurti','V-Neck Kurti','Square Neck Kurti','Angrakha Kurti','Asymmetric Kurti','Chikankari Kurti','Block Print Kurti','Tiered Kurti','Designer Kurti'],
+  Blouse:['Round Neck','V Neck','Boat Neck','Deep V Neck','U Neck','Deep U Neck','Square Neck','Sweetheart Neck','Keyhole Neck','Halter Neck','High Neck','Collar Neck'],
+  'Salwar Suit':['Straight Suit','Anarkali Suit','Palazzo Suit','Patiala Suit','Punjabi Suit','Sharara Suit','Churidar Suit','Cotton Suit','Party Wear Suit','Embroidered Suit','Printed Suit','Rayon Suit'],
+  Kurta:['Straight Kurta','Pathani Kurta','Short Kurta','Long Kurta','A-Line Kurta','Angrakha Kurta','Embroidered Kurta','Printed Kurta','Cotton Kurta','Silk Kurta','Party Wear Kurta','Designer Kurta'],
+  Plazo:['Straight Palazzo','Flared Palazzo','Wide Leg Palazzo','Pleated Palazzo','Printed Palazzo','Cotton Palazzo','Rayon Palazzo','Party Wear Palazzo','Embroidered Palazzo','High Waist Palazzo','Palazzo Pants','Designer Palazzo'],
+  Kameez:['Straight Kameez','A-Line Kameez','Long Kameez','Embroidered Kameez','Front Slit Kameez','Side Slit Kameez','Cotton Kameez','Silk Kameez','Party Wear Kameez','Printed Kameez','High Neck Kameez','Designer Kameez','Anarkali Kameez','Angrakha Kameez'],
+  'Saree Blouse':['Boat Neck','Sweetheart Neck','V Neck','Round Neck','Deep Back','Backless','High Neck','Elbow Sleeve','Puff Sleeve','Princess Cut','Peplum Blouse','Designer Blouse'],
+  Lehenga:['Bridal Lehenga','A-Line Lehenga','Flared Lehenga','Panel Lehenga','Circular Lehenga','Sharara Lehenga','Printed Lehenga','Embroidered Lehenga','Party Lehenga','Silk Lehenga','Velvet Lehenga','Designer Lehenga','Panelled Lehenga','Ruffle Lehenga','Layered Lehenga','Indo-Western Lehenga'],
+  Gown:['Anarkali Gown','A-Line Gown','Flared Gown','Floor Length Gown','Party Gown','Embroidered Gown','Net Gown','Layered Gown','Off Shoulder Gown','Sleeve Gown','Bridal Gown','Designer Gown','Ball Gown','Mermaid Gown','Empire Gown','Cape Gown','Tiered Gown'],
+  Dress:['A-Line Dress','Maxi Dress','Midi Dress','Shirt Dress','Flared Dress','Bodycon Dress','Party Dress','Cotton Dress','Floral Dress','Sleeve Dress','Wrap Dress','Designer Dress','Fit and Flare Dress','Tiered Dress','Princess Dress'],
+  Shirt:['Classic Shirt','Slim Fit Shirt','Regular Shirt','Mandarin Collar','Cuban Collar','Half Sleeve Shirt','Full Sleeve Shirt','Printed Shirt','Linen Shirt','Casual Shirt','Party Shirt','Designer Shirt','Mandarin Collar Shirt','Peter Pan Collar Shirt','Peplum Shirt','Tunic Shirt','Longline Shirt','Ruffle Shirt','Oversized Shirt','Embroidered Shirt'],
+  Pant:['Straight Pant','Cigarette Pant','Palazzo Pant','Wide Leg Pant','Tapered Pant','Pleated Pant','Formal Pant','Casual Pant','Cargo Pant','Ankle Pant','Bootcut Pant','Designer Pant','Slim Pant','Flared Pant'],
+  Salwar:['Patiala Salwar','Churidar Salwar','Dhoti Salwar','Afghani Salwar','Parallel Salwar','Straight Salwar','Pleated Salwar','Printed Salwar','Cotton Salwar','Silk Salwar','Designer Salwar','Classic Salwar','Semi Patiala Salwar','Tulip Salwar'],
+  Choli:['Bridal Choli','Sleeveless Choli','Long Sleeve Choli','Backless Choli','Peplum Choli','Princess Choli','Net Choli','Embroidered Choli','Silk Choli','Party Choli','Mirror Work Choli','Designer Choli','Short Choli','Long Choli','Off Shoulder Choli','High Neck Choli'],
+  Sherwani:['Classic Sherwani','Jodhpuri Sherwani','Indo-Western','Achkan Sherwani','Wedding Sherwani','Embroidered Sherwani','Silk Sherwani','Velvet Sherwani','Printed Sherwani','Long Sherwani','Designer Sherwani','Royal Sherwani','Indo-Western Sherwani','Bandhgala Sherwani'],
+  Suit:['2-Piece Suit','3-Piece Suit','Slim Fit Suit','Classic Suit','Wedding Suit','Party Suit','Tuxedo','Bandhgala Suit','Double Breasted Suit','Checked Suit','Linen Suit','Designer Suit','Straight Suit','A-Line Suit','Jacket Suit','Three Piece Suit','Formal Suit'],
+  Blazer:['Single Breasted Blazer','Double Breasted Blazer','Slim Blazer','Party Blazer','Wedding Blazer','Checked Blazer','Printed Blazer','Velvet Blazer','Linen Blazer','Bandhgala Blazer','Classic Blazer','Designer Blazer','Single Button Blazer','Double Button Blazer','Cropped Blazer','Longline Blazer','Peplum Blazer','Tuxedo Blazer','Collarless Blazer'],
+  Waistcoat:['Classic Waistcoat','Nehru Waistcoat','Wedding Waistcoat','Printed Waistcoat','Checked Waistcoat','Embroidered Waistcoat','Silk Waistcoat','Linen Waistcoat','Party Waistcoat','Long Waistcoat','Designer Waistcoat','Royal Waistcoat','Cropped Waistcoat','Buttoned Waistcoat','Layered Waistcoat'],
+  Pajama:['Classic Pajama','Churidar Pajama','Pathani Pajama','Straight Pajama','Cotton Pajama','Silk Pajama','Printed Pajama','Wedding Pajama','Loose Pajama','Narrow Pajama','Designer Pajama','Classic White Pajama','Slim Pajama','Embroidered Pajama'],
+  'School Uniform':['Shirt & Trouser','Shirt & Skirt','Tunic Uniform','Pinafore Uniform','Sports Uniform','House T-Shirt','Formal Uniform','Summer Uniform','Winter Uniform','Primary Uniform','Secondary Uniform','Designer Uniform'],
+  Coat:['Long Coat','Overcoat','Trench Coat','Bandhgala Coat','Wedding Coat','Winter Coat','Party Coat','Wool Coat','Double Breasted Coat','Slim Coat','Classic Coat','Designer Coat','Short Coat','Tailored Coat','Cape Coat','Nehru Coat'],
+  Other:['Custom Design 1','Custom Design 2','Custom Design 3','Custom Design 4','Custom Design 5','Custom Design 6','Custom Design 7','Custom Design 8','Custom Design 9','Custom Design 10','Custom Design 11','Custom Design 12','Designer Set','Fusion Wear','Festive Wear','Casual Wear','Party Wear','Wedding Wear','Custom Style','Latest Style']
+};
+function loadSavedDesigns(){try{return JSON.parse(localStorage.getItem('sg_garment_designs')||'[]')}catch(e){return[]}}
+function saveSavedDesigns(a){localStorage.setItem('sg_garment_designs',JSON.stringify(a))}
+function designVisual(type,index){
+  const colors=['#e88ca8','#6d9fe8','#d7a74e','#69b5a4','#9a82d7','#e7805b','#647c9b','#d56f91','#7ea85e','#b78464','#6d83c8','#bb6e9e','#d18b4a','#5f9b82','#8c69b6','#cf6c64'];
+  const c=colors[index%colors.length], dark='#3d3854', pale='#fffdf9', gold='#d6a53d';
+  const n=index%8;
+  const necks=[`M165 82 Q200 112 235 82`,`M165 82 L200 115 L235 82`,`M168 84 Q200 58 232 84`,`M170 82 L200 101 L230 82`,`M166 82 Q200 98 234 82`,`M172 80 L200 112 L228 80`,`M168 82 Q200 72 232 82`,`M175 82 L200 104 L225 82`];
+  const neck=necks[n];
+  const sleevePaths=[
+    `<path d="M142 105 L86 150 L111 184 L160 142" fill="${c}" stroke="${dark}" stroke-width="4"/><path d="M258 105 L314 150 L289 184 L240 142" fill="${c}" stroke="${dark}" stroke-width="4"/>`,
+    `<path d="M142 105 L72 166 L104 196 L164 142" fill="${c}" stroke="${dark}" stroke-width="4"/><path d="M258 105 L328 166 L296 196 L236 142" fill="${c}" stroke="${dark}" stroke-width="4"/>`,
+    `<path d="M145 108 L100 155 L116 176 L163 140" fill="${c}" stroke="${dark}" stroke-width="4"/><path d="M255 108 L300 155 L284 176 L237 140" fill="${c}" stroke="${dark}" stroke-width="4"/>`,
+    `<path d="M145 108 L92 146 L106 176 L164 139" fill="${c}" stroke="${dark}" stroke-width="4"/><path d="M255 108 L308 146 L294 176 L236 139" fill="${c}" stroke="${dark}" stroke-width="4"/>`
+  ][n%4];
+  const upper=['Pant','Salwar','Pajama'].includes(type);
+  const full=['Lehenga','Gown','Dress'].includes(type);
+  const crop=['Blouse','Saree Blouse','Choli'].includes(type);
+  const formal=['Blazer','Suit','Waistcoat','Sherwani','Coat'].includes(type);
+  const indian=['Kurti','Kameez','Salwar Suit'].includes(type);
+  let garment='';
+  if(upper){
+    garment=`<path d="M150 76 L250 76 L270 160 L236 160 L230 320 L200 350 L170 320 L164 160 L130 160 Z" fill="${c}" stroke="${dark}" stroke-width="4"/><path d="M164 160 L200 184 L236 160" fill="none" stroke="${pale}" stroke-width="5"/><path d="M180 190 L174 310 M220 190 L226 310" stroke="${dark}" stroke-width="3" opacity=".5"/>`;
+  }else if(full){
+    garment=`<path d="M158 75 Q200 112 242 75 L258 180 Q326 248 350 344 L50 344 Q74 248 142 180 Z" fill="${c}" stroke="${dark}" stroke-width="4"/><path d="${neck}" fill="none" stroke="${pale}" stroke-width="6"/><path d="M200 108 L200 338" stroke="${pale}" stroke-width="4" opacity=".8"/><path d="M92 270 Q200 304 308 270" fill="none" stroke="${pale}" stroke-width="5" opacity=".75"/>`;
+  }else if(formal){
+    garment=`<path d="M148 74 L252 74 L276 330 L124 330 Z" fill="${c}" stroke="${dark}" stroke-width="4"/><path d="M168 74 L200 120 L232 74" fill="none" stroke="${pale}" stroke-width="6"/><path d="M200 120 L200 324" stroke="${dark}" stroke-width="3"/><circle cx="200" cy="160" r="6" fill="${pale}"/><circle cx="200" cy="192" r="6" fill="${pale}"/><path d="M140 222 L174 222 M226 222 L260 222" stroke="${dark}" stroke-width="5"/>`;
+  }else{
+    const bottom= crop ? 260 : (indian ? 335 : 315);
+    garment=`<path d="M154 76 L246 76 L278 154 L250 ${bottom} L150 ${bottom} L122 154 Z" fill="${c}" stroke="${dark}" stroke-width="4"/><path d="${neck}" fill="none" stroke="${pale}" stroke-width="6"/><path d="M200 108 L200 ${bottom-10}" stroke="${pale}" stroke-width="3" opacity=".8"/><path d="M148 194 Q200 220 252 194" fill="none" stroke="${pale}" stroke-width="4" opacity=".8"/>`;
+  }
+  const embellish = n%4===0 ? `<circle cx="180" cy="148" r="5" fill="${gold}"/><circle cx="200" cy="162" r="5" fill="${gold}"/><circle cx="220" cy="148" r="5" fill="${gold}"/>` : n%4===1 ? `<path d="M150 245 Q200 274 250 245 M158 263 Q200 288 242 263" fill="none" stroke="${pale}" stroke-width="5"/>` : n%4===2 ? `<path d="M150 126 L125 150 M250 126 L275 150 M165 286 L235 286" stroke="${gold}" stroke-width="5" stroke-linecap="round"/>` : `<path d="M150 225 L250 225 M158 242 L242 242" stroke="${pale}" stroke-width="4" opacity=".9"/>`;
+  const dupatta = (type==='Salwar Suit'||type==='Lehenga'||type==='Kameez') ? `<path d="M285 82 Q350 140 332 330" fill="none" stroke="${gold}" stroke-width="12" opacity=".85"/><path d="M290 84 Q350 142 334 330" fill="none" stroke="${pale}" stroke-width="3"/>` : '';
+  return `<svg viewBox="0 0 400 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${type} fashion design"><rect x="8" y="8" width="384" height="364" rx="28" fill="#faf9ff"/><text x="200" y="38" text-anchor="middle" font-size="16" font-weight="800" fill="${dark}">${type} • Design ${index+1}</text>${upper?'':sleevePaths}${garment}${embellish}${dupatta}<path d="M105 350 H295" stroke="${c}" stroke-width="8" stroke-linecap="round"/><circle cx="120" cy="350" r="5" fill="${dark}"/><circle cx="280" cy="350" r="5" fill="${dark}"/></svg>`;
+}
+function garmentDesignsFor(type){const arr=DESIGN_TYPES[type]||DESIGN_TYPES.Other;return arr.map((name,i)=>({id:type.replace(/\W/g,'_')+'_'+i,type,name,index:i,svg:designVisual(type,i),image:(DESIGN_IMAGE_URLS[type]&&DESIGN_IMAGE_URLS[type][name])||''}));}const DESIGN_IMAGE_URLS={
+  Blouse:{
+    'Padded Blouse':'designs/blouse/padded-blouse.svg',
+    'Princess Cut Blouse':'designs/blouse/princess-cut-blouse.svg',
+    'Boat Neck Blouse':'designs/blouse/boat-neck-blouse.svg',
+    'Back Open Blouse':'designs/blouse/back-open-blouse.svg',
+    'Patch Work Blouse':'designs/blouse/patch-work-blouse.svg',
+    'Silk Blouse':'designs/blouse/silk-blouse.svg',
+    'Collar Neck Blouse':'designs/blouse/collar-neck-blouse.svg',
+    'Deep Neck Blouse':'designs/blouse/deep-neck-blouse.svg',
+    'Elbow Sleeve Blouse':'designs/blouse/elbow-sleeve-blouse.svg',
+    'Cold Shoulder Blouse':'designs/blouse/cold-shoulder-blouse.svg',
+    'High Neck Blouse':'designs/blouse/high-neck-blouse.svg',
+    'Net Blouse':'designs/blouse/net-blouse.svg'
+  }
+};function getGarmentMaster(){
+  try{const a=JSON.parse(localStorage.getItem(GARMENT_MASTER_KEY)||'null');if(Array.isArray(a)&&a.length)return a}catch(e){}
+  const a=JSON.parse(JSON.stringify(DEFAULT_GARMENT_MASTER));localStorage.setItem(GARMENT_MASTER_KEY,JSON.stringify(a));return a;
+}
+function saveGarmentMaster(a){localStorage.setItem(GARMENT_MASTER_KEY,JSON.stringify(a))}
+function garmentMasterRate(type){const x=getGarmentMaster().find(x=>x.name===type);return Number(x?.rate||0)}
+function openGarmentsManager(){if(window.__sgRecordView)window.__sgRecordView('garments');
+  mt.textContent='👗 Garments';
+  const a=getGarmentMaster();
+  mb.innerHTML='<div class="banner" style="margin-bottom:12px">👗 यहाँ आपकी दुकान के garments, default stitching rate, measurement template और extra services manage होंगी। New Order के design/measurement functions अलग रहेंगे.</div>'+
+  '<div class="gm-top-actions"><button class="primary" onclick="addGarmentMaster()">＋ Add New Garment</button><button class="secondary" onclick="openGarmentMeasurementManager()">📏 Measurement Templates</button></div>'+
+  '<div style="margin-top:14px">'+a.map((g,i)=>garmentMasterCard(g,i)).join('')+'</div>';
+}
+function garmentMasterCard(g,i){
+  const fields=measurementNames(g.name),services=g.services||[];
+  return '<div class="gm-card"><div class="gm-head"><div><div class="gm-title">👗 '+esc(g.name)+'</div><small class="muted">'+fields.length+' measurements • '+services.length+' services</small></div><div class="gm-rate">₹'+Number(g.rate||0).toLocaleString('en-IN')+'</div></div>'+
+  '<div class="gm-tags">'+(services.length?services.map(s=>'<span class="gm-tag">🧵 '+esc(s)+'</span>').join(''):'<span class="muted">No extra services</span>')+'</div>'+
+  '<div class="gm-actions"><button class="secondary" onclick="editGarmentMaster('+i+')">✏️ Edit & Rate</button><button class="secondary" onclick="openGarmentMeasurementEditor('+i+')">📏 Measurements</button><button class="secondary" onclick="openGarmentServiceEditor('+i+')">🧵 Services</button><button class="remove-g" onclick="deleteGarmentMaster('+i+')">🗑 Remove</button></div></div>';
+}
+function addGarmentMaster(){
+  const name=prompt('Garment ka naam:');if(!name||!name.trim())return;
+  const n=name.trim(),a=getGarmentMaster();
+  if(a.some(x=>x.name.toLowerCase()===n.toLowerCase())){alert('Ye garment already hai.');return}
+  a.push({name:n,rate:0,services:[]});saveGarmentMaster(a);
+  const cfg=getMeasureConfig();if(!cfg[n]){cfg[n]=['Height','Shoulder','Chest','Waist','Hip','Length'];saveMeasureConfig(cfg)}
+  openGarmentsManager();
+}
+function editGarmentMaster(i){
+  const a=getGarmentMaster(),g=a[i];if(!g)return;
+  const old=g.name,n=prompt('Garment ka naam:',old);if(!n||!n.trim())return;
+  const rate=prompt('Default stitching rate ₹:',String(g.rate||0)),name=n.trim(),r=Math.max(0,Number(rate||0));
+  if(name!==old&&a.some((x,j)=>j!==i&&x.name.toLowerCase()===name.toLowerCase())){alert('Ye garment already hai.');return}
+  g.name=name;g.rate=r;saveGarmentMaster(a);
+  if(name!==old){const cfg=getMeasureConfig();if(cfg[old]&&!cfg[name]){cfg[name]=cfg[old];delete cfg[old];saveMeasureConfig(cfg)}}
+  openGarmentsManager();
+}
+function deleteGarmentMaster(i){
+  const a=getGarmentMaster(),g=a[i];if(!g)return;
+  if(!confirm('“'+g.name+'” garment ko Garments list se remove karein?'))return;
+  a.splice(i,1);saveGarmentMaster(a);openGarmentsManager();
+}
+function openGarmentMeasurementManager(){if(window.__sgRecordView)window.__sgRecordView('garment-measurements');
+  mt.textContent='📏 Measurement Templates';
+  mb.innerHTML='<div class="banner">Measurement names yahan manage karein. Changes New Order me bhi use honge.</div>'+measurementManager()+'<button class="secondary" style="width:100%;margin-top:10px" onclick="openGarmentsManager()">← Back to Garments</button>';
+}
+function openGarmentMeasurementEditor(i){if(window.__sgRecordView){const a=getGarmentMaster(),g=a[i];if(g)window.__sgRecordView('garment-measurement-editor:'+g.name);}
+  const a=getGarmentMaster(),g=a[i];if(!g)return;
+  mt.textContent='📏 '+g.name+' Measurements';
+  mb.innerHTML='<div class="gm-editor"><h3>📏 '+esc(g.name)+' Measurement Template</h3><div class="muted">Yahan measurement names add, edit ya remove kar sakte hain.</div><div class="gm-list" id="gmMeasureList">'+measurementNames(g.name).map((n,j)=>'<div class="gm-list-row"><input value="'+esc(n)+'" id="gmm-'+j+'"><button class="remove-g" onclick="removeGarmentMeasure('+j+')">−</button></div>').join('')+'</div><button class="secondary" style="width:100%;margin-top:9px" onclick="addGarmentMeasureRow()">＋ Add Measurement</button><button class="primary" onclick="saveGarmentMeasurements('+i+')">💾 Save Measurements</button></div><button class="secondary" style="width:100%;margin-top:10px" onclick="openGarmentsManager()">← Back to Garments</button>';
+}
+function addGarmentMeasureRow(){
+  const list=document.getElementById('gmMeasureList');if(!list)return;
+  const j=list.children.length;list.insertAdjacentHTML('beforeend','<div class="gm-list-row"><input id="gmm-'+j+'" placeholder="Measurement name"><button class="remove-g" onclick="removeGarmentMeasure('+j+')">−</button></div>');
+}
+function removeGarmentMeasure(j){
+  const list=document.getElementById('gmMeasureList');if(!list||!list.children[j])return;
+  list.children[j].remove();Array.from(list.children).forEach((row,k)=>{row.querySelector('input').id='gmm-'+k;row.querySelector('button').setAttribute('onclick','removeGarmentMeasure('+k+')')});
+}
+function saveGarmentMeasurements(i){
+  const a=getGarmentMaster(),g=a[i];if(!g)return;
+  const names=Array.from(document.querySelectorAll('#gmMeasureList input')).map(x=>x.value.trim()).filter(Boolean);
+  if(!names.length){alert('Kam se kam 1 measurement rakhiye.');return}
+  const cfg=getMeasureConfig();cfg[g.name]=names;saveMeasureConfig(cfg);openGarmentsManager();
+}
+function openGarmentServiceEditor(i){if(window.__sgRecordView){const a=getGarmentMaster(),g=a[i];if(g)window.__sgRecordView('garment-services:'+g.name);}
+  const a=getGarmentMaster(),g=a[i];if(!g)return;
+  mt.textContent='🧵 '+g.name+' Services';
+  mb.innerHTML='<div class="gm-editor"><h3>🧵 Extra Services</h3><div class="muted">Is garment ke saath available extra work/services add karein.</div><div class="gm-list" id="gmServiceList">'+(g.services||[]).map((s,j)=>'<div class="gm-list-row"><input value="'+esc(s)+'" id="gms-'+j+'"><button class="remove-g" onclick="removeGarmentService('+j+')">−</button></div>').join('')+'</div><button class="secondary" style="width:100%;margin-top:9px" onclick="addGarmentServiceRow()">＋ Add Service</button><button class="primary" onclick="saveGarmentServices('+i+')">💾 Save Services</button></div><button class="secondary" style="width:100%;margin-top:10px" onclick="openGarmentsManager()">← Back to Garments</button>';
+}
+function addGarmentServiceRow(){
+  const list=document.getElementById('gmServiceList');if(!list)return;
+  const j=list.children.length;list.insertAdjacentHTML('beforeend','<div class="gm-list-row"><input id="gms-'+j+'" placeholder="Service name"><button class="remove-g" onclick="removeGarmentService('+j+')">−</button></div>');
+}
+function removeGarmentService(j){
+  const list=document.getElementById('gmServiceList');if(!list||!list.children[j])return;
+  list.children[j].remove();Array.from(list.children).forEach((row,k)=>{row.querySelector('input').id='gms-'+k;row.querySelector('button').setAttribute('onclick','removeGarmentService('+k+')')});
+}
+function saveGarmentServices(i){
+  const a=getGarmentMaster(),g=a[i];if(!g)return;
+  g.services=Array.from(document.querySelectorAll('#gmServiceList input')).map(x=>x.value.trim()).filter(Boolean);saveGarmentMaster(a);openGarmentsManager();
+}
+function openGarmentLibrary(){if(window.__sgRecordView)window.__sgRecordView('designs');
+  mt.textContent='👗 Garments';
+  const saved=loadSavedDesigns();
+  mb.innerHTML='<div class="card"><h3>🎨 Garment Design Library</h3><p class="muted">Kisi bhi garment ko touch karke uske related designs dekhiye.</p><div class="garment-library">'+GARMENT_LIBRARY.map((g,i)=>'<div class="garment-library-card" onclick="openDesignCatalog('+JSON.stringify(g).replace(/"/g,'&quot;')+')"><div class="libpic">'+garmentVisual(g)+'</div><b>'+g+'</b><small>'+((DESIGN_TYPES[g]||[]).length)+' Designs ›</small></div>').join('')+'</div><div class="folder-box"><div style="display:flex;justify-content:space-between;align-items:center"><div><b>📁 My Garment Folder</b><div class="folder-count">'+saved.length+' saved designs</div></div><button class="primary" onclick="openGarmentFolder()">Open</button></div><div class="library-note">💡 Garment par tap karein aur uske alag-alag designs dekhein.</div></div></div>';
+}
+function openDesignCatalog(type){if(window.__sgRecordView)window.__sgRecordView('design-catalog:'+type);
+  const designs=garmentDesignsFor(type).concat(loadSavedDesigns().filter(x=>x.type===type).map(x=>({...x,svg:x.svg||designVisual(type,0)})));
+  const saved=loadSavedDesigns();
+  const chips=['All Designs'].concat(designs.slice(0,5).map(x=>x.name));
+  const T=esc(JSON.stringify(type));
+  const q=encodeURIComponent(type+' garment designs');
+  const fileLabel=(mode)=>'<label class="source-chip">'+(mode==='camera'?'📷 Camera':'🖼️ Gallery')+'<input type="file" accept="image/*" '+(mode==='camera'?'capture="environment"':'')+' onchange="saveUploadedDesign('+T+',this)" style="position:absolute;opacity:0;width:1px;height:1px"></label>';
+  mt.textContent=type==='Blouse'?'👗 Blouse Neck Designs':'👗 '+type+' Designs';
+  mb.innerHTML=`<div class="design-back"><button type="button" class="secondary" onclick="openGarmentLibrary()">← Garments</button><b>${esc(type)} · ${designs.length} Designs</b></div>
+  <div class="design-sources">
+    <button type="button" class="source-chip active" onclick="showGarmentSource('library',${T})">🎨 SILAI GURU</button>
+    ${fileLabel('camera')}
+    ${fileLabel('gallery')}
+    <a class="source-chip" href="https://www.pinterest.com/search/pins/?q='+encodeURIComponent(type+' designs')+'" target="_blank" rel="noopener noreferrer" style="display:inline-block;text-decoration:none;color:inherit;">✨ Design Inspiration</a>
+    <button type="button" class="source-chip" onclick="showGarmentSource('link',${T})">🔗 Add Link</button>
+  </div>
+  <div id="garmentSourceArea"></div>
+  <input class="design-search" id="designSearch" placeholder="🔎 Search ${esc(type)} design..." oninput="filterDesigns(${T})">
+  <div class="design-toolbar">${chips.map((x,i)=>'<button type="button" class="design-chip '+(i===0?'active':'')+'" onclick="filterDesignChip('+T+','+JSON.stringify(x)+',this)">'+esc(x)+'</button>').join('')}</div>
+  <div id="designGrid" class="design-grid">${designs.map(d=>designCardHtml(d,saved)).join('')}</div>
+  <div class="library-note">💡 New Order me bhi yahi Design Library use hogi.</div>`;
+  showGarmentSource('library',type);
+}
+function showGarmentSource(mode,type){
+  const box=document.getElementById('garmentSourceArea');if(!box)return;
+  if(mode==='library'){box.innerHTML='<div class="design-source-box"><b>🎨 SILAI GURU Design Library</b><small>Ready designs aur My Designs yahan milenge.</small></div>';return}
+  if(mode==='camera'||mode==='gallery'){box.innerHTML='<div class="design-source-box"><b>'+(mode==='camera'?'📷 Camera se Design':'🖼️ Gallery se Design')+'</b><small>Ye feature sabhi plans me available hai. Upload ke baad photo My Designs me save hogi; cloud backup/storage aapke plan ke according apply hoga.</small><input id="designPhotoInput" type="file" accept="image/*" '+(mode==='camera'?'capture="environment"':'')+' onchange="saveUploadedDesign(\''+esc(type).replace(/'/g,"\\'")+'\')" style="margin-top:8px"></div>';return}
+  if(mode==='web'){
+    const q=encodeURIComponent(type+' garment designs');
+    const src=[['Pinterest','https://www.pinterest.com/search/pins/?q='+q],['Myntra','https://www.myntra.com/'+encodeURIComponent(type.toLowerCase())],['Meesho','https://www.meesho.com/search?q='+q],['Google Images','https://www.google.com/search?tbm=isch&q='+q]];
+    box.innerHTML='<div class="design-source-box"><h3 style="margin:0 0 8px">🌐 '+esc(type)+' Design Websites</h3><p class="muted">Customer ko design dikhane ke liye website kholiye. Pasand aane par design ka share/copy link lekar “Add Design Link” me save karein.</p><div class="design-source-grid">'+src.map(s=>'<div class="source-card"><b>'+s[0]+'</b><small>'+esc(type)+' designs</small><button class="secondary" onclick="window.open(\''+s[1]+'\',\'_blank\',\'noopener,noreferrer\')">Open Website ↗</button></div>').join('')+'</div></div>';
+    return;
+  }
+  box.innerHTML='<div class="design-source-box"><h3 style="margin:0 0 8px">🔗 Add External Design</h3><p class="muted">Website/app se design pasand aane par uska link save karein. Yeh design catalogue me reference ke roop me rahega.</p><div class="design-link-box"><input id="catalogExternalUrl" type="url" placeholder="https://..."><button class="primary" onclick="saveCatalogExternalDesign(\''+esc(type).replace(/'/g,"\\'")+'\')">Save Design</button></div></div>';
+}
+function saveUploadedDesign(type,inputEl){
+  const input=inputEl||document.getElementById('designPhotoInput'),file=input&&input.files&&input.files[0];if(!file)return;
+  // Camera/Gallery is available to every plan; storage quota is enforced separately by the user's plan.
+  const reader=new FileReader();
+  reader.onload=function(e){const img=new Image();img.onload=function(){const max=900,scale=Math.min(1,max/Math.max(img.width,img.height));const cv=document.createElement('canvas');cv.width=Math.round(img.width*scale);cv.height=Math.round(img.height*scale);cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);const data=cv.toDataURL('image/jpeg',.78);const name=(file.name||type+' Design').replace(/\.[^.]+$/,'').slice(0,60);const a=loadSavedDesigns();a.push({id:'upload_'+Date.now(),type,name,image:data,savedAt:Date.now(),source:'Camera/Gallery'});try{saveSavedDesigns(a);alert('Design My Designs me save ho gaya ✓');openDesignCatalog(type)}catch(err){alert('Photo save nahi ho paayi. Photo size kam karke dobara try karein.')}};img.src=e.target.result};reader.readAsDataURL(file);
+}
+function saveCatalogExternalDesign(type){
+  const x=document.getElementById('catalogExternalUrl'),url=String(x?.value||'').trim();
+  if(!/^https?:\/\//i.test(url)){alert('Valid website link dijiye.');return}
+  const a=loadSavedDesigns();a.push({id:'ext_'+Date.now(),type,name:type+' External Design',url,savedAt:Date.now(),external:true});saveSavedDesigns(a);alert('Design link catalogue me save ho gaya ✓');openGarmentFolder();
+}
+function designMediaHtml(d){
+  if(d.image)return '<img src="'+d.image+'" alt="'+esc(d.name)+'" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'"><div class="design-fallback" style="display:none">'+(d.svg||designVisual(d.type,d.index||0))+'</div>';
+  if(d.external||d.url)return '<div style="text-align:center;padding:18px"><div style="font-size:42px">🔗</div><b>External Design</b><small style="display:block;margin-top:6px">Website link saved</small></div>';
+  return d.svg||designVisual(d.type,d.index||0);
+}
+function designCardHtml(d,saved){
+  const isSaved=saved.some(x=>x.id===d.id);
+  const id=JSON.stringify(d.id),type=JSON.stringify(d.type),name=JSON.stringify(d.name);
+  return '<div class="design-card"><div class="design-img">'+designMediaHtml(d)+'</div><div class="design-name">'+esc(d.name)+'</div><div class="design-actions"><button class="secondary" onclick="toggleSavedDesign('+id+','+type+','+name+')">'+(isSaved?'✓ Saved':'☆ Save')+'</button><button class="secondary" onclick="buyMaterialForDesign('+name+','+type+')">🛍️ Buy Material</button><button class="primary" onclick="showDesignToCustomer('+type+','+name+')">👁 '+(d.external||d.url?'Open':'Show')+'</button></div></div>';
+}
+function buyMaterialForDesign(name,type){const q=encodeURIComponent(type+' '+name+' fabric tailoring material');window.open('https://www.google.com/search?tbm=shop&q='+q,'_blank','noopener,noreferrer');}
+function filterDesignChip(type,label,btn){
+  const search=el('designSearch');if(search)search.value='';
+  document.querySelectorAll('.design-chip').forEach(x=>x.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  const saved=loadSavedDesigns();
+  let designs=garmentDesignsFor(type).concat(saved.filter(x=>x.type===type).map(x=>({...x,svg:x.svg||designVisual(type,x.index||0)})));
+  if(label!=='All Designs')designs=designs.filter(d=>d.name===label);
+  const grid=el('designGrid');if(grid)grid.innerHTML=designs.map(d=>designCardHtml(d,saved)).join('')||'<div class="design-empty">Design nahi mila.</div>';
+}
+function filterDesigns(type){
+  const q=String(el('designSearch')?.value||'').toLowerCase();
+  const saved=loadSavedDesigns();
+  const designs=garmentDesignsFor(type).concat(saved.filter(x=>x.type===type).map(x=>({...x,svg:x.svg||designVisual(type,0)}))).filter(d=>d.name.toLowerCase().includes(q));
+  const grid=el('designGrid');if(grid)grid.innerHTML=designs.map(d=>designCardHtml(d,saved)).join('')||'<div class="design-empty">Design nahi mila.</div>';
+}
+function toggleSavedDesign(id,type,name){
+  const a=loadSavedDesigns(),i=a.findIndex(x=>x.id===id);
+  if(i>=0)a.splice(i,1);
+  else{
+    const d=garmentDesignsFor(type).find(x=>x.id===id);
+    a.push({id,type,name,index:d?.index??0,svg:d?.svg||designVisual(type,d?.index??0),image:d?.image||'',savedAt:Date.now()});
+  }
+  saveSavedDesigns(a);openDesignCatalog(type);
+}
+function openGarmentFolder(){if(window.__sgRecordView)window.__sgRecordView('garment-folder');
+  const a=loadSavedDesigns();
+  mt.textContent='📁 My Garment Folder';
+  mb.innerHTML='<div class="design-back"><button class="secondary" onclick="openGarmentLibrary()">← Garments</button><b>'+a.length+' Saved Designs</b></div>'+(a.length?'<div class="design-grid">'+a.map(x=>{const d=garmentDesignsFor(x.type).find(y=>y.id===x.id)||{...x,index:0,svg:designVisual(x.type,0)};return designCardHtml(d,a)}).join('')+'</div>':'<div class="design-empty">Abhi koi design save nahi hai.<br>Garment select karke design par ☆ Save dabaiye.</div>');
+}
+function showDesignToCustomer(type,name,orderIndex){
+  if(window.__sgRecordView)window.__sgRecordView((orderIndex!==undefined?'order-preview:'+orderIndex+':'+type:'design-preview:'+type+':'+name));
+  const all=garmentDesignsFor(type);
+  const saved=loadSavedDesigns().filter(x=>x.type===type);
+  const d=all.find(x=>x.name===name)||saved.find(x=>x.name===name);
+  if(!d)return;
+  if(d.external&&d.url){window.open(d.url,'_blank','noopener,noreferrer');return;}
+  const safeType=esc(type).replace(/'/g,"\\'");
+  const safeName=esc(name).replace(/'/g,"\\'");
+  const preview=d.image?'<img src="'+d.image+'" alt="'+esc(d.name)+'" loading="eager">':d.svg;
+  const selectAction=(orderIndex!==undefined)?'selectDesignForOrder('+orderIndex+',\''+safeType+'\',\''+safeName+'\')':'openDesignCatalog(\''+safeType+'\')';
+  const selectText=(orderIndex!==undefined)?'✓ Select Design for Order':'✓ Select Design';
+  const backAction=(orderIndex!==undefined)?'openDesignCatalogForOrder(\''+safeType+'\','+orderIndex+')':'openDesignCatalog(\''+safeType+'\')';
+  mt.textContent='👁 '+type+' Design Preview';
+  mb.innerHTML='<div class="design-back"><button class="secondary" onclick="'+backAction+'">← Designs</button></div><div style="text-align:center"><div style="font-size:18px;font-weight:800;margin:8px 0 4px">'+esc(name)+'</div><div class="preview-large">'+preview+'</div><p class="muted">Customer ko yahi design dikhaye.</p><div style="display:flex;gap:8px;justify-content:center"><button class="primary" onclick="'+selectAction+'">'+selectText+'</button><button class="secondary" onclick="'+backAction+'">Back</button></div></div>';
+}
+function garmentVisual(type){
+  const common={fill:'#d9d6ff',stroke:'#5144bd'};
+  const svg=(body,accent='#7b6ff0')=>'<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="3" y="3" width="94" height="94" rx="22" fill="#f7f6ff"/>'+body.replaceAll('__A__',accent)+'</svg>';
+  const map={
+    'Blouse':svg('<path d="M28 31L40 23h20l12 8 11 7-9 17-10-7v25H36V48l-10 7-9-17z" fill="#f2a7c7" stroke="#7a4160" stroke-width="2"/><path d="M40 23q10 12 20 0" fill="none" stroke="#7a4160" stroke-width="3"/><path d="M37 73h26" stroke="#fff" stroke-width="3"/>'),
+    'Salwar Suit':svg('<path d="M36 24h28l8 13-7 7v31H35V44l-7-7z" fill="#79a9f7" stroke="#315aa6" stroke-width="2"/><path d="M28 37l-10 18 12 7 7-12M72 37l10 18-12 7-7-12" fill="#dfe9ff" stroke="#315aa6" stroke-width="2"/><path d="M28 77q22 12 44 0" fill="none" stroke="#315aa6" stroke-width="2"/>','#6d9ff2'),
+    'Kurta':svg('<path d="M38 18h24l7 12 10 8-7 14-9-6v36H37V46l-9 6-7-14 10-8z" fill="#72c4b3" stroke="#236b61" stroke-width="2"/><path d="M50 18v28M44 31h12" stroke="#236b61" stroke-width="3"/><circle cx="50" cy="37" r="2" fill="#236b61"/>','#55b3a0'),
+    'Shirt':svg('<path d="M35 20l15 8 15-8 10 9 8 13-11 7-5-7v39H33V42l-5 7-11-7 8-13z" fill="#8ec5f5" stroke="#315d8e" stroke-width="2"/><path d="M50 28l-8 10 8 8 8-8z" fill="#fff" stroke="#315d8e" stroke-width="2"/><path d="M50 46v27M42 51h16" stroke="#315d8e" stroke-width="2"/>','#75b7ed'),
+    'Pant':svg('<path d="M31 18h38l-4 29-7 35H48l-2-31-4 31H27l4-35z" fill="#4b83d8" stroke="#214f93" stroke-width="2"/><path d="M31 28h38M50 28v23" stroke="#214f93" stroke-width="2"/><circle cx="50" cy="34" r="2" fill="#fff"/>','#4b83d8'),
+    'Saree Blouse':svg('<path d="M30 30l10-8h20l10 8 9 9-8 13-9-7v28H38V45l-9 7-8-13z" fill="#f08a91" stroke="#8c3e46" stroke-width="2"/><path d="M40 22q10 13 20 0" fill="none" stroke="#8c3e46" stroke-width="3"/><path d="M39 59h22" stroke="#fff" stroke-width="3"/>','#e8757d'),
+    'Kurti':svg('<path d="M38 18h24l8 12 9 8-8 13-9-7v39H38V44l-9 7-8-13 9-8z" fill="#b89ae8" stroke="#684b9b" stroke-width="2"/><path d="M44 19q6 9 12 0M50 29v43" fill="none" stroke="#684b9b" stroke-width="2"/><path d="M39 72h22" stroke="#fff" stroke-width="3"/>','#aa8bdd'),
+    'Salwar':svg('<path d="M35 22h30l-2 28-7 28H43l7-28-7 28H25l8-28z" fill="#f3c36b" stroke="#8d641d" stroke-width="2"/><path d="M35 30h30M50 30v20" stroke="#8d641d" stroke-width="2"/>','#efb94e'),
+    'Kameez':svg('<path d="M38 17h24l7 13 10 10-8 13-8-7v39H37V46l-8 7-8-13 10-10z" fill="#e7a56b" stroke="#8c5127" stroke-width="2"/><path d="M43 18q7 10 14 0M50 30v24" fill="none" stroke="#8c5127" stroke-width="2"/><path d="M39 73h22" stroke="#fff" stroke-width="3"/>','#e09a5e'),
+    'Lehenga':svg('<path d="M38 20h24v17l18 43H20l18-43z" fill="#e77c9e" stroke="#8c3155" stroke-width="2"/><path d="M31 61h38M26 73h48" stroke="#fff" stroke-width="3"/><path d="M39 20q11 8 22 0" fill="none" stroke="#8c3155" stroke-width="2"/>','#df6f93'),
+    'Choli':svg('<path d="M35 22l15 7 15-7 9 9 7 12-10 7-7-9v24H36V41l-7 9-10-7 7-12z" fill="#f0b04f" stroke="#8b5c14" stroke-width="2"/><path d="M42 26q8 9 16 0M50 30v35" fill="none" stroke="#8b5c14" stroke-width="2"/>','#eaa342'),
+    'Gown':svg('<path d="M39 16h22l5 18 16 51H18l16-51z" fill="#9c8ee8" stroke="#584a9b" stroke-width="2"/><path d="M38 17q12 11 24 0M33 62h34M27 75h46" fill="none" stroke="#fff" stroke-width="3"/>','#8d7fe0'),
+    'Dress':svg('<path d="M39 18h22l4 20 17 43H18l17-43z" fill="#f19b62" stroke="#8f4f26" stroke-width="2"/><path d="M39 18q11 10 22 0M34 61h32" fill="none" stroke="#fff" stroke-width="3"/>','#ed8c4c'),
+    'Blazer':svg('<path d="M39 18l11 8 11-8 10 10 10 46H19l10-46z" fill="#345b8f" stroke="#1d3554" stroke-width="2"/><path d="M50 26v47M39 18l11 25 11-25M34 40l16 33 16-33" fill="none" stroke="#dce8f7" stroke-width="2"/><circle cx="50" cy="50" r="2" fill="#fff"/><circle cx="50" cy="59" r="2" fill="#fff"/>','#345b8f'),
+    'Waistcoat':svg('<path d="M39 18l11 8 11-8 9 10 3 45H27l3-45z" fill="#e6a33c" stroke="#875b14" stroke-width="2"/><path d="M39 18l11 24 11-24M50 42v31" fill="none" stroke="#875b14" stroke-width="2"/><circle cx="50" cy="51" r="2" fill="#fff"/><circle cx="50" cy="60" r="2" fill="#fff"/>','#d99127'),
+    'Sherwani':svg('<path d="M38 17h24l8 14 9 9-9 12-7-7v35H37V45l-7 7-9-12 9-9z" fill="#d3b05c" stroke="#775f22" stroke-width="2"/><path d="M43 18q7 9 14 0M50 28v48M45 38h10M45 47h10M45 56h10" fill="none" stroke="#775f22" stroke-width="2"/><circle cx="50" cy="35" r="2" fill="#fff"/>','#c6a24f'),
+    'Pajama':svg('<path d="M32 20h36l-3 29-7 30H45l5-30-6 30H25l8-30z" fill="#b7d7d0" stroke="#3f746a" stroke-width="2"/><path d="M32 30h36M50 30v19" stroke="#3f746a" stroke-width="2"/>','#9ecbc1'),
+    'Suit':svg('<path d="M39 18l11 8 11-8 10 10 10 47H19l10-47z" fill="#6b7180" stroke="#353946" stroke-width="2"/><path d="M50 26v49M39 18l11 25 11-25M34 42l16 33 16-33" fill="none" stroke="#e9ebf0" stroke-width="2"/><path d="M45 37l5 7 5-7" fill="#fff"/>','#5c6270'),
+    'School Uniform':svg('<path d="M35 19h30l7 12 9 9-8 12-8-7v29H35V45l-8 7-8-12 9-9z" fill="#f0d35d" stroke="#75621a" stroke-width="2"/><path d="M39 20l11 10 11-10M50 30v44" fill="none" stroke="#315a9b" stroke-width="4"/><path d="M43 42h14" stroke="#315a9b" stroke-width="3"/>','#e5c84e'),
+    'Other':svg('<circle cx="50" cy="48" r="28" fill="#eee" stroke="#666" stroke-width="2"/><path d="M33 58l15-25 7 7-15 25zM53 34l5-5 9 9-5 5zM61 54l6 6-5 5-6-6z" fill="#ef5b55" stroke="#8c2f2b" stroke-width="2"/><path d="M39 66l-7 7" stroke="#666" stroke-width="3"/>','#ef5b55')
+  };
+  return map[type]||map['Other'];
+}
+function orderMeasurementNames(type){
+  const base=[
+    'Height','Shoulder','Armhole','Upper Chest','Chest','Lower Chest',
+    'Waist','Hip','Thigh','Knee','Mori','Bicep','Wrist',
+    'Neck Front','Neck Back','Sleeve','Sleeve Length',
+    'Front Length','Back Length','Total Length'
+  ];
+  const extra={
+    Blouse:['Cup','Under Bust','Blouse Length','V-Neck Blouse','Round Neck Blouse','Square Neck Blouse','Sweetheart Blouse','Halter Neck Blouse','Peplum Blouse','Angrakha Blouse','Boat Back Blouse'],
+    'Saree Blouse':['Cup','Under Bust','Blouse Length'],
+    Kurti:['Kurti Length','Side Slit Length','V-Neck Kurti','Square Neck Kurti','Angrakha Kurti','Asymmetric Kurti','Chikankari Kurti','Block Print Kurti','Tiered Kurti','Designer Kurti'],
+    'Salwar Suit':['Bottom','Bottom Length','Dupatta Length'],
+    Kurta:['Kurta Length','Side Slit Length'],
+    Shirt:['Shirt Length','Collar','Mandarin Collar Shirt','Peter Pan Collar Shirt','Peplum Shirt','Tunic Shirt','Longline Shirt','Ruffle Shirt','Oversized Shirt','Embroidered Shirt'],
+    Pant:['Pant Length','Waistband','Straight Pant','Slim Pant','Wide Leg Pant','Flared Pant','Cigarette Pant','Cargo Pant','Ankle Pant','Palazzo Pant'],
+    Plazo:['Plazo Length','Waistband'],
+    Salwar:['Salwar Length','Patiala Salwar','Dhoti Salwar','Churidar Salwar','Straight Salwar','Semi Patiala Salwar','Afghani Salwar','Parallel Salwar','Tulip Salwar'],
+    Kameez:['Kameez Length','Straight Kameez','A-Line Kameez','Anarkali Kameez','Angrakha Kameez','Front Slit Kameez','Side Slit Kameez','Embroidered Kameez','Printed Kameez'],
+    Lehenga:['Lehenga Length','Waistband','A-Line Lehenga','Flared Lehenga','Panelled Lehenga','Ruffle Lehenga','Circular Lehenga','Layered Lehenga','Bridal Lehenga','Indo-Western Lehenga'],
+    Choli:['Cup','Under Bust','Choli Length','Short Choli','Long Choli','Peplum Choli','Sleeveless Choli','Off Shoulder Choli','High Neck Choli','Backless Choli','Embroidered Choli'],
+    Gown:['Gown Length','A-Line Gown','Ball Gown','Mermaid Gown','Empire Gown','Cape Gown','Tiered Gown','Anarkali Gown','Off Shoulder Gown'],
+    Dress:['Dress Length','Side Slit Length','A-Line Dress','Fit and Flare Dress','Maxi Dress','Midi Dress','Shirt Dress','Wrap Dress','Tiered Dress','Princess Dress'],
+    Blazer:['Blazer Length','Collar','Single Button Blazer','Double Button Blazer','Cropped Blazer','Longline Blazer','Peplum Blazer','Tuxedo Blazer','Collarless Blazer','Printed Blazer'],
+    Waistcoat:['Waistcoat Length','Classic Waistcoat','Long Waistcoat','Cropped Waistcoat','Embroidered Waistcoat','Nehru Waistcoat','Buttoned Waistcoat','Printed Waistcoat','Layered Waistcoat'],
+    Sherwani:['Sherwani Length','Collar','Classic Sherwani','Achkan Sherwani','Jodhpuri Sherwani','Indo-Western Sherwani','Embroidered Sherwani','Bandhgala Sherwani','Long Sherwani','Wedding Sherwani'],
+    Pajama:['Pajama Length','Waistband','Straight Pajama','Churidar Pajama','Pathani Pajama','Cotton Pajama','Silk Pajama','Loose Pajama','Slim Pajama','Embroidered Pajama'],
+    Suit:['Jacket Length','Pant Length','Straight Suit','A-Line Suit','Jacket Suit','Bandhgala Suit','Three Piece Suit','Designer Suit','Wedding Suit','Formal Suit'],
+    'School Uniform':['Shirt Length','Pant/Skirt Length']
+  };
+  return base.concat(extra[type]||[]).filter((v,i,a)=>a.indexOf(v)===i);
+}
+function garmentCard(i,type){
+  const garmentTypes=['Blouse','Salwar Suit','Kurta','Shirt','Pant','Saree Blouse','Kurti','Salwar','Kameez','Lehenga','Choli','Gown','Dress','Blazer','Waistcoat','Sherwani','Pajama','Suit','School Uniform','Plazo','Other'];
+  const selected=type||'Kurti';
+  const fields=orderMeasurementNames(selected);
+  return '<div class="garment-card sg-garment-card" id="garment-'+i+'" data-selected-type="'+esc(selected)+'" data-removed-measures="[]">'+
+    '<div class="garment-head"><div class="garment-title">📏 Measurements-'+(i+1)+'</div><div style="display:flex;gap:6px;align-items:center"><button type="button" class="secondary sg-add-garment" onclick="addGarment()">＋ Add</button><button type="button" class="secondary sg-restore-measure" onclick="showRemovedMeasurements('+i+')">↩ Restore</button><button type="button" class="remove-g" onclick="removeGarment('+i+')">− Remove</button></div></div>'+
+    '<div class="measure-grid g-fields sg-order-measures">'+fields.map(n=>'<div class="field"><div style="display:flex;align-items:center;justify-content:space-between;gap:6px"><label>'+n+'</label><button type="button" class="remove-g sg-remove-measure" onclick="removeOrderMeasurement('+i+',this.dataset.name)" data-name="'+esc(n)+'" title="Remove this measurement">−</button></div><input class="g-measure" data-name="'+n+'" placeholder="inches"></div>').join('')+'</div>'+
+    '<div class="sg-type-section"><div class="section-title" style="margin-top:14px">Garment Type</div>'+
+    '<button type="button" class="sg-selected-garment sg-all-garments" onclick="toggleOrderGarmentTypes('+i+')"><span><b>All Garments</b><small>Tap to select garment type</small></span><span>⌄</span></button>'+
+    '<div id="orderGarmentTypes-'+i+'" class="sg-garment-type-grid" style="display:none">'+garmentTypes.map((name)=>'<button type="button" class="sg-type-icon '+(name===selected?'active':'')+'" onclick="selectOrderGarmentType('+i+','+JSON.stringify(name)+')"><b>'+esc(name)+'</b></button>').join('')+'</div>'+
+    '</div></div>';
+}
+function toggleOrderGarmentTypes(i){
+  const box=document.getElementById('orderGarmentTypes-'+i);if(!box)return;
+  box.style.display=box.style.display==='none'?'grid':'none';
+}
+function selectOrderGarmentType(i,type){
+  const card=document.getElementById('garment-'+i);if(!card)return;
+  card.dataset.selectedType=type;
+  const btn=card.querySelector('.sg-selected-garment');
+  if(btn)btn.innerHTML='<span><b>'+esc(type)+'</b><small>Selected • Tap to change garment</small></span><span>⌄</span>';
+  refreshGarmentFields(i);
+  const grid=document.getElementById('orderGarmentTypes-'+i);
+  if(grid)grid.style.display='none';
+  openOrderDesignPicker(i);
+}
+function refreshGarmentFields(i){
+  const card=document.getElementById('garment-'+i);if(!card)return;
+  const type=card.dataset.selectedType||'Kurti';
+  const old=Object.fromEntries(Array.from(card.querySelectorAll('.g-measure')).map(x=>[x.dataset.name,x.value]));
+  let removed=[];try{removed=JSON.parse(card.dataset.removedMeasures||'[]')}catch(_){removed=[]}
+  let removedValues={};try{removedValues=JSON.parse(card.dataset.removedValues||'{}')}catch(_){removedValues={}}
+  const values=Object.assign({},removedValues,old);
+  card.querySelector('.g-fields').innerHTML=orderMeasurementNames(type).filter(n=>!removed.includes(n)).map(n=>'<div class="field"><div style="display:flex;align-items:center;justify-content:space-between;gap:6px"><label>'+n+'</label><button type="button" class="remove-g sg-remove-measure" onclick="removeOrderMeasurement('+i+',this.dataset.name)" data-name="'+esc(n)+'" title="Remove this measurement">−</button></div><input class="g-measure" data-name="'+n+'" placeholder="inches" value="'+esc(values[n]||'')+'"></div>').join('');
+  refreshMeasurementRestoreBox(i);
+}
+function refreshMeasurementRestoreBox(i){
+  const card=document.getElementById('garment-'+i);if(!card)return;
+  let removed=[];try{removed=JSON.parse(card.dataset.removedMeasures||'[]')}catch(_){removed=[]}
+  let box=card.querySelector('.sg-restore-box');
+  if(!removed.length){if(box)box.remove();return}
+  if(!box){box=document.createElement('div');box.className='sg-restore-box';const grid=card.querySelector('.g-fields');grid.insertAdjacentElement('afterend',box)}
+  box.innerHTML='<div class="sg-restore-title">↩️ Removed Measurements — वापस जोड़ें</div><div class="sg-restore-list">'+removed.map(n=>'<button type="button" class="sg-restore-btn" onclick="restoreOrderMeasurement('+i+',this.dataset.name)" data-name="'+esc(n)+'">＋ '+esc(n)+'</button>').join('')+'</div>';
+}
+function showRemovedMeasurements(i){
+  const card=document.getElementById('garment-'+i);if(!card)return;
+  const box=card.querySelector('.sg-restore-box');
+  if(box){box.scrollIntoView({behavior:'smooth',block:'nearest'});return}
+  alert('Abhi koi removed measurement nahi hai. Kisi measurement ke − button ko dabane ke baad use yahan se wapas add kar sakte hain.');
+}
+function removeOrderMeasurement(i,name){
+  const card=document.getElementById('garment-'+i);if(!card)return;
+  let removed=[];try{removed=JSON.parse(card.dataset.removedMeasures||'[]')}catch(_){removed=[]}
+  let removedValues={};try{removedValues=JSON.parse(card.dataset.removedValues||'{}')}catch(_){removedValues={}}
+  const input=Array.from(card.querySelectorAll('.g-measure')).find(x=>x.dataset.name===name);
+  if(input)removedValues[name]=input.value||'';
+  if(!removed.includes(name))removed.push(name);
+  card.dataset.removedMeasures=JSON.stringify(removed);
+  card.dataset.removedValues=JSON.stringify(removedValues);
+  refreshGarmentFields(i);
+}
+function restoreOrderMeasurement(i,name){
+  const card=document.getElementById('garment-'+i);if(!card)return;
+  let removed=[];try{removed=JSON.parse(card.dataset.removedMeasures||'[]')}catch(_){removed=[]}
+  removed=removed.filter(x=>x!==name);
+  card.dataset.removedMeasures=JSON.stringify(removed);
+  refreshGarmentFields(i);
+}
+function initGarments(){const w=document.getElementById('garmentsWrap');if(w&&!w.children.length)w.innerHTML=garmentCard(0,'Kurti')}
+function addGarment(){const w=document.getElementById('garmentsWrap');if(!w)return;const i=w.children.length;w.insertAdjacentHTML('beforeend',garmentCard(i,'Kurti'))}
+function removeGarment(i){const w=document.getElementById('garmentsWrap'),card=document.getElementById('garment-'+i);if(w&&card&&w.children.length>1)card.remove()}
+function collectGarments(){return Array.from(document.querySelectorAll('#garmentsWrap .garment-card')).map((card,idx)=>{const type=card.dataset.selectedType||'Kurti';const d=orderDesignTargets[idx]||null;return {type,design:d?{source:d.source,name:d.name,url:d.url||'',image:d.image||''}:null,measurements:Object.fromEntries(Array.from(card.querySelectorAll('.g-measure')).map(x=>[x.dataset.name,x.value.trim()]).filter(x=>x[1]))};})}
+function snapshotOrderForm(){const ids=['cn','cm','cwd','cd','ct','ca','co'];const s={};ids.forEach(id=>{const x=document.getElementById(id);if(x)s[id]=x.value});s.garments=Array.from(document.querySelectorAll('#garmentsWrap .garment-card')).map(card=>({type:card.dataset.selectedType||'Kurti',measurements:Object.fromEntries(Array.from(card.querySelectorAll('.g-measure')).map(x=>[x.dataset.name,x.value]))}));return s}
+function restoreOrderForm(s){if(!s)return;Object.entries(s).forEach(([id,v])=>{const x=document.getElementById(id);if(x&&typeof v==='string')x.value=v});const w=document.getElementById('garmentsWrap');if(w&&s.garments?.length){w.innerHTML=s.garments.map((g,i)=>garmentCard(i,g.type)).join('');s.garments.forEach((g,i)=>{const card=document.getElementById('garment-'+i);Object.entries(g.measurements||{}).forEach(([k,v])=>{const x=Array.from(card.querySelectorAll('.g-measure')).find(y=>y.dataset.name===k);if(x)x.value=v})})}renderOrderDesignBadges()}
+function renderOrderDesignBadges(){Object.entries(orderDesignTargets).forEach(([i,d])=>{if(!/^\d+$/.test(i))return;const box=document.getElementById('selected-design-'+i);if(box&&d)box.innerHTML='<div class="selected-design">✓ <b>'+esc(d.name)+'</b><br><small>'+esc(d.source)+'</small></div>'})}
+function openOrderDesignPicker(index){
+  if(window.__sgRecordView){
+    const card=document.getElementById('garment-'+index);
+    const type=card?.dataset.selectedType||'Kurti';
+    window.__sgRecordView('order-design:'+index+':'+type);
+  }
+  orderFormSnapshot=snapshotOrderForm();
+  const card=document.getElementById('garment-'+index);
+  const type=card?.dataset.selectedType||'Kurti';
+  openDesignCatalogForOrder(type,index);
+}
+function openDesignCatalogForOrder(type,index){
+  if(window.__sgRecordView)window.__sgRecordView('order-design:'+index+':'+type);
+  const designs=garmentDesignsFor(type).concat(loadSavedDesigns().filter(x=>x.type===type).map(x=>({...x,svg:x.svg||designVisual(type,0)})));
+  const T=esc(JSON.stringify(type)),I=JSON.stringify(index),q=encodeURIComponent(type+' garment designs');
+  window.orderDesignTargetIndex=index;
+  const camera='<label class="source-chip">📷 Camera<input type="file" accept="image/*" capture="environment" onchange="saveOrderUploadedDesign('+T+','+I+')" style="position:absolute;opacity:0;width:1px;height:1px"></label>';
+  const gallery='<label class="source-chip">🖼️ Gallery<input type="file" accept="image/*" onchange="saveOrderUploadedDesign('+T+','+I+')" style="position:absolute;opacity:0;width:1px;height:1px"></label>';
+  mt.textContent='🎨 '+type+' Design';
+  mb.innerHTML=`<div class="design-back"><button type="button" class="secondary" onclick="backToOrderPicker()">← Back to Order</button><b>${esc(type)} · Select Design</b></div>
+  <div class="design-sources">
+    <button type="button" class="source-chip active" onclick="showOrderDesignSource('library',${T},${I})">🎨 SILAI GURU</button>
+    ${camera}
+    ${gallery}
+    <button type="button" class="source-chip" id="orderWebsitesBtn" onclick="openOrderWebsites(${T},${I});return false;">🌐 Websites</button>
+  </div>
+  <div id="orderDesignSourceArea"></div>
+  <input class="design-search" id="orderDesignSearch" placeholder="🔎 Search ${esc(type)} design..." oninput="filterOrderDesigns(${T})">
+  <div id="orderDesignGrid" class="design-grid">${designs.map(d=>{
+    const DTYPE=JSON.stringify(d.type),DNAME=JSON.stringify(d.name);
+    return '<div class="design-card"><div class="design-img">'+designMediaHtml(d)+'</div><div class="design-name">'+esc(d.name)+'</div><div class="design-actions"><button type="button" class="primary" onclick="selectDesignForOrder('+I+','+DTYPE+','+DNAME+')">✓ Select</button><button type="button" class="secondary" onclick="showDesignToCustomer('+DTYPE+','+DNAME+','+I+')">👁 Show</button></div></div>';
+  }).join('')}</div>`;
+  showOrderDesignSource('library',type,index);
+}
+function openOrderWebsites(type,index){
+  const box=document.getElementById('orderDesignSourceArea');
+  if(!box)return;
+  const q=encodeURIComponent(type+' designs');
+  box.innerHTML='<div class="design-source-box"><b>✨ Design Inspiration</b><small>Sirf design inspiration ke liye source select karein.</small><div class="design-source-grid">'+
+    '<a class="source-card" href="https://www.pinterest.com/search/pins/?q='+q+'" target="_blank" rel="noopener noreferrer"><b>📌 Pinterest</b><small>'+esc(type)+' Designs</small><span>Open Website ↗</span></a>'+
+    '<a class="source-card" href="https://www.bing.com/images/search?q='+q+'" target="_blank" rel="noopener noreferrer"><b>🖼️ Bing Images</b><small>'+esc(type)+' Designs</small><span>Open Images ↗</span></a>'+
+    '<a class="source-card" href="https://www.google.com/search?tbm=isch&q='+q+'" target="_blank" rel="noopener noreferrer"><b>🔎 Google Images</b><small>More '+esc(type)+' designs</small><span>Open Images ↗</span></a>'+
+    '</div></div>';
+  box.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function openDesignWebsite(url){window.open(url,'_blank','noopener,noreferrer')}
+function showWebsiteChoices(type,index){
+  const box=document.getElementById('garmentSourceArea');if(!box)return;
+  const q=encodeURIComponent(type+' designs');
+  const items=[
+    ['📌 Pinterest','https://www.pinterest.com/search/pins/?q='+q],
+    ['🛍️ Myntra','https://www.myntra.com/search?q='+q],
+    ['🛒 Meesho','https://www.meesho.com/search?q='+q],
+    ['🔎 Google Images','https://www.google.com/search?tbm=isch&q='+q]
+  ];
+  box.innerHTML='<div class="design-source-box"><b>✨ Design Inspiration</b><small>Sirf design inspiration ke liye source select karein.</small><div class="design-source-grid">'+
+    items.map(s=>'<div class="source-card"><b>'+s[0]+'</b><small>'+esc(type)+' Designs</small><a class="secondary" href="'+s[1]+'" target="_blank" rel="noopener noreferrer" style="display:block;text-decoration:none;text-align:center">Open Website ↗</a></div>').join('')+
+    '</div></div>';
+}
+function showOrderWebsiteChoices(type,index){
+  window.orderDesignTargetIndex=index;
+  let box=document.getElementById('orderDesignSourceArea');
+  if(!box){
+    const wrap=document.getElementById('orderDesignGrid')?.parentElement;
+    if(wrap){
+      box=document.createElement('div');
+      box.id='orderDesignSourceArea';
+      wrap.insertBefore(box,document.getElementById('orderDesignGrid'));
+    }
+  }
+  if(!box)return false;
+  const q=encodeURIComponent(type+' designs');
+  box.innerHTML='<div class="design-source-box"><b>✨ Design Inspiration</b><small>Sirf design inspiration ke liye source select karein.</small><div class="design-source-grid">'+
+    '<a class="source-card" href="https://www.pinterest.com/search/pins/?q='+q+'" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit"><b>📌 Pinterest</b><small>'+esc(type)+' Designs</small><span>Open ↗</span></a>'+
+    '<a class="source-card" href="https://www.myntra.com/search?q='+q+'" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit"><b>🛍️ Myntra</b><small>'+esc(type)+' Designs</small><span>Open ↗</span></a>'+
+    '<a class="source-card" href="https://www.meesho.com/search?q='+q+'" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit"><b>🛒 Meesho</b><small>Designs</small><span>Open ↗</span></a>'+
+    '<a class="source-card" href="https://www.google.com/search?tbm=isch&q='+q+'" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit"><b>🔎 Google Images</b><small>More designs</small><span>Open ↗</span></a>'+
+    '</div></div>';
+  box.scrollIntoView({behavior:'smooth',block:'nearest'});
+  return false;
+}
+function openOrderCamera(type,index){window.orderDesignTargetIndex=index;openOrderFilePicker(type,index,true)}
+function openOrderGallery(type,index){window.orderDesignTargetIndex=index;openOrderFilePicker(type,index,false)}
+function openOrderFilePicker(type,index,camera){
+  let input=document.getElementById('orderDesignPhotoInput');
+  if(!input){
+    input=document.createElement('input');input.type='file';input.id='orderDesignPhotoInput';input.accept='image/*';input.style.display='none';
+    document.body.appendChild(input);
+  }
+  input.setAttribute('capture',camera?'environment':'');
+  input.onchange=function(){saveOrderUploadedDesign(type,index)};
+  input.value='';
+  input.click();
+}
+function filterOrderDesigns(type){
+  const q=String(document.getElementById('orderDesignSearch')?.value||'').toLowerCase().trim();
+  const all=garmentDesignsFor(type).concat(loadSavedDesigns().filter(x=>x.type===type).map(x=>({...x,svg:x.svg||designVisual(type,0)})));
+  const grid=document.getElementById('orderDesignGrid');if(!grid)return;
+  const idx=window.orderDesignTargetIndex||0;
+  const list=q?all.filter(x=>String(x.name||'').toLowerCase().includes(q)):all;
+  grid.innerHTML=list.map(d=>{
+    const DTYPE=JSON.stringify(d.type),DNAME=JSON.stringify(d.name),I=JSON.stringify(idx);
+    return '<div class="design-card"><div class="design-img">'+designMediaHtml(d)+'</div><div class="design-name">'+esc(d.name)+'</div><div class="design-actions"><button class="primary" onclick="selectDesignForOrder('+I+','+DTYPE+','+DNAME+')">✓ Select</button><button class="secondary" onclick="showDesignToCustomer('+DTYPE+','+DNAME+','+I+')">👁 Show</button></div></div>';
+  }).join('')||'<div class="empty">Design nahi mila.</div>';
+}
+function showOrderDesignSource(mode,type,index){
+  window.orderDesignTargetIndex=index;
+  const box=document.getElementById('orderDesignSourceArea');if(!box)return;
+  const T=JSON.stringify(type),I=JSON.stringify(index),q=encodeURIComponent(type+' garment designs');
+  if(mode==='library'){box.innerHTML='<div class="design-source-box"><b>🎨 SILAI GURU Design Library</b><small>Ready designs aur aapke My Designs yahan milenge.</small></div>';return}
+  if(mode==='camera'){box.innerHTML='<div class="design-source-box"><b>📷 Camera</b><small>Camera se design photo lene ke liye neeche photo box dabayein.</small><input id="orderDesignPhotoInput" type="file" accept="image/*" capture="environment" onchange="saveOrderUploadedDesign('+T+','+I+')" style="display:block;width:100%;margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:12px"></div>';return}
+  if(mode==='gallery'){box.innerHTML='<div class="design-source-box"><b>🖼️ Gallery</b><small>Phone Gallery se design photo select karein.</small><input id="orderDesignPhotoInput" type="file" accept="image/*" onchange="saveOrderUploadedDesign('+T+','+I+')" style="display:block;width:100%;margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:12px"></div>';return}
+  if(mode==='web'){
+    const q=encodeURIComponent(type+' designs');
+    box.innerHTML='<div class="design-source-box"><b>✨ Design Inspiration</b><small>Sirf design inspiration ke liye source select karein.</small><div class="design-source-grid">'+
+      '<a class="source-card" href="https://www.pinterest.com/search/pins/?q='+q+'" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;display:block"><b>📌 Pinterest</b><small>'+esc(type)+' Designs</small><span>Open Website ↗</span></a>'+
+      '<a class="source-card" href="https://www.myntra.com/search?q='+q+'" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;display:block"><b>🛍️ Myntra</b><small>'+esc(type)+' Designs</small><span>Open Website ↗</span></a>'+
+      '<a class="source-card" href="https://www.meesho.com/search?q='+q+'" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;display:block"><b>🛒 Meesho</b><small>'+esc(type)+' Designs</small><span>Open Website ↗</span></a>'+
+      '<a class="source-card" href="https://www.google.com/search?tbm=isch&q='+q+'" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:inherit;display:block"><b>🔎 Google Images</b><small>More '+esc(type)+' designs</small><span>Open Website ↗</span></a>'+
+      '</div></div>';
+    return;
+  }
+}
+function saveOrderUploadedDesign(type,index){
+  const input=document.getElementById('orderDesignPhotoInput'),file=input&&input.files&&input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(e){const img=new Image();img.onload=function(){const max=900,scale=Math.min(1,max/Math.max(img.width,img.height));const cv=document.createElement('canvas');cv.width=Math.round(img.width*scale);cv.height=Math.round(img.height*scale);cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);const data=cv.toDataURL('image/jpeg',.78);const name=(file.name||type+' Design').replace(/\.[^.]+$/,'').slice(0,60);const d={id:'upload_'+Date.now(),type,name,image:data,savedAt:Date.now(),source:'Camera/Gallery'};const a=loadSavedDesigns();a.push(d);saveSavedDesigns(a);orderDesignTargets[index]={source:'Camera/Gallery',name,image:data,url:''};alert('Design My Designs me save ho gaya aur order ke liye select ho gaya ✓');backToOrderPicker()};img.src=e.target.result};reader.readAsDataURL(file);
+}
+function selectDesignForOrder(index,type,name){const all=garmentDesignsFor(type).concat(loadSavedDesigns().filter(x=>x.type===type));const d=all.find(x=>x.name===name);if(!d)return;orderDesignTargets[index]={source:'SILAI GURU',name:d.name,url:d.url||'',image:d.image||''};backToOrderPicker()}
+function backToOrderPicker(){const s=orderFormSnapshot;openM('order');setTimeout(()=>restoreOrderForm(s),30)}
+function addO(e){e.preventDefault();const name=document.getElementById('cn').value.trim(),mob=document.getElementById('cm').value.trim(),c=cs.find(x=>x.mobile===mob),garments=collectGarments();if(!name||!mob||!garments.length){alert('Customer name, mobile aur kam se kam ek garment zaroor bhariye.');return false}let customer=c;if(!customer){customer={id:Date.now(),name,mobile:mob,orders:0};cs.push(customer)}customer.orders++;os.push({id:Date.now(),customer:name,mobile:mob,garment:garments[0].type,garments,workDate:document.getElementById('cwd').value,delivery:document.getElementById('cd').value,total:+document.getElementById('ct').value||0,advance:+document.getElementById('ca').value||0,note:document.getElementById('co').value,status:'Pending',created:new Date().toISOString()});save();closeM();render();alert('Customer & Order save ho gaya ✓');return false}
+function statusO(id){let o=os.find(x=>x.id===id);o.status=o.status==='Pending'?'Ready':'Delivered';save();render();openM('delivery')}function saveProfile(){try{const v=id=>String((document.getElementById(id)||{}).value||"").trim();const fields=["pn","pm","ps","pe","pa","pst","pc","pp"];for(const id of fields){if(!v(id)){alert("Kripya sabhi * wali details bhariye.");const e=document.getElementById(id);if(e){e.focus();e.scrollIntoView({behavior:"smooth",block:"center"});}return false;}}const profile={name:v("pn"),mobile:v("pm"),shop:v("ps"),email:v("pe"),address:v("pa"),state:v("pst"),city:v("pc"),pin:v("pp")};localStorage.setItem(K,JSON.stringify(profile));p=profile;try{cs=JSON.parse(localStorage.getItem(CK)||"[]");}catch(_){cs=[];localStorage.setItem(CK,"[]");}try{os=JSON.parse(localStorage.getItem(OK)||"[]");}catch(_){os=[];localStorage.setItem(OK,"[]");}const saved=JSON.parse(localStorage.getItem(K)||"null");if(!saved||saved.mobile!==profile.mobile){alert("Profile save nahi hua. Dobara try karein.");return false;}const ob=document.getElementById("onboard");if(ob){ob.hidden=true;ob.style.display="none";}render();window.scrollTo(0,0);return false;}catch(err){console.error("saveProfile error:",err);alert("Profile save ho gaya hai, lekin app open karte waqt error aaya. Page refresh karke dobara kholiye.");return false;}}try{p=JSON.parse(localStorage.getItem(K)||'null');plan=localStorage.getItem(PK)||'free';applyTheme(localStorage.getItem(TK)||'default')}catch(e){p=null;plan='free'}const saveBtn=document.getElementById('profileSaveBtn');if(saveBtn){saveBtn.addEventListener('click',function(e){e.preventDefault();saveProfile();});saveBtn.addEventListener('touchend',function(e){e.preventDefault();saveProfile();},{passive:false});}
+const o=document.getElementById('onboard');if(p&&p.name&&p.mobile&&p.shop&&p.email&&p.address&&p.state&&p.city&&p.pin){o.hidden=true;o.style.display='none';}else{o.hidden=false;o.style.display='flex';}render();
+</script><script>
+/* SG_GARMENTS_MANAGEMENT_FIX_V1 */
+(function(){
+  function removeDuplicateDesignIcon(){
+    document.querySelectorAll('.ico').forEach(function(el){
+      var txt=(el.textContent||'').trim().toLowerCase();
+      if(txt.indexOf('design library')>=0){el.remove();}
+    });
+  }
+  function garmentManagement(){
+    var modal=document.getElementById('modal'), title=document.getElementById('mt'), body=document.getElementById('mb');
+    if(!modal||!title||!body)return;
+    title.textContent='👗 Garments';
+    var types=['Kurti','Blouse','Salwar Suit','Kameez','Saree Blouse','Lehenga','Gown','Dress','Shirt','Pant','Salwar','Choli','Sherwani','Suit','Blazer','Waistcoat','Pajama','School Uniform','Coat','Other'];
+    body.innerHTML='<div class="card" style="margin:0 0 12px 0"><h3 style="margin:0 0 6px">👗 Garment Management</h3><div class="muted">Yahan sirf garment types manage honge. Customer ko design dikhana aur design select karna <b>New Order</b> ke andar hi rahega.</div></div>'+
+      '<div class="garment-library">'+types.map(function(t){return '<div class="garment-library-card" style="cursor:default"><div style="font-size:32px;text-align:center;padding:14px 0">👗</div><b>'+t+'</b><small>Garment Type</small><button type="button" class="secondary" style="width:100%;margin-top:9px" onclick="alert(\''+t+' garment settings yahan manage ki jayengi.\')">⚙️ Manage</button></div>';}).join('')+'</div>'+ 
+      '<div class="card" style="margin-top:12px"><b>Design selection:</b><div class="muted" style="margin-top:5px">New Order → Customer → Garment → Select Design. Isliye yahan duplicate ready-made design cards nahi honge.</div></div>';
+    modal.classList.add('show');
+  }
+  function patch(){
+    removeDuplicateDesignIcon();
+    if(typeof window.openM==='function' && !window.__sgGarmentsPatched){
+      var old=window.openM;
+      window.openM=function(t){if(t==='garments'){garmentManagement();return;} return old.apply(this,arguments);};
+      window.__sgGarmentsPatched=true;
+    }
+  }
+  patch();
+  new MutationObserver(function(){removeDuplicateDesignIcon();}).observe(document.body,{childList:true,subtree:true});
+})();
+</script>
+<script>/* SG_REAL_DESIGN_LIBRARY_V2 */
+(function(){
+const P=[['#f39ab2','#7a3550','#fff1f5'],['#d8b15a','#76510d','#fff8df'],['#4fa6a2','#174f4c','#e9fbfa'],['#6f82d8','#26356e','#eef1ff'],['#a97bd6','#513276','#f5efff'],['#e98a54','#743512','#fff0e8']];
+function V(t,i){const q=P[(+i||0)%P.length],c=q[0],d=q[1],l=q[2],x=String(t||'').toLowerCase();let b;if(x.includes('pant')||x.includes('salwar')||x.includes('pajama'))b='<path d="M62 38h76l-12 70h-14l-12-32-12 32H74z" fill="'+c+'" stroke="'+d+'" stroke-width="5"/><path d="M75 57h50" stroke="'+l+'" stroke-width="6"/>';else if(x.includes('blouse')||x.includes('choli'))b='<path d="M65 42l18-12q17 15 34 0l18 12 19 30-20 13-10-20v43H76V65L66 85 47 72z" fill="'+c+'" stroke="'+d+'" stroke-width="5"/><path d="M76 64q24 20 48 0" fill="none" stroke="'+l+'" stroke-width="5"/>';else if(x.includes('lehenga')||x.includes('gown')||x.includes('dress'))b='<path d="M82 32h36l6 24q6 25 31 66H45q25-41 31-66z" fill="'+c+'" stroke="'+d+'" stroke-width="5"/><path d="M62 94h76M54 108h92" stroke="'+l+'" stroke-width="5"/>';else if(x.includes('shirt'))b='<path d="M72 38l15-10 13 15 13-15 15 10 23 25-16 16-10-16v54H75V63L65 79 49 63z" fill="'+c+'" stroke="'+d+'" stroke-width="5"/><path d="M87 28l13 15 13-15M100 43v59" fill="none" stroke="'+d+'" stroke-width="5"/><circle cx="100" cy="60" r="3" fill="'+l+'"/><circle cx="100" cy="75" r="3" fill="'+l+'"/>';else b='<path d="M78 34h44l8 18 21 16-19 20-11-15v51H79V73L68 88 49 68l21-16z" fill="'+c+'" stroke="'+d+'" stroke-width="5"/><path d="M70 51q30 35 60 0" fill="none" stroke="'+l+'" stroke-width="7"/><path d="M100 52v72M84 91h32M84 103h32" stroke="'+l+'" stroke-width="5"/>';return '<svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="8" width="184" height="134" rx="22" fill="#fff"/><defs><linearGradient id="sg'+i+'" x1="0" y1="0" x2="1" y2="1"><stop stop-color="'+c+'"/><stop offset="1" stop-color="'+l+'"/></linearGradient></defs>'+b.replaceAll(c,'url(#sg'+i+')')+'</svg>'}
+window.designVisual=V;
+window.designMediaHtml=function(d){if(d.image)return '<img src="'+d.image+'" alt="'+d.name+'" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'"><div class="design-fallback" style="display:none">'+(d.svg||V(d.type,d.index||0))+'</div>';if(d.external||d.url)return '<div style="text-align:center;padding:18px"><div style="font-size:42px">🔗</div><b>External Design</b><small style="display:block;margin-top:6px">Website link saved</small></div>';return d.svg||V(d.type,d.index||0)};
+document.addEventListener('click',function(e){const z=e.target.closest('.design-card button');if(!z)return;e.preventDefault();e.stopPropagation();const card=z.closest('.design-card'),name=(card.querySelector('.design-name')||{}).textContent||'Design';if(/show|eye/i.test(z.textContent||'')){const sv=card.querySelector('.design-img svg');if(typeof openDesignPreview==='function')openDesignPreview({name:name.trim(),type:window.currentDesignType||'',svg:sv?sv.outerHTML:''});else if(typeof openDesignPreviewModal==='function')openDesignPreviewModal(name.trim(),sv?sv.outerHTML:'');else alert('👁️ '+name.trim());}else if(/select/i.test(z.textContent||'')){const sv=card.querySelector('.design-img svg');const d={id:'builtin-'+Date.now(),name:name.trim(),type:window.currentDesignType||'',index:0,svg:sv?sv.outerHTML:''};if(typeof selectDesign==='function')selectDesign(d);else alert('✓ '+d.name+' design select ho gaya')}} ,true);
+})();</script><script src="silai-guru-backfix.js?v=20260930-3"></script><script src="silai-guru-custom-measurements.js?v=20260930-2"></script><style id="sg-expanded-library-style">
+.sgx-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.sgx-card{background:#fff;border:1px solid #e5e6ef;border-radius:15px;overflow:hidden}.sgx-photo{height:175px;background:#faf9ff}.sgx-photo img{width:100%;height:100%;object-fit:cover;display:block}.sgx-name{padding:8px 9px 2px;font-size:12px;font-weight:800}.sgx-actions{display:flex;gap:6px;padding:7px}.sgx-actions button{flex:1;font-size:11px;padding:7px 4px}.sgx-count{font-size:12px;color:#5b4bdb;font-weight:800;margin:4px 0 8px}.sgx-source{font-size:10px;color:#73778c;padding:0 9px 6px}.sgx-tabs{display:flex;gap:7px;overflow:auto;padding:4px 0 8px}.sgx-tab{white-space:nowrap;border:1px solid #e5e6ef;background:#fff;border-radius:20px;padding:8px 12px;font-weight:800}.sgx-tab.active{background:#5b4bdb;color:#fff;border-color:#5b4bdb}.sgx-note{background:#f8f7ff;border:1px solid #ddd8ff;border-radius:14px;padding:11px;margin:8px 0;font-size:12px;color:#555}.sgx-back{background:#efeeff;color:#5144bd;padding:8px 11px;margin-bottom:6px}.sgx-search{margin:4px 0 8px}.sgx-empty{text-align:center;padding:25px;color:#73778c}@media(max-width:500px){.sgx-photo{height:145px}}
+</style>
+<script id="sg-expanded-library-script">
+(function(){
+  const IMG='https://commons.wikimedia.org/wiki/Special:Redirect/file/';
+  const DATA={
+    'Kurti':[
+      ['Straight Kurti','Kurta_Indian_Dress_for_Woman.jpg'],['A-Line Kurti','Kurta_Indian_Dress_Women_2.jpg'],['Anarkali Kurti','Woman_wearing_a_beautiful_red_kurti.jpg'],['Long Kurti','Ladies_kurta_green.jpg'],['Rayon Kurti','Ladies_kurta_white.jpg'],['Palazzo Kurti','Ladies_kurta_with_leggings.jpg'],['High-Low Kurti','Kurta_Indian_Dress_for_Woman.jpg'],['Cotton Kurti','Kurtas_Indian_Dress_1.jpg'],['Party Wear Kurti','Woman_wearing_a_beautiful_red_kurti.jpg'],['Short Kurti','Ladies_kurta_green.jpg'],['Embroidered Kurti','Kurtas_Indian_Dress_Different_Colors.jpg'],['Flared Kurti','A_flared_lehenga.jpg'],['V-Neck Kurti','Kurta_Indian_Dress_Women_2.jpg'],['Square Neck Kurti','Traditional_Kurta_Indian_Style.jpg'],['Angrakha Kurti','Kurta_Indian_Dress_for_Woman.jpg'],['Asymmetric Kurti','Ladies_kurta_white.jpg'],['Chikankari Kurti','Ladies_kurta_green.jpg'],['Block Print Kurti','Kurtas_Indian_Dress_1.jpg'],['Tiered Kurti','A_flared_lehenga.jpg'],['Designer Kurti','Woman_wearing_a_beautiful_red_kurti.jpg']
+    ],
+    'Blouse':[
+      ['Padded Blouse','Blouse_MET_CI44.111_F.jpg'],['Princess Cut Blouse','Blouse_MET_CI44.111_B.jpg'],['Boat Neck Blouse','Blouse_MET_CI44.111_F.jpg'],['Back Open Blouse','Blouse_MET_CI44.111_B.jpg'],['Patch Work Blouse','Blouse_(kanchali)_and_skirt_(ghaghara),_Banjara_community,_Saurashtra,_Gujarat,_India,_view_1,_mid_20th_century,_cotton,_glass_mirrors_-_Textile_Museum_of_Canada_-_DSC00975.JPG'],['Silk Blouse','Blouse_MET_CI44.111_F.jpg'],['Collar Neck Blouse','Blouse_MET_CI44.111_B.jpg'],['Deep Neck Blouse','Blouse_MET_CI44.111_F.jpg'],['Elbow Sleeve Blouse','Blouse_MET_CI44.111_B.jpg'],['Cold Shoulder Blouse','Blouse_MET_CI44.111_F.jpg'],['High Neck Blouse','Blouse_MET_CI44.111_B.jpg'],['Net Blouse','Blouse_MET_CI44.111_F.jpg'],['Peplum Blouse','Blouse_MET_CI44.111_B.jpg'],['Halter Blouse','Blouse_MET_CI44.111_F.jpg'],['Sweetheart Blouse','Blouse_MET_CI44.111_B.jpg'],['V-Neck Blouse','Blouse_MET_CI44.111_F.jpg'],['Round Neck Blouse','Blouse_MET_CI44.111_B.jpg'],['Keyhole Blouse','Blouse_MET_CI44.111_F.jpg'],['Angrakha Blouse','Blouse_MET_CI44.111_B.jpg'],['Boat Back Blouse','Blouse_MET_CI44.111_F.jpg']
+    ],
+    'Salwar Suit':[
+      ['Straight Suit','Shalwar_kameez_(1710604).jpg'],['Anarkali Suit','Shalwar_kameez_(1710609).jpg'],['Palazzo Suit','Shalwar_kameez_(1710606).jpg'],['Patiala Suit','Shalwar_kameez_(32037464703).jpg'],['Punjabi Suit','Shalwar_kameez.jpg'],['Sharara Suit','Shalwar_kameez_(1710604).jpg'],['Churidar Suit','Shalwar_kameez_(32037464703).jpg'],['Party Suit','Shalwar_kameez_(1710609).jpg'],['Embroidered Suit','Shalwar_kameez.jpg'],['Cotton Suit','Shalwar_kameez_(1710606).jpg'],['Straight Cut Suit','Shalwar_kameez_(1710604).jpg'],['Printed Suit','Shalwar_kameez_(1710609).jpg'],['Designer Suit','Shalwar_kameez.jpg'],['Front Slit Suit','Shalwar_kameez_(32037464703).jpg'],['Long Suit','Shalwar_kameez_(1710606).jpg'],['Short Suit','Shalwar_kameez_(1710604).jpg'],['Layered Suit','Shalwar_kameez_(1710609).jpg'],['Georgette Suit','Shalwar_kameez.jpg'],['Festive Suit','Shalwar_kameez_(32037464703).jpg'],['Wedding Suit','Shalwar_kameez_(1710606).jpg']
+    ],
+    'Lehenga':[
+      ['Bridal Lehenga','Lehenga_-_Kanchan_Fashion.jpg'],['Flared Lehenga','A_flared_lehenga.jpg'],['Party Lehenga','Cultural_costume.jpg'],['Designer Lehenga','Lehenga_-_Kanchan_Fashion.jpg'],['A-Line Lehenga','A_flared_lehenga.jpg'],['Panel Lehenga','Lehenga_-_Kanchan_Fashion.jpg'],['Net Lehenga','Cultural_costume.jpg'],['Silk Lehenga','Lehenga_-_Kanchan_Fashion.jpg'],['Mirror Work Lehenga','Cultural_costume.jpg'],['Embroidered Lehenga','Lehenga_-_Kanchan_Fashion.jpg'],['Reception Lehenga','A_flared_lehenga.jpg'],['Engagement Lehenga','Lehenga_-_Kanchan_Fashion.jpg'],['Sharara Lehenga','Cultural_costume.jpg'],['Printed Lehenga','A_flared_lehenga.jpg'],['Pastel Lehenga','Lehenga_-_Kanchan_Fashion.jpg']
+    ],
+    'Sherwani':[
+      ['Classic Sherwani','Sherwani.jpg'],['Wedding Sherwani','Sherwani.jpg'],['Bandhgala Sherwani','Sherwani.jpg'],['Embroidered Sherwani','Sherwani.jpg'],['Jodhpuri Sherwani','Sherwani.jpg'],['Indo-Western Sherwani','Sherwani.jpg'],['Royal Sherwani','Sherwani.jpg'],['Long Sherwani','Sherwani.jpg'],['Short Sherwani','Sherwani.jpg'],['Designer Sherwani','Sherwani.jpg']
+    ],
+    'Gown':[['Anarkali Gown','A_flared_lehenga.jpg'],['Party Gown','Woman_wearing_a_beautiful_red_kurti.jpg'],['Floor Length Gown','A_flared_lehenga.jpg'],['Embroidered Gown','Cultural_costume.jpg'],['Designer Gown','A_flared_lehenga.jpg'],['Wedding Gown','Cultural_costume.jpg'],['Flared Gown','A_flared_lehenga.jpg'],['Cape Gown','Cultural_costume.jpg'],['Layered Gown','A_flared_lehenga.jpg'],['Straight Gown','Woman_wearing_a_beautiful_red_kurti.jpg']],
+    'Dress':[['A-Line Dress','Woman_wearing_a_beautiful_red_kurti.jpg'],['Maxi Dress','A_flared_lehenga.jpg'],['Midi Dress','Ladies_kurta_green.jpg'],['Party Dress','Woman_wearing_a_beautiful_red_kurti.jpg'],['Flared Dress','A_flared_lehenga.jpg'],['Layered Dress','Cultural_costume.jpg'],['Printed Dress','Ladies_kurta_white.jpg'],['Embroidered Dress','Woman_wearing_a_beautiful_red_kurti.jpg'],['Long Dress','A_flared_lehenga.jpg'],['Designer Dress','Cultural_costume.jpg']],
+    'Kameez':[['Straight Kameez','Shalwar_kameez_(1710604).jpg'],['Long Kameez','Shalwar_kameez_(1710609).jpg'],['Embroidered Kameez','Shalwar_kameez.jpg'],['Printed Kameez','Shalwar_kameez_(1710606).jpg'],['Party Kameez','Shalwar_kameez_(32037464703).jpg'],['Designer Kameez','Shalwar_kameez.jpg'],['A-Line Kameez','Shalwar_kameez_(1710604).jpg'],['Front Slit Kameez','Shalwar_kameez_(1710609).jpg'],['Cotton Kameez','Shalwar_kameez_(1710606).jpg'],['Festive Kameez','Shalwar_kameez_(32037464703).jpg']],
+    'Saree Blouse':[['Classic Saree Blouse','Blouse_MET_CI44.111_F.jpg'],['Designer Saree Blouse','Blouse_MET_CI44.111_B.jpg'],['Back Open Saree Blouse','Blouse_MET_CI44.111_F.jpg'],['Boat Neck Saree Blouse','Blouse_MET_CI44.111_B.jpg'],['Padded Saree Blouse','Blouse_MET_CI44.111_F.jpg'],['Princess Cut Saree Blouse','Blouse_MET_CI44.111_B.jpg'],['Sleeveless Saree Blouse','Blouse_MET_CI44.111_F.jpg'],['Elbow Sleeve Saree Blouse','Blouse_MET_CI44.111_B.jpg'],['High Neck Saree Blouse','Blouse_MET_CI44.111_F.jpg'],['Deep Neck Saree Blouse','Blouse_MET_CI44.111_F.jpg']],
+    'Choli':[['Classic Choli','Cultural_costume.jpg'],['Bridal Choli','Lehenga_-_Kanchan_Fashion.jpg'],['Designer Choli','Cultural_costume.jpg'],['Mirror Work Choli','Cultural_costume.jpg'],['Embroidered Choli','Lehenga_-_Kanchan_Fashion.jpg'],['Back Open Choli','Blouse_MET_CI44.111_B.jpg'],['Boat Neck Choli','Blouse_MET_CI44.111_F.jpg'],['Sleeveless Choli','Blouse_MET_CI44.111_B.jpg'],['Long Choli','Lehenga_-_Kanchan_Fashion.jpg'],['Festive Choli','Cultural_costume.jpg']],
+    'Shirt':[['Formal Shirt','Kurta_-_Mens.jpg'],['Casual Shirt','Kurta_-_Mens.jpg'],['Mandarin Collar Shirt','Kurta_-_Mens.jpg'],['Band Collar Shirt','Kurta_-_Mens.jpg'],['Designer Shirt','Kurta_-_Mens.jpg'],['Long Shirt','Kurta_-_Mens.jpg'],['Short Shirt','Kurta_-_Mens.jpg'],['Party Shirt','Kurta_-_Mens.jpg'],['Printed Shirt','Kurta_-_Mens.jpg'],['Wedding Shirt','Kurta_-_Mens.jpg']],
+    'Pant':[['Straight Pant','Shalwar_kameez_(1710604).jpg'],['Palazzo Pant','Shalwar_kameez_(1710609).jpg'],['Cigarette Pant','Shalwar_kameez_(1710606).jpg'],['Ankle Pant','Shalwar_kameez_(32037464703).jpg'],['Wide Leg Pant','Shalwar_kameez_(1710604).jpg'],['Flared Pant','Shalwar_kameez_(1710609).jpg'],['Sharara Pant','Shalwar_kameez_(1710606).jpg'],['Patiala Pant','Shalwar_kameez_(32037464703).jpg'],['Designer Pant','Shalwar_kameez_(1710604).jpg'],['Comfort Pant','Shalwar_kameez_(1710609).jpg']],
+    'Salwar':[['Patiala Salwar','Shalwar_kameez_(1710604).jpg'],['Straight Salwar','Shalwar_kameez_(1710609).jpg'],['Churidar Salwar','Shalwar_kameez_(1710606).jpg'],['Afghani Salwar','Shalwar_kameez.jpg'],['Dhoti Salwar','Shalwar_kameez_(32037464703).jpg'],['Designer Salwar','Shalwar_kameez_(1710604).jpg'],['Parallel Salwar','Shalwar_kameez_(1710609).jpg'],['Gathered Salwar','Shalwar_kameez_(1710606).jpg']],
+    'Suit':[['Classic Suit','Kurta_-_Mens.jpg'],['Formal Suit','Kurta_-_Mens.jpg'],['Party Suit','Kurta_-_Mens.jpg'],['Wedding Suit','Kurta_-_Mens.jpg'],['Bandhgala Suit','Sherwani.jpg'],['Designer Suit','Sherwani.jpg'],['Jodhpuri Suit','Sherwani.jpg'],['Indo-Western Suit','Sherwani.jpg']],
+    'Blazer':[['Classic Blazer','Kurta_-_Mens.jpg'],['Party Blazer','Sherwani.jpg'],['Wedding Blazer','Sherwani.jpg'],['Bandhgala Blazer','Sherwani.jpg'],['Designer Blazer','Kurta_-_Mens.jpg'],['Slim Blazer','Kurta_-_Mens.jpg'],['Long Blazer','Sherwani.jpg'],['Printed Blazer','Kurta_-_Mens.jpg']],
+    'Waistcoat':[['Classic Waistcoat','Kurta_-_Mens.jpg'],['Nehru Waistcoat','Kurta_-_Mens.jpg'],['Wedding Waistcoat','Sherwani.jpg'],['Designer Waistcoat','Sherwani.jpg'],['Printed Waistcoat','Kurta_-_Mens.jpg'],['Embroidered Waistcoat','Sherwani.jpg']],
+    'Pajama':[['Classic Pajama','Kurta_-_Mens.jpg'],['Churidar Pajama','Kurta_-_Mens.jpg'],['Pathani Pajama','Kurta_-_Mens.jpg'],['Straight Pajama','Kurta_-_Mens.jpg'],['Designer Pajama','Kurta_-_Mens.jpg'],['Wedding Pajama','Sherwani.jpg']],
+    'School Uniform':[['School Shirt','Kurta_-_Mens.jpg'],['School Trousers','Kurta_-_Mens.jpg'],['School Blazer','Sherwani.jpg'],['School Dress','Woman_wearing_a_beautiful_red_kurti.jpg'],['School Kurta','Kurta_-_Mens.jpg']],
+    'Coat':[['Classic Coat','Kurta_-_Mens.jpg'],['Long Coat','Sherwani.jpg'],['Party Coat','Sherwani.jpg'],['Wedding Coat','Sherwani.jpg'],['Designer Coat','Kurta_-_Mens.jpg']],
+    'Other':[['Traditional Indian Wear','Cultural_costume.jpg'],['Ethnic Wear','Cultural_costume.jpg'],['Festive Wear','Cultural_costume.jpg'],['Designer Wear','Lehenga_-_Kanchan_Fashion.jpg'],['Custom Design','Kurta_Indian_Dress_for_Woman.jpg']]
+  };
+  function esc(x){return String(x).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+  function url(name){return IMG+encodeURIComponent(name).replace(/%2F/g,'/');}
+  function openExpandedLibrary(){
+    const box=document.getElementById('mb'); if(!box)return;
+    let current=null;
+    const garments=Object.keys(DATA);
+    function renderList(){
+      box.innerHTML='<button class="close" onclick="closeM()">✕</button><h2>🎨 SILAI GURU Design Library</h2><div class="sgx-note"><b>Actual garment photos</b><br>Har garment ke liye alag design folder. Built-in library photos user ke personal backup quota me save nahi hongi.</div><input class="design-search" id="sgxSearch" placeholder="🔎 Search garment design..."><div class="garment-library">'+garments.map(g=>'<button class="garment-library-card" data-g="'+esc(g)+'"><div class="libpic"><span style="font-size:44px">👗</span></div><b>'+esc(g)+'</b><small>'+DATA[g].length+' designs</small></button>').join('')+'</div>';
+      box.querySelectorAll('[data-g]').forEach(b=>b.addEventListener('click',()=>renderFolder(b.dataset.g)));
+      const q=box.querySelector('#sgxSearch'); q.addEventListener('input',()=>{const v=q.value.toLowerCase();box.querySelectorAll('[data-g]').forEach(b=>b.style.display=b.dataset.g.toLowerCase().includes(v)?'':'none')});
+    }
+    function renderFolder(g){
+      current=g; const items=DATA[g]||[];
+      box.innerHTML='<button class="sgx-back" id="sgxBack">← Garments</button><h2>👗 '+esc(g)+' · '+items.length+' Designs</h2><div class="sgx-note">'+esc(g)+' ke actual photo references. Design card par <b>Show</b> dabakar bada photo dekhein.</div><input class="design-search" id="sgxDS" placeholder="🔎 Search '+esc(g)+' design..."><div class="sgx-count">'+items.length+' designs available</div><div class="sgx-grid">'+items.map((d,i)=>'<div class="sgx-card"><div class="sgx-photo"><img loading="lazy" src="'+url(d[1])+'" alt="'+esc(d[0])+'" onerror="this.style.display=\'none\';this.parentElement.innerHTML=\'<div style=\'padding:20px;text-align:center;color:#777\'>Photo unavailable</div>\'"></div><div class="sgx-name">'+esc(d[0])+'</div><div class="sgx-source">Built-in reference</div><div class="sgx-actions"><button class="secondary" data-save="'+i+'">☆ Save</button><button class="primary" data-show="'+i+'">👁 Show</button></div></div>').join('')+'</div>';
+      box.querySelector('#sgxBack').addEventListener('click',renderList);
+      box.querySelector('#sgxDS').addEventListener('input',function(){const v=this.value.toLowerCase();box.querySelectorAll('.sgx-card').forEach(c=>c.style.display=c.querySelector('.sgx-name').textContent.toLowerCase().includes(v)?'':'none')});
+      box.querySelectorAll('[data-show]').forEach(b=>b.addEventListener('click',()=>{const d=items[+b.dataset.show];box.innerHTML='<button class="sgx-back" id="sgxPreviewBack">← '+esc(g)+'</button><h2>'+esc(d[0])+'</h2><div class="preview-large" style="height:520px;max-width:420px"><img src="'+url(d[1])+'" alt="'+esc(d[0])+'" style="width:100%;height:100%;object-fit:contain;border-radius:18px"></div><button class="primary" id="sgxUse">✓ Use this design in order</button>';box.querySelector('#sgxPreviewBack').addEventListener('click',()=>renderFolder(g));box.querySelector('#sgxUse').addEventListener('click',()=>{try{localStorage.setItem('sgSelectedDesign',JSON.stringify({garment:g,name:d[0],image:url(d[1])}))}catch(e){} alert(d[0]+' selected. Ab New Order me ise use kar sakte hain.');});}));
+    }
+    renderList();
+  }
+  /* expanded photo library disabled: use the main garment catalog */
+})();
+</script>
+<!-- SG_DESIGN_LIBRARY_EXPANDED_V1 -->
+<!-- /SG_DESIGN_LIBRARY_EXPANDED_V1 -->
+</body></html>
